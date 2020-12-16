@@ -1,0 +1,12 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"debug.allowBreakpointsEverywhere": true,
+		"testExplorer.mergeSuites": true,
+		"testExplorer.addToEditorContextMenu": true
+	},
+}

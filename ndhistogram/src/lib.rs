@@ -1,9 +1,10 @@
-trait NDHistogram {}
+pub struct Histogram {}
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn it_works() {
-        assert_eq!(2 + 2, 4);
+impl Histogram {
+    pub fn new() -> Histogram {
+        Histogram {}
     }
 }
+
+#[cfg(test)]
+mod unittests;
