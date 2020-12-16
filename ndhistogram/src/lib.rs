@@ -1,3 +1,5 @@
+trait NDHistogram {}
+
 #[cfg(test)]
 mod tests {
     #[test]
