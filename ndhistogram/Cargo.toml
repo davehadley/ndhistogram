@@ -1,0 +1,7 @@
+[package]
+name = "ndhistogram"
+version = "0.1.0"
+authors = [ "David Hadley <davehadley@users.noreply.github.com>",]
+edition = "2018"
+
+[dependencies]
