@@ -1,3 +1,4 @@
+#[cfg(test)]
 use std::vec;
 
 use crate::axis::Axis;
