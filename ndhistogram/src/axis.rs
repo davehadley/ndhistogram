@@ -7,10 +7,10 @@ pub trait Axis {
     } // includes overflow and underflow
 }
 
-struct Uniform {
-    num: usize,
-    low: f64,
-    high: f64,
+pub struct Uniform {
+    pub num: usize,
+    pub low: f64,
+    pub high: f64,
 }
 
 impl Axis for Uniform {
@@ -28,6 +28,6 @@ impl Axis for Uniform {
     }
 
     fn numbins(&self) -> usize {
-        self.num + 2
+        self.num
     }
 }
