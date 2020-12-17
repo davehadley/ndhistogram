@@ -1,56 +1,33 @@
-use std::{collections::btree_set::Union, ops::AddAssign};
 
-pub trait Axis {
-    type Position;
-    fn numbins(&self) -> usize;
-    fn find_index(&self, position: &Self::Position) -> usize;
+trait Axis {
+    type Coordinate;
+    fn index(&self, coordinate: &Self::Coordinate) -> usize;
 }
 
-struct Uniform {
-    numbins: usize,
-    low: f64,
-    high: f64,
+pub trait Axes {
+    type Coordinate;
+    fn index(&self, coordinate: &Self::Coordinate) -> usize;
 }
 
-impl Uniform {
-    fn new(numbins: usize, low: f64, high: f64) -> Uniform {
-        Uniform { numbins, low, high }
-    }
-}
-//struct Variable { binedges : Vec<f64> },
-//struct Category { values: Vec<String> }
-
-impl Axis for Uniform {
-    type Position = f64;
-    fn numbins(&self) -> usize {
-        self.numbins
-    }
-
-    fn find_index(&self, position: &f64) -> usize {
-        0
-    }
+pub trait BinStore {
+    type Value;
+    type Weight;
+    fn fill(&mut self, index: usize, weight: Self::Weight);
+    fn get(&self, index: usize) -> Option<Self::Value>;
 }
 
-pub struct Histogram1D<T: Axis, U = f64> {
-    axis: T,
-    values: Vec<U>,
+pub struct Histogram<T: Axes, B: BinStore> {
+    axes: T,
+    bins: B 
 }
 
-impl<T: Axis, U: AddAssign<f64> + Default + Clone> Histogram1D<T, U> {
-    pub fn new(axis: T) -> Histogram1D<T, U> {
-        let numbins = axis.numbins();
-        Histogram1D {
-            axis: axis,
-            values: vec![U::default(); numbins],
-        }
-    }
-
-    pub fn fill(&mut self, x: &T::Position) {
-        let index = self.axis.find_index(x);
-        let v = self.values.get_mut(index).unwrap();
-        *v += 1.0;
+impl <T: Axes, B: BinStore> Histogram<T, B> {
+    pub fn fill(&mut self, coordinate: &T::Coordinate, weight: B::Weight) {
+        let index = self.axes.index(&coordinate);
+        self.bins.fill(index, weight);
     }
 }
 
 #[cfg(test)]
 mod unittests;
+
