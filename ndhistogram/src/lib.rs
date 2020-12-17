@@ -1,4 +1,5 @@
 mod axes;
+mod axis;
 mod binvalues;
 
 use axes::Axes;

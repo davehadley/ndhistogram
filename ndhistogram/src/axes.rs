@@ -1,8 +1,4 @@
-trait Axis {
-    type Coordinate;
-    fn index(&self, coordinate: &Self::Coordinate) -> usize;
-    fn size(&self) -> usize;
-}
+use crate::axis::Axis;
 
 pub trait Axes {
     type Coordinate;
