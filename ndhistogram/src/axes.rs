@@ -1,4 +1,4 @@
-use crate::axis::Axis;
+use super::axis::Axis;
 
 pub trait Axes {
     type Coordinate;
