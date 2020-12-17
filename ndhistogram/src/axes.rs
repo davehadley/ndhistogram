@@ -5,8 +5,14 @@ pub trait Axes {
     fn index(&self, coordinate: &Self::Coordinate) -> usize;
 }
 
-struct Axes1D<X: Axis> {
+pub struct Axes1D<X: Axis> {
     x: X,
+}
+
+impl<X: Axis> Axes1D<X> {
+    pub fn new(x: X) -> Axes1D<X> {
+        Axes1D { x }
+    }
 }
 struct Axes2D<X: Axis, Y: Axis> {
     x: X,

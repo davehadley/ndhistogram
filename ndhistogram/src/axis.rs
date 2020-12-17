@@ -8,9 +8,15 @@ pub trait Axis {
 }
 
 pub struct Uniform {
-    pub num: usize,
-    pub low: f64,
-    pub high: f64,
+    num: usize,
+    low: f64,
+    high: f64,
+}
+
+impl Uniform {
+    pub fn new(num: usize, low: f64, high: f64) -> Uniform {
+        Uniform { num, low, high }
+    }
 }
 
 impl Axis for Uniform {
