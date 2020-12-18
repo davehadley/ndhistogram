@@ -14,9 +14,15 @@ impl<X: Axis> Axes1D<X> {
         Axes1D { x }
     }
 }
-struct Axes2D<X: Axis, Y: Axis> {
+pub struct Axes2D<X: Axis, Y: Axis> {
     x: X,
     y: Y,
+}
+
+impl<X: Axis, Y: Axis> Axes2D<X, Y> {
+    pub fn new(x: X, y: Y) -> Axes2D<X, Y> {
+        Axes2D { x, y }
+    }
 }
 
 impl<X: Axis> Axes for Axes1D<X> {
