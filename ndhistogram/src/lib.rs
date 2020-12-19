@@ -11,6 +11,3 @@ pub use axis::Axis;
 pub use axis::Uniform;
 pub use binvalues::VecBinValues;
 pub use histogram::Histogram;
-
-#[cfg(test)]
-mod unittests;
