@@ -53,3 +53,11 @@ repos:
   - id: check-toml
   - id: mixed-line-ending
     stages: [commit]
+
+- repo: local
+  hooks:
+  - id: rustclippy
+    name: rustclippy
+    entry: cargo clippy --all-targets --all-features -- -Dclippy::all
+    language: system
+    types: [rust]
