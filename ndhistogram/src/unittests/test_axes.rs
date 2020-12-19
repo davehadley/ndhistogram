@@ -2,14 +2,12 @@ use itertools::iproduct;
 use std::collections::HashMap;
 
 #[cfg(test)]
-use crate::axes::Axes2D;
-use crate::axes::{Axes, Axes1D};
-use crate::axis::Uniform;
+use crate::{axes::Axes, axis::Uniform};
 
 #[test]
 fn test_axes1d_uniform() {
     let nbins = 5;
-    let ax = Axes1D::new(Uniform::new(nbins, 0.0, 5.0));
+    let ax = (Uniform::new(nbins, 0.0, 5.0),);
     let actual: Vec<usize> = (-2..7).map(|it| ax.index(&(it as f64))).collect();
     let expected = vec![0, 0, 1, 2, 3, 4, 5, 6, 6];
     assert_eq!(expected, actual)
@@ -18,7 +16,7 @@ fn test_axes1d_uniform() {
 #[test]
 fn test_axes2d_uniform() {
     let nbins = 2;
-    let ax = Axes2D::new(
+    let ax = (
         Uniform::new(nbins, 0.0, 2.0),
         Uniform::new(nbins, 10.0, 12.0),
     );

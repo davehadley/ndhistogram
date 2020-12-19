@@ -1,8 +1,16 @@
-#[allow(dead_code)]
-pub mod axes;
-pub mod axis;
-pub mod binvalues;
-pub mod histogram;
+#![cfg_attr(debug_assertions, allow(dead_code, unused_imports))]
+
+mod axes;
+mod axis;
+mod binvalues;
+
+#[macro_use]
+mod histogram;
+
+pub use axis::Axis;
+pub use axis::Uniform;
+pub use binvalues::VecBinValues;
+pub use histogram::Histogram;
 
 #[cfg(test)]
 mod unittests;
