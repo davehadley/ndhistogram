@@ -9,7 +9,7 @@ impl<A: Axes, V: Default + Clone> ArrayHistogram<A, V> {
     pub fn new(axes: A) -> ArrayHistogram<A, V> {
         let size = axes.size();
         ArrayHistogram {
-            axes: axes,
+            axes,
             values: vec![V::default(); size],
         }
     }
