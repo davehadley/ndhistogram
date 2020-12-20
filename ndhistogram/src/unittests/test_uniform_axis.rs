@@ -7,6 +7,12 @@ fn test_uniform_size() {
 }
 
 #[test]
+fn test_uniform_numbins() {
+    let ax = Uniform::new(5, 0.0, 1.0);
+    assert_eq!(ax.numbins(), 5)
+}
+
+#[test]
 fn test_uniform_get_index() {
     let ax = Uniform::new(5, 0.0, 1.0);
     let actual: Vec<usize> = (-2..7).map(|x| ax.index(&(x as f64 / 5.0))).collect();

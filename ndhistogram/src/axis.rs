@@ -5,6 +5,7 @@ pub trait Axis {
     fn size(&self) -> usize {
         self.numbins() + 2
     } // includes overflow and underflow
+    fn iterindices() {}
 }
 
 pub struct Uniform {
