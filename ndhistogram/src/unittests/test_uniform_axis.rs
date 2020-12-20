@@ -1,4 +1,5 @@
 use crate::axis::{Axis, Uniform};
+use std::ops::Range;
 
 #[test]
 fn test_uniform_size() {
@@ -19,3 +20,32 @@ fn test_uniform_get_index() {
     let expected = vec![0, 0, 1, 2, 3, 4, 5, 6, 6];
     assert_eq!(expected, actual)
 }
+
+#[test]
+fn test_uniform_get_edges() {
+    let ax = Uniform::new(5, 0.0, 1.0);
+    let actual: Vec<Range<f64>> = Range::<i32> { start: -2, end: 7 }
+        .map(|x| ax.bin(x as usize))
+        .filter_map(|x| x)
+        .cloned()
+        .collect();
+    let edges: Vec<f64> = vec![0.0, 0.2, 0.4, 0.6, 0.8, 1.0];
+    let expected: Vec<Range<f64>> = edges
+        .iter()
+        .zip(edges.iter().skip(1).clone())
+        .map(|it| Range {
+            start: *it.0,
+            end: *it.1,
+        })
+        .collect();
+    assert_eq!(expected, actual)
+}
+
+// #[test]
+// fn test_uniform_iterate_indices() {
+//     let ax = Uniform::new(5, 0.0, 1.0);
+//     let actual: Vec<usize> = ax.iter_indices().collect();
+//     let expected = vec![0, 0, 1, 2, 3, 4, 5, 6];
+//     assert_eq!(expected, actual);
+
+// }

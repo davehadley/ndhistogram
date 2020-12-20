@@ -1,4 +1,5 @@
 use std::collections::binary_heap::Iter;
+use std::ops::Range;
 
 pub trait Axis {
     type Coordinate;
@@ -27,7 +28,7 @@ impl Uniform {
 
 impl Axis for Uniform {
     type Coordinate = f64;
-    type BinItem = (Self::Coordinate, Self::Coordinate);
+    type BinItem = Range<Self::Coordinate>;
 
     fn index(&self, coordinate: &Self::Coordinate) -> usize {
         let frac = (coordinate - self.low) / (self.high - self.low);
