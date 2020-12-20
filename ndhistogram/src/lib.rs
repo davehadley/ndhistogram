@@ -6,3 +6,6 @@ pub mod histogram;
 
 #[macro_use]
 mod macros;
+
+#[cfg(test)]
+mod unittests;

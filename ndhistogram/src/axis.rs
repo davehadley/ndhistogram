@@ -30,7 +30,7 @@ impl Axis for Uniform {
             return self.num + 1 as usize;
         }
         let idx = (self.num as f64) * frac;
-        return (idx as usize) + 1;
+        (idx as usize) + 1
     }
 
     fn numbins(&self) -> usize {
