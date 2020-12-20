@@ -1,11 +1,16 @@
+use std::collections::binary_heap::Iter;
+
 pub trait Axis {
     type Coordinate;
+    type BinItem;
+
     fn index(&self, coordinate: &Self::Coordinate) -> usize;
     fn numbins(&self) -> usize;
     fn size(&self) -> usize {
         self.numbins() + 2
     } // includes overflow and underflow
-    fn iterindices() {}
+
+    fn bin(&self, index: usize) -> Option<&Self::BinItem>;
 }
 
 pub struct Uniform {
@@ -22,6 +27,7 @@ impl Uniform {
 
 impl Axis for Uniform {
     type Coordinate = f64;
+    type BinItem = (Self::Coordinate, Self::Coordinate);
 
     fn index(&self, coordinate: &Self::Coordinate) -> usize {
         let frac = (coordinate - self.low) / (self.high - self.low);
@@ -37,4 +43,16 @@ impl Axis for Uniform {
     fn numbins(&self) -> usize {
         self.num
     }
+
+    fn bin(&self, _: usize) -> std::option::Option<&<Self as Axis>::BinItem> {
+        todo!()
+    }
+}
+
+trait IterAxis: Axis {
+    type BinIterator;
+    fn iter_indices(&self) -> std::ops::Range<usize> {
+        0..self.size()
+    }
+    fn iter_bins(&self) -> Self::BinIterator;
 }
