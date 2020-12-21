@@ -11,7 +11,7 @@ pub trait Axis {
         self.numbins() + 2
     } // includes overflow and underflow
 
-    fn bin(&self, index: usize) -> Option<&Self::BinItem>;
+    fn bin(&self, index: usize) -> Option<Self::BinItem>;
 }
 
 pub struct Uniform {
@@ -22,6 +22,12 @@ pub struct Uniform {
 
 impl Uniform {
     pub fn new(num: usize, low: f64, high: f64) -> Uniform {
+        if num == 0 {
+            panic!("Invalid axis num bins ({})", num);
+        }
+        if low >= high {
+            panic!("Invalid axis range bins (low:{}, high:{})", low, high);
+        }
         Uniform { num, low, high }
     }
 }
@@ -45,8 +51,18 @@ impl Axis for Uniform {
         self.num
     }
 
-    fn bin(&self, _: usize) -> std::option::Option<&<Self as Axis>::BinItem> {
-        todo!()
+    fn bin(&self, index: usize) -> std::option::Option<<Self as Axis>::BinItem> {
+        if index == 0 || (index - 1) >= self.num {
+            return None;
+        }
+        let interval = (self.high - self.low) / (self.num as f64);
+        let start = ((index - 1) as f64) * interval;
+        let end = (index as f64) * interval;
+        // debug_assert!(start >= self.low);
+        // debug_assert!(start < self.high);
+        // debug_assert!(end > self.low);
+        // debug_assert!(end <= self.high);
+        Some(Range { start, end })
     }
 }
 
