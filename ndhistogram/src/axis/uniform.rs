@@ -43,7 +43,6 @@ impl Axis for Uniform {
         if index == 0 || (index - 1) >= self.num {
             return None;
         }
-        let interval = (self.high - self.low) / (self.num as f64);
         let start = ((index - 1) as f64) * (self.high - self.low) / (self.num as f64);
         let end = (index as f64) * (self.high - self.low) / (self.num as f64);
         Some(Range { start, end })
