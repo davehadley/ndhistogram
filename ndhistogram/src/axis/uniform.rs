@@ -65,8 +65,11 @@ impl Display for Uniform {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
-            "Axis{{# bins: {}, range=[{}, {})}}",
-            self.num, self.low, self.high
+            "Axis{{# bins={}, range=[{}, {}), class={}}}",
+            self.num,
+            self.low,
+            self.high,
+            stringify!(Uniform)
         )
     }
 }
