@@ -1,3 +1,5 @@
+use float_cmp::approx_eq;
+
 use crate::axis::{Axis, Uniform};
 use std::ops::Range;
 
@@ -37,7 +39,12 @@ fn test_uniform_get_edges() {
             end: *it.1,
         })
         .collect();
-    assert_eq!(expected, actual)
+    assert_eq!(expected.len(), actual.len());
+    let delta = 1.0e-6;
+    assert!(expected
+        .iter()
+        .zip(actual)
+        .all(|it| (it.0.start - it.1.start).abs() < delta && (it.0.end - it.1.end).abs() < delta));
 }
 
 // #[test]

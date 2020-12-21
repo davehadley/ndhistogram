@@ -56,12 +56,8 @@ impl Axis for Uniform {
             return None;
         }
         let interval = (self.high - self.low) / (self.num as f64);
-        let start = ((index - 1) as f64) * interval;
-        let end = (index as f64) * interval;
-        // debug_assert!(start >= self.low);
-        // debug_assert!(start < self.high);
-        // debug_assert!(end > self.low);
-        // debug_assert!(end <= self.high);
+        let start = ((index - 1) as f64) * (self.high - self.low) / (self.num as f64);
+        let end = (index as f64) * (self.high - self.low) / (self.num as f64);
         Some(Range { start, end })
     }
 }

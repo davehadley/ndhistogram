@@ -8,3 +8,4 @@ edition = "2018"
 
 [dev-dependencies]
 itertools = "0.9"
+float-cmp = "0.8.0"
