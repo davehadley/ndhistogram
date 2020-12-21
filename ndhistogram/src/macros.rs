@@ -1,16 +1,17 @@
 #[macro_export]
 macro_rules! ndhistogram {
-    (($t:ty)? $(,)? $( $x:expr ),+ ) => {
+
+    ($( $x:expr ),+ $(,)*; $type:ty $(;)*) => {
         {
             let axes = (
             $(
                 $x,
             )*
         );
-            $crate::histogram::ArrayHistogram::<_, $t>::new(axes)
+            $crate::histogram::ArrayHistogram::<_, $type>::new(axes)
         }
     };
-    ($( $x:expr ),+) => {
+    ($( $x:expr ),+ $(,)*) => {
         {
             let axes = (
             $(
@@ -20,4 +21,5 @@ macro_rules! ndhistogram {
             $crate::histogram::ArrayHistogram::<_, f64>::new(axes)
         }
     };
+
 }
