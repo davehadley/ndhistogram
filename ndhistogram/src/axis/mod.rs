@@ -17,10 +17,10 @@ pub trait Axis {
     fn bin(&self, index: usize) -> Option<Self::BinRange>;
 }
 
-trait IterAxis: Axis {
-    type BinIterator;
-    fn iter_indices(&self) -> std::ops::Range<usize> {
-        0..self.size()
-    }
-    fn iter_bins(&self) -> Self::BinIterator;
-}
+// trait IterAxis: Axis {
+//     type BinIterator;
+//     fn iter_indices(&self) -> std::ops::Range<usize> {
+//         0..self.size()
+//     }
+//     fn iter_bins(&self) -> Self::BinIterator;
+// }
