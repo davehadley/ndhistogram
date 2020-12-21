@@ -1,6 +1,6 @@
 #[macro_export]
 macro_rules! ndhistogram {
-    ( $( $x:expr ),+;$t:ty ) => {
+    (($t:ty)? $(,)? $( $x:expr ),+ ) => {
         {
             let axes = (
             $(

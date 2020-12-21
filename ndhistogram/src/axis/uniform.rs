@@ -39,7 +39,7 @@ impl<T: Float> Axis for Uniform<T> {
         if frac < T::zero() {
             return 0;
         } else if frac >= T::one() {
-            return self.num + 1 as usize;
+            return self.num + 1;
         }
         let idx: T = T::from(self.num).unwrap() * frac;
         (idx.to_usize().unwrap()) + 1
