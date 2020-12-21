@@ -1,8 +1,14 @@
 use num::{Float, FromPrimitive, NumCast};
-use std::{fmt::Debug, ops::Mul, ops::Range, ops::Sub};
+use std::{
+    fmt::{Debug, Display},
+    ops::Mul,
+    ops::Range,
+    ops::Sub,
+};
 
 use super::Axis;
 
+#[derive(Clone, PartialEq, Debug)]
 pub struct Uniform<T = f64> {
     num: usize,
     low: T,
@@ -26,7 +32,7 @@ where
 
 impl<T: Float> Axis for Uniform<T> {
     type Coordinate = T;
-    type BinItem = Range<Self::Coordinate>;
+    type BinRange = Range<Self::Coordinate>;
 
     fn index(&self, coordinate: &Self::Coordinate) -> usize {
         let frac = (*coordinate - self.low) / (self.high - self.low);
@@ -43,7 +49,7 @@ impl<T: Float> Axis for Uniform<T> {
         self.num
     }
 
-    fn bin(&self, index: usize) -> std::option::Option<<Self as Axis>::BinItem> {
+    fn bin(&self, index: usize) -> std::option::Option<<Self as Axis>::BinRange> {
         if index == 0 || (index - 1) >= self.num {
             return None;
         }
@@ -52,5 +58,15 @@ impl<T: Float> Axis for Uniform<T> {
         let start = (T::from(index - 1)?) * (self.high - self.low) / (T::from(self.num)?);
         let end = (T::from(index)?) * (self.high - self.low) / (T::from(self.num)?);
         Some(Range { start, end })
+    }
+}
+
+impl Display for Uniform {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "Axis{{# bins: {}, range=[{}, {})}}",
+            self.num, self.low, self.high
+        )
     }
 }

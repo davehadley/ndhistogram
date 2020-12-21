@@ -47,6 +47,24 @@ fn test_uniform_get_edges() {
         .all(|it| (it.0.start - it.1.start).abs() < delta && (it.0.end - it.1.end).abs() < delta));
 }
 
+#[test]
+fn test_uniform_clone() {
+    let ax = Uniform::new(5, 0.0, 1.0);
+    assert_eq!(ax, ax.clone());
+}
+
+#[test]
+fn test_uniform_debug_display() {
+    let ax = Uniform::new(5, 0.0, 1.0);
+    println!("{:?}", ax);
+}
+
+#[test]
+fn test_uniform_display() {
+    let ax = Uniform::new(5, 0.0, 1.0);
+    println!("{}", ax);
+}
+
 // #[test]
 // fn test_uniform_iterate_indices() {
 //     let ax = Uniform::new(5, 0.0, 1.0);

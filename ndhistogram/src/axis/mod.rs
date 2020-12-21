@@ -1,12 +1,12 @@
-use std::collections::binary_heap::Iter;
 use std::ops::Range;
+use std::{collections::binary_heap::Iter, fmt::Display};
 
 mod uniform;
 pub use uniform::Uniform;
 
 pub trait Axis {
     type Coordinate;
-    type BinItem;
+    type BinRange;
 
     fn index(&self, coordinate: &Self::Coordinate) -> usize;
     fn numbins(&self) -> usize;
@@ -14,7 +14,7 @@ pub trait Axis {
         self.numbins() + 2
     } // includes overflow and underflow
 
-    fn bin(&self, index: usize) -> Option<Self::BinItem>;
+    fn bin(&self, index: usize) -> Option<Self::BinRange>;
 }
 
 trait IterAxis: Axis {
