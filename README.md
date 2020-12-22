@@ -11,6 +11,15 @@ Before committing any code, please install pre-commit hooks with:
 source install-hook.sh
 ```
 
-# To-do List
+# Task List
 
-- [ ] 
+- [ ] Histogram filling.
+- [ ] Histogram retrieving.
+- [ ] Histogram/axis iteration.
+- [ ] Category axis.
+- [ ] AnyD histogram.
+- [ ] Growable axis.
+- [ ] Re-binnable axis.
+- [ ] Documentation.
+- [ ] Make public on github.
+- [ ] Release to create.io.
