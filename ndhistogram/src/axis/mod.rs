@@ -7,6 +7,7 @@ pub use uniform::Uniform;
 pub trait Axis {
     type Coordinate;
     type BinRange;
+    //type ItemIterator: Iterator<Item=(usize, Self::BinRange)>;
 
     fn index(&self, coordinate: &Self::Coordinate) -> usize;
     fn numbins(&self) -> usize;
@@ -15,6 +16,17 @@ pub trait Axis {
     } // includes overflow and underflow
 
     fn bin(&self, index: usize) -> Option<Self::BinRange>;
+
+    fn iter_indices(&self) -> Box<dyn Iterator<Item = usize>> {
+        Box::new(0..self.numbins())
+    }
+
+    fn iter_items<'a>(&'a self) -> Box<dyn Iterator<Item = (usize, Option<Self::BinRange>)> + 'a> {
+        Box::new(self.iter_indices().map(move |it| (it, self.bin(it))))
+    }
+    fn iter_bins<'a>(&'a self) -> Box<dyn Iterator<Item = Option<Self::BinRange>> + 'a> {
+        Box::new(self.iter_indices().map(move |it| self.bin(it)))
+    }
 }
 
 // trait IterAxis: Axis {
@@ -23,4 +35,13 @@ pub trait Axis {
 //         0..self.size()
 //     }
 //     fn iter_bins(&self) -> Self::BinIterator;
+// }
+
+// impl <T> IntoIterator for T where T:Axis {
+//     type Item = (usize, T::BinRange);
+//     type IntoIter = ();
+
+//     fn into_iter(self) -> Self::IntoIter {
+//         self.iter_indices().map(|it| (it, self.bin(it)))
+//     }
 // }

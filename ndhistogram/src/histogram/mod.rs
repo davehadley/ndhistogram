@@ -13,6 +13,7 @@ pub trait Histogram<'a, A: Axes, V: 'a> {
     }
 
     fn iter_values(&'a self) -> Self::ValueIterator;
+    //fn iter_items(&'a self) { self.axes().iter_indices().zip(self.iter_values()) }
 }
 
 mod arrayhistogram;

@@ -1,6 +1,7 @@
 use num::{Float, FromPrimitive, NumCast};
 use std::{
     fmt::{Debug, Display},
+    iter::Map,
     ops::Mul,
     ops::Range,
     ops::Sub,
@@ -30,7 +31,7 @@ where
     }
 }
 
-impl<T: Float> Axis for Uniform<T> {
+impl<'a, T: Float> Axis for Uniform<T> {
     type Coordinate = T;
     type BinRange = Range<Self::Coordinate>;
 
