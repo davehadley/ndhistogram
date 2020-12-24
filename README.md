@@ -23,3 +23,7 @@ source install-hook.sh
 - [ ] Documentation.
 - [ ] Make public on github.
 - [ ] Release to create.io.
+
+# Niggles
+
+- [ ] Don't make user have to bother with references/dereferences to Copy-able / primitives
