@@ -1,14 +1,12 @@
 use super::axis::Axis;
 
-pub trait Axes {
-    type Coordinate;
-    fn index(&self, coordinate: &Self::Coordinate) -> usize;
-    fn numbins(&self) -> usize;
-    fn size(&self) -> usize;
-}
+pub trait Axes: Axis {}
 
-impl<X: Axis> Axes for (X,) {
+impl<X: Axis> Axes for (X,) {}
+
+impl<X: Axis> Axis for (X,) {
     type Coordinate = X::Coordinate;
+    type BinRange = X::BinRange;
 
     fn index(&self, coordinate: &Self::Coordinate) -> usize {
         self.0.index(coordinate)
@@ -21,10 +19,17 @@ impl<X: Axis> Axes for (X,) {
     fn size(&self) -> usize {
         self.0.size()
     }
+
+    fn bin(&self, index: usize) -> Option<Self::BinRange> {
+        self.0.bin(index)
+    }
 }
 
-impl<X: Axis, Y: Axis> Axes for (X, Y) {
+impl<X: Axis, Y: Axis> Axes for (X, Y) {}
+
+impl<X: Axis, Y: Axis> Axis for (X, Y) {
     type Coordinate = (X::Coordinate, Y::Coordinate);
+    type BinRange = (X::BinRange, Y::BinRange);
 
     fn index(&self, coordinate: &Self::Coordinate) -> usize {
         let ix = self.0.index(&coordinate.0);
@@ -38,5 +43,14 @@ impl<X: Axis, Y: Axis> Axes for (X, Y) {
 
     fn size(&self) -> usize {
         self.0.size() * self.1.size()
+    }
+
+    fn bin(&self, index: usize) -> Option<Self::BinRange> {
+        let ix = index % self.0.size();
+        let iy = index / self.0.size();
+
+        let bx = self.0.bin(ix)?;
+        let by = self.1.bin(iy)?;
+        Some((bx, by))
     }
 }
