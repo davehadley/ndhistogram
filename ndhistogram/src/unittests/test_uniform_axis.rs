@@ -69,6 +69,6 @@ fn test_uniform_display() {
 fn test_uniform_iterate_indices() {
     let ax = Uniform::new(5, 0.0, 1.0);
     let actual: Vec<usize> = ax.iter_indices().collect();
-    let expected = vec![0, 0, 1, 2, 3, 4, 5, 6];
+    let expected = vec![0, 1, 2, 3, 4, 5, 6];
     assert_eq!(expected, actual);
 }

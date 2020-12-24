@@ -18,7 +18,7 @@ pub trait Axis {
     fn bin(&self, index: usize) -> Option<Self::BinRange>;
 
     fn iter_indices(&self) -> Box<dyn Iterator<Item = usize>> {
-        Box::new(0..self.numbins())
+        Box::new(0..self.size())
     }
 
     fn iter_items<'a>(&'a self) -> Box<dyn Iterator<Item = (usize, Option<Self::BinRange>)> + 'a> {
