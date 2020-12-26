@@ -11,7 +11,7 @@ fn test_axes_2d_size() {
 }
 
 #[test]
-fn test_uniform_numbins() {
+fn test_axes_2d_numbins() {
     let x = Uniform::new(5, 0.0, 1.0);
     let y = Uniform::new(4, 0.0, 1.0);
     assert_eq!((x, y).numbins(), (5 * 4))
