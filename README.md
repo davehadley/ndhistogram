@@ -22,7 +22,7 @@ source install-hook.sh
 - [x] Weighted Histogram 2D filling.
 - [x] Weighted Histogram 2D retrieving.
 - [x] Histogram 1D filling bin edges works as expected.
-- [ ] Histogram 2D filling bin edges works as expected.
+- [x] Histogram 2D filling bin edges works as expected.
 - [ ] Histogram 1D underflow works as expected.
 - [ ] Histogram 2D overflow works as expected.
 - [ ] Histogram/axis iteration.

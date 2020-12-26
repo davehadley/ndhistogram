@@ -1,5 +1,5 @@
 use crate::{
-    axis::Uniform,
+    axis::{Axis, Uniform},
     histogram::{Fill, FillWeight, Histogram},
 };
 

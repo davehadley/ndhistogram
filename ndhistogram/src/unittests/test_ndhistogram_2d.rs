@@ -1,5 +1,7 @@
+use std::collections::HashMap;
+
 use crate::{
-    axis::Uniform,
+    axis::{Axis, Uniform},
     histogram::{Fill, FillWeight, Histogram},
 };
 
@@ -29,5 +31,37 @@ fn test_histogram_uniform_2d_weighted_fill_once() {
     hist.fill_weight((0.1, 0.6), 2.0);
     let actual = *hist.value((0.1, 0.6)).unwrap();
     let expected = 2.0;
+    assert_eq!(expected, actual);
+}
+
+#[test]
+#[allow(clippy::float_cmp)]
+fn test_histogram_uniform_2d_unweighted_fill_bin_edges() {
+    let mut hist = ndhistogram!(Uniform::new(2, 0.0, 2.0), Uniform::new(2, 0.0, 2.0));
+    hist.fill((-1.0, -1.0));
+    hist.fill_weight((0.0, 0.0), 20.0);
+    hist.fill_weight((1.0, 0.0), 300.0);
+    hist.fill_weight((0.0, 1.0), 4000.0);
+    hist.fill_weight((1.0, 1.0), 50000.0);
+    let actual: Vec<((usize, usize), f64)> = hist
+        .axes()
+        .iter_bins()
+        .flatten()
+        .map(|bin| {
+            (
+                (
+                    hist.axes().0.index(bin.0.start),
+                    hist.axes().1.index(bin.1.start),
+                ),
+                *hist.value((bin.0.start, bin.1.start)).unwrap(),
+            )
+        })
+        .collect();
+    let expected = vec![
+        ((1, 1), 20.0),
+        ((2, 1), 300.0),
+        ((1, 2), 4000.0),
+        ((2, 2), 50000.0),
+    ];
     assert_eq!(expected, actual);
 }
