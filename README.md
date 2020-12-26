@@ -15,12 +15,12 @@ source install-hook.sh
 
 - [x] Histogram 1D filling.
 - [x] Histogram 1D retrieving.
-- [ ] Histogram 2D filling.
-- [ ] Histogram 2D retrieving.
-- [ ] Weighted Histogram 1D filling.
-- [ ] Weighted Histogram 1D retrieving.
-- [ ] Weighted Histogram 2D filling.
-- [ ] Weighted Histogram 2D retrieving.
+- [x] Histogram 2D filling.
+- [x] Histogram 2D retrieving.
+- [x] Weighted Histogram 1D filling.
+- [x] Weighted Histogram 1D retrieving.
+- [x] Weighted Histogram 2D filling.
+- [x] Weighted Histogram 2D retrieving.
 - [ ] Histogram 1D filling bin edges works as expected.
 - [ ] Histogram 2D filling bin edges works as expected.
 - [ ] Histogram 1D underflow works as expected.

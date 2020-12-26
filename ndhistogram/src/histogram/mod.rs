@@ -4,8 +4,6 @@ pub trait Histogram<'a, A: Axes, V: 'a> {
 
     fn axes(&self) -> &A;
 
-    fn fill(&mut self, coordinate: A::Coordinate);
-
     fn value_at_index(&self, index: usize) -> Option<&V>;
     fn value(&self, coordinate: A::Coordinate) -> Option<&V> {
         let index = self.axes().index(coordinate);
@@ -14,6 +12,14 @@ pub trait Histogram<'a, A: Axes, V: 'a> {
 
     fn iter_values(&'a self) -> Self::ValueIterator;
     //fn iter_items(&'a self) { self.axes().iter_indices().zip(self.iter_values()) }
+}
+
+pub trait Fill<A: Axes> {
+    fn fill(&mut self, coordinate: A::Coordinate);
+}
+
+pub trait FillWeight<A: Axes, W> {
+    fn fill_weight(&mut self, coordinate: A::Coordinate, weight: W);
 }
 
 mod arrayhistogram;
