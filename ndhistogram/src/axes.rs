@@ -8,7 +8,7 @@ impl<X: Axis> Axis for (X,) {
     type Coordinate = X::Coordinate;
     type BinRange = X::BinRange;
 
-    fn index(&self, coordinate: &Self::Coordinate) -> usize {
+    fn index(&self, coordinate: Self::Coordinate) -> usize {
         self.0.index(coordinate)
     }
 
@@ -31,9 +31,9 @@ impl<X: Axis, Y: Axis> Axis for (X, Y) {
     type Coordinate = (X::Coordinate, Y::Coordinate);
     type BinRange = (X::BinRange, Y::BinRange);
 
-    fn index(&self, coordinate: &Self::Coordinate) -> usize {
-        let ix = self.0.index(&coordinate.0);
-        let iy = self.1.index(&coordinate.1);
+    fn index(&self, coordinate: Self::Coordinate) -> usize {
+        let ix = self.0.index(coordinate.0);
+        let iy = self.1.index(coordinate.1);
         ix + self.0.size() * iy
     }
 

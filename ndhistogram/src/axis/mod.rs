@@ -9,7 +9,7 @@ pub trait Axis {
     type BinRange;
     //type ItemIterator: Iterator<Item=(usize, Self::BinRange)>;
 
-    fn index(&self, coordinate: &Self::Coordinate) -> usize;
+    fn index(&self, coordinate: Self::Coordinate) -> usize;
     fn numbins(&self) -> usize;
     fn size(&self) -> usize {
         self.numbins() + 2

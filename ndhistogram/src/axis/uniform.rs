@@ -31,12 +31,12 @@ where
     }
 }
 
-impl<'a, T: Float> Axis for Uniform<T> {
+impl<T: Float> Axis for Uniform<T> {
     type Coordinate = T;
     type BinRange = Range<Self::Coordinate>;
 
-    fn index(&self, coordinate: &Self::Coordinate) -> usize {
-        let frac = (*coordinate - self.low) / (self.high - self.low);
+    fn index(&self, coordinate: Self::Coordinate) -> usize {
+        let frac = (coordinate - self.low) / (self.high - self.low);
         if frac < T::zero() {
             return 0;
         } else if frac >= T::one() {

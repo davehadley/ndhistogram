@@ -22,12 +22,12 @@ impl<A: Axes, V: Default + Clone> ArrayHistogram<A, V> {
 impl<'a, A: Axes, V: One + AddAssign + 'a> Histogram<'a, A, V> for ArrayHistogram<A, V> {
     type ValueIterator = std::slice::Iter<'a, V>;
 
-    fn fill(&mut self, coordinate: &A::Coordinate) {
+    fn fill(&mut self, coordinate: A::Coordinate) {
         let index = self.axes.index(coordinate);
         self.values[index] += V::one();
     }
 
-    fn value(&self, coordinate: &A::Coordinate) -> Option<&V> {
+    fn value(&self, coordinate: A::Coordinate) -> Option<&V> {
         let index = self.axes.index(coordinate);
         self.values.get(index)
     }

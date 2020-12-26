@@ -4,11 +4,11 @@ pub trait Histogram<'a, A: Axes, V: 'a> {
 
     fn axes(&self) -> &A;
 
-    fn fill(&mut self, coordinate: &A::Coordinate);
+    fn fill(&mut self, coordinate: A::Coordinate);
 
     fn value_at_index(&self, index: usize) -> Option<&V>;
-    fn value(&self, coordinate: &A::Coordinate) -> Option<&V> {
-        let index = self.axes().index(&coordinate);
+    fn value(&self, coordinate: A::Coordinate) -> Option<&V> {
+        let index = self.axes().index(coordinate);
         self.value_at_index(index)
     }
 
