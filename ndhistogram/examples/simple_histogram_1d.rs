@@ -1,5 +1,4 @@
 extern crate ndhistogram;
-use ndhistogram::histogram::Histogram;
 use ndhistogram::ndhistogram;
 use ndhistogram::{axis::Uniform, histogram::Fill};
 
