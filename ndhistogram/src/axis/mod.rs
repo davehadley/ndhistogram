@@ -1,6 +1,7 @@
 use std::ops::Range;
 use std::{collections::binary_heap::Iter, fmt::Display};
 
+pub mod binrange;
 mod uniform;
 pub use uniform::Uniform;
 

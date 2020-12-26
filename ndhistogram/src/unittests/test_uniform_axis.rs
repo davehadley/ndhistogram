@@ -1,7 +1,8 @@
 use float_cmp::approx_eq;
 
+use crate::axis::binrange::ContinuousBinRange;
 use crate::axis::{Axis, Uniform};
-use std::ops::Range;
+use std::{convert::TryFrom, ops::Range};
 
 #[test]
 fn test_uniform_size() {
@@ -29,6 +30,7 @@ fn test_uniform_get_edges() {
     let actual: Vec<Range<f64>> = Range::<i32> { start: -2, end: 7 }
         .map(|x| ax.bin(x as usize))
         .filter_map(|x| x)
+        .filter_map(|x| Range::try_from(x).ok())
         .collect();
     let edges: Vec<f64> = vec![0.0, 0.2, 0.4, 0.6, 0.8, 1.0];
     let expected: Vec<Range<f64>> = edges
@@ -44,7 +46,7 @@ fn test_uniform_get_edges() {
     assert!(expected
         .iter()
         .zip(actual)
-        .all(|it| (it.0.start - it.1.start).abs() < delta && (it.0.end - it.1.end).abs() < delta));
+        .all(|it| it.0.start - it.1.start.abs() < delta && (it.0.end - it.1.end).abs() < delta));
 }
 
 #[test]

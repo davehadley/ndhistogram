@@ -4,10 +4,10 @@ use std::{
     iter::Map,
     ops::Mul,
     ops::Range,
-    ops::Sub,
+    ops::{RangeBounds, RangeFrom, RangeTo, Sub},
 };
 
-use super::Axis;
+use super::{binrange::ContinuousBinRange, Axis};
 
 #[derive(Clone, PartialEq, Debug)]
 pub struct Uniform<T = f64> {
@@ -33,7 +33,7 @@ where
 
 impl<T: Float> Axis for Uniform<T> {
     type Coordinate = T;
-    type BinRange = Range<Self::Coordinate>;
+    type BinRange = ContinuousBinRange<T>;
 
     fn index(&self, coordinate: Self::Coordinate) -> usize {
         let frac = (coordinate - self.low) / (self.high - self.low);
@@ -58,7 +58,23 @@ impl<T: Float> Axis for Uniform<T> {
         // let end = (index as f64) * (self.high - self.low) / (self.num as f64);
         let start = (T::from(index - 1)?) * (self.high - self.low) / (T::from(self.num)?);
         let end = (T::from(index)?) * (self.high - self.low) / (T::from(self.num)?);
-        Some(Range { start, end })
+        Some(Self::BinRange::Bin { start, end })
+    }
+
+    fn size(&self) -> usize {
+        self.numbins() + 2
+    }
+
+    fn iter_indices(&self) -> Box<dyn Iterator<Item = usize>> {
+        Box::new(0..self.size())
+    }
+
+    fn iter_items<'a>(&'a self) -> Box<dyn Iterator<Item = (usize, Option<Self::BinRange>)> + 'a> {
+        Box::new(self.iter_indices().map(move |it| (it, self.bin(it))))
+    }
+
+    fn iter_bins<'a>(&'a self) -> Box<dyn Iterator<Item = Option<Self::BinRange>> + 'a> {
+        Box::new(self.iter_indices().map(move |it| self.bin(it)))
     }
 }
 
