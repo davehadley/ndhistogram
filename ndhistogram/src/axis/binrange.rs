@@ -2,7 +2,7 @@ use std::{
     convert::TryFrom,
     ops::{Range, RangeBounds, RangeFrom, RangeTo},
 };
-
+#[derive(Debug)]
 pub enum ContinuousBinRange<T> {
     Underflow { end: T },
     Overflow { start: T },

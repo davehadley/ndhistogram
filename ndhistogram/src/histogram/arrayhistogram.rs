@@ -4,6 +4,8 @@ use num::One;
 
 use super::{Fill, FillWeight, Histogram, Item, MutableHistogram};
 use crate::axes::Axes;
+
+#[derive(Debug)]
 pub struct ArrayHistogram<A, V> {
     axes: A,
     values: Vec<V>,

@@ -1,5 +1,5 @@
 use crate::axes::Axes;
-
+#[derive(Debug)]
 pub struct Item<'a, T, V> {
     pub index: usize,
     pub bin: Option<T>,
