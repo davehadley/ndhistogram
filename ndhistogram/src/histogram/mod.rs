@@ -1,13 +1,13 @@
 use crate::axes::Axes;
 
-pub struct Item<T, V> {
+pub struct Item<'a, T, V> {
     pub index: usize,
     pub bin: Option<T>,
-    pub value: V,
+    pub value: &'a V,
 }
 pub trait Histogram<'a, A: Axes + 'a, V: 'a> {
     type Values: Iterator<Item = &'a V>;
-    type Iter: Iterator<Item = Item<A::BinRange, &'a V>>;
+    type Iter: Iterator<Item = Item<'a, A::BinRange, V>>;
 
     fn axes(&self) -> &A;
 
