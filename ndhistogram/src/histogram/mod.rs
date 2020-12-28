@@ -7,6 +7,7 @@ pub struct Item<T, V> {
 }
 pub trait Histogram<'a, A: Axes + 'a, V: 'a> {
     type Values: Iterator<Item = &'a V>;
+    type Iter: Iterator<Item = Item<A::BinRange, &'a V>>;
 
     fn axes(&self) -> &A;
 
@@ -18,14 +19,7 @@ pub trait Histogram<'a, A: Axes + 'a, V: 'a> {
     }
 
     fn values(&'a self) -> Self::Values;
-
-    fn iter(&'a self) -> Box<dyn Iterator<Item = Item<A::BinRange, &'a V>> + 'a> {
-        Box::new(self.axes().iter().map(move |(index, binrange)| Item {
-            index,
-            bin: binrange,
-            value: self.value_at_index(index).unwrap(),
-        }))
-    }
+    fn iter(&'a self) -> Self::Iter;
 }
 
 pub trait Fill<A: Axes> {

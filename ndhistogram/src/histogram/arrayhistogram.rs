@@ -2,7 +2,7 @@ use std::{iter::Map, ops::AddAssign};
 
 use num::One;
 
-use super::{Fill, FillWeight, Histogram, MutableHistogram};
+use super::{Fill, FillWeight, Histogram, Item, MutableHistogram};
 use crate::axes::Axes;
 pub struct ArrayHistogram<A, V> {
     axes: A,
@@ -21,6 +21,7 @@ impl<A: Axes, V: Default + Clone> ArrayHistogram<A, V> {
 
 impl<'a, A: Axes + 'a, V: One + AddAssign + 'a> Histogram<'a, A, V> for ArrayHistogram<A, V> {
     type Values = std::slice::Iter<'a, V>;
+    type Iter = Box<dyn Iterator<Item = Item<A::BinRange, &'a V>> + 'a>;
 
     fn value(&self, coordinate: A::Coordinate) -> Option<&V> {
         let index = self.axes.index(coordinate);
@@ -37,6 +38,14 @@ impl<'a, A: Axes + 'a, V: One + AddAssign + 'a> Histogram<'a, A, V> for ArrayHis
 
     fn values(&'a self) -> Self::Values {
         self.values.iter()
+    }
+
+    fn iter(&'a self) -> Self::Iter {
+        Box::new(self.axes().iter().map(move |(index, binrange)| Item {
+            index,
+            bin: binrange,
+            value: self.value_at_index(index).unwrap(),
+        }))
     }
 }
 
