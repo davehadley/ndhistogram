@@ -20,7 +20,7 @@ impl<A: Axes, V: Default + Clone> ArrayHistogram<A, V> {
 }
 
 impl<'a, A: Axes, V: One + AddAssign + 'a> Histogram<'a, A, V> for ArrayHistogram<A, V> {
-    type ValueIterator = std::slice::Iter<'a, V>;
+    type Values = std::slice::Iter<'a, V>;
 
     fn value(&self, coordinate: A::Coordinate) -> Option<&V> {
         let index = self.axes.index(coordinate);
@@ -35,7 +35,7 @@ impl<'a, A: Axes, V: One + AddAssign + 'a> Histogram<'a, A, V> for ArrayHistogra
         self.values.get(index)
     }
 
-    fn values(&'a self) -> Self::ValueIterator {
+    fn values(&'a self) -> Self::Values {
         self.values.iter()
     }
 }

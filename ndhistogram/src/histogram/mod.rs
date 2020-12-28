@@ -1,6 +1,7 @@
 use crate::axes::Axes;
 pub trait Histogram<'a, A: Axes, V: 'a> {
-    type ValueIterator: Iterator<Item = &'a V>;
+    type Values: Iterator<Item = &'a V>;
+    //type ItemIterator: Iterator<Item = &'a V>;
 
     fn axes(&self) -> &A;
 
@@ -10,8 +11,8 @@ pub trait Histogram<'a, A: Axes, V: 'a> {
         self.value_at_index(index)
     }
 
-    fn values(&'a self) -> Self::ValueIterator;
-    //fn iter(&'a self) { self.axes().indices().zip(self.values()) }
+    fn values(&'a self) -> Self::Values;
+    //fn iter(&'a self) -> Box<dyn Iterator<Item=>> { self.axes().indices().zip(self.values()) }
 }
 
 pub trait Fill<A: Axes> {
