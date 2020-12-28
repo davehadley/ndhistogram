@@ -2,7 +2,7 @@ use std::{iter::Map, ops::AddAssign};
 
 use num::One;
 
-use super::{Fill, FillWeight, Histogram};
+use super::{Fill, FillWeight, Histogram, MutableHistogram};
 use crate::axes::Axes;
 pub struct ArrayHistogram<A, V> {
     axes: A,
@@ -51,5 +51,19 @@ impl<A: Axes, V: AddAssign<W>, W> FillWeight<A, W> for ArrayHistogram<A, V> {
     fn fill_weight(&mut self, coordinate: A::Coordinate, weight: W) {
         let index = self.axes.index(coordinate);
         self.values[index] += weight;
+    }
+}
+
+impl<'a, A: Axes + 'a, V: One + AddAssign + 'a> MutableHistogram<'a, A, V>
+    for ArrayHistogram<A, V>
+{
+    type ValuesMut = std::slice::IterMut<'a, V>;
+
+    fn value_at_index_mut(&mut self, index: usize) -> Option<&mut V> {
+        self.values.get_mut(index)
+    }
+
+    fn values(&'a mut self) -> Self::ValuesMut {
+        todo!()
     }
 }
