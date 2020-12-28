@@ -35,7 +35,7 @@ impl<'a, A: Axes, V: One + AddAssign + 'a> Histogram<'a, A, V> for ArrayHistogra
         self.values.get(index)
     }
 
-    fn iter_values(&'a self) -> Self::ValueIterator {
+    fn values(&'a self) -> Self::ValueIterator {
         self.values.iter()
     }
 }

@@ -10,8 +10,8 @@ pub trait Histogram<'a, A: Axes, V: 'a> {
         self.value_at_index(index)
     }
 
-    fn iter_values(&'a self) -> Self::ValueIterator;
-    //fn iter_items(&'a self) { self.axes().iter_indices().zip(self.iter_values()) }
+    fn values(&'a self) -> Self::ValueIterator;
+    //fn iter(&'a self) { self.axes().indices().zip(self.values()) }
 }
 
 pub trait Fill<A: Axes> {

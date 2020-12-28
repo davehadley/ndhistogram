@@ -23,6 +23,7 @@ source install-hook.sh
 - [x] Weighted Histogram 2D retrieving.
 - [x] Histogram 1D filling bin edges works as expected.
 - [x] Histogram 2D filling bin edges works as expected.
+- [ ] Make Histogram API match HashMap API
 - [ ] Histogram 1D underflow works as expected.
 - [ ] Histogram 2D overflow works as expected.
 - [ ] Histogram/axis iteration.
@@ -36,4 +37,4 @@ source install-hook.sh
 
 # Niggles
 
-- [ ] Don't make user have to bother with references/dereferences to Copy-able / primitives
+- [x] Don't make user have to bother with references/dereferences to Copy-able / primitives
