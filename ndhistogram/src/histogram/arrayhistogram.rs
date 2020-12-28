@@ -2,7 +2,7 @@ use std::{iter::Map, ops::AddAssign};
 
 use num::One;
 
-use super::{Fill, FillWeight, Histogram, Item, MutableHistogram};
+use super::{Fill, FillWeight, Histogram, Item, ItemMut, MutableHistogram};
 use crate::axes::Axes;
 
 #[derive(Debug)]
@@ -69,12 +69,21 @@ impl<'a, A: Axes + 'a, V: One + AddAssign + 'a> MutableHistogram<'a, A, V>
     for ArrayHistogram<A, V>
 {
     type ValuesMut = std::slice::IterMut<'a, V>;
+    type IterMut = Box<dyn Iterator<Item = ItemMut<'a, A::BinRange, V>> + 'a>;
 
     fn value_at_index_mut(&mut self, index: usize) -> Option<&mut V> {
         self.values.get_mut(index)
     }
 
-    fn values(&'a mut self) -> Self::ValuesMut {
-        todo!()
+    fn values_mut(&'a mut self) -> Self::ValuesMut {
+        self.values.iter_mut()
+    }
+
+    fn iter_mut(&'a mut self) -> Self::IterMut {
+        Box::new(self.axes().iter().map(move |(index, binrange)| ItemMut {
+            index,
+            bin: binrange,
+            value: self.value_at_index_mut(index).unwrap(),
+        }))
     }
 }
