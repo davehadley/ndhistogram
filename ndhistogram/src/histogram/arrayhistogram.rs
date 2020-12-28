@@ -65,12 +65,9 @@ impl<A: Axes, V: AddAssign<W>, W> FillWeight<A, W> for ArrayHistogram<A, V> {
     }
 }
 
-impl<'a, A: Axes, V: One + AddAssign + 'a> MutableHistogram<'a, A, V>
-    for ArrayHistogram<A, V>
-{
+impl<'a, A: Axes, V: One + AddAssign + 'a> MutableHistogram<'a, A, V> for ArrayHistogram<A, V> {
     type ValuesMut = std::slice::IterMut<'a, V>;
     type IterMut = Box<dyn Iterator<Item = ItemMut<'a, A::BinRange, V>> + 'a>;
-    //type IterMut = Box<dyn Iterator<Item = ItemMut<'a, A::BinRange, V>>>;
 
     fn value_at_index_mut(&mut self, index: usize) -> Option<&mut V> {
         self.values.get_mut(index)
@@ -82,25 +79,10 @@ impl<'a, A: Axes, V: One + AddAssign + 'a> MutableHistogram<'a, A, V>
 
     fn iter_mut(&'a mut self) -> Self::IterMut {
         Box::new(
-        TestIterMut { 
-            axesiter: self.axes.iter(),
-            values: &mut self.values 
-        }
-    )
-    }
-}
-
-struct TestIterMut<'a, A, V> {
-    axesiter: A,
-    values: &'a mut [V],
-}
-
-impl <'a, A: Iterator<Item=(usize, Option<Z>)>, V, Z> Iterator for TestIterMut<'a, A, V> {
-    type Item = ItemMut<'a, Z, V>;
-
-    fn next(&mut self) -> Option<Self::Item> {
-        let (index, bin) = self.axesiter.next()?;
-        let value = self.values.get_mut(index)?;
-        Some(ItemMut { index: index, bin: bin, value: value })
+            self.axes
+                .iter()
+                .zip(self.values.iter_mut())
+                .map(|((index, bin), value)| ItemMut { index, bin, value }),
+        )
     }
 }
