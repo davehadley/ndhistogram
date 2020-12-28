@@ -8,11 +8,11 @@ pub struct Item<T, V> {
 pub trait Histogram<'a, A: Axes + 'a, V: 'a> {
     type Values: Iterator<Item = &'a V>;
 
-    fn axes(&'a self) -> &'a A;
+    fn axes(&self) -> &A;
 
-    fn value_at_index(&'a self, index: usize) -> Option<&'a V>;
+    fn value_at_index(&self, index: usize) -> Option<&V>;
 
-    fn value(&'a self, coordinate: A::Coordinate) -> Option<&'a V> {
+    fn value(&self, coordinate: A::Coordinate) -> Option<&V> {
         let index = self.axes().index(coordinate);
         self.value_at_index(index)
     }
