@@ -2,14 +2,14 @@ use std::{iter::Map, ops::AddAssign};
 
 use num::One;
 
-use super::{Fill, FillWeight, Histogram, MutableHistogram};
+use super::{Fill, FillWeight, Histogram, Item};
 use crate::axes::Axes;
 pub struct ArrayHistogram<A, V> {
     axes: A,
     values: Vec<V>,
 }
 
-impl<A: Axes, V: Default + Clone> ArrayHistogram<A, V> {
+impl<'a, A: Axes, V: Default + Clone> ArrayHistogram<A, V> {
     pub fn new(axes: A) -> ArrayHistogram<A, V> {
         let size = axes.size();
         ArrayHistogram {
@@ -19,8 +19,9 @@ impl<A: Axes, V: Default + Clone> ArrayHistogram<A, V> {
     }
 }
 
-impl<'a, A: Axes + 'a, V: One + AddAssign + 'a> Histogram<'a, A, V> for ArrayHistogram<A, V> {
-    type Values = std::slice::Iter<'a, V>;
+impl<A: Axes, V: One + AddAssign> Histogram<A, V> for ArrayHistogram<A, V> {
+    // type Values = std::slice::Iter<'a, V>;
+    // type Iter = Box<dyn Iterator<Item=Item<A::BinRange, &'a V>> + 'a>;
 
     fn value(&self, coordinate: A::Coordinate) -> Option<&V> {
         let index = self.axes.index(coordinate);
@@ -35,9 +36,17 @@ impl<'a, A: Axes + 'a, V: One + AddAssign + 'a> Histogram<'a, A, V> for ArrayHis
         self.values.get(index)
     }
 
-    fn values(&'a self) -> Self::Values {
-        self.values.iter()
-    }
+    // fn values(&self) -> Self::Values {
+    //     self.values.iter()
+    // }
+
+    // fn iter(&self) -> Self::Iter {
+    //     Box::new(self.axes().iter().map(move |(index, binrange)| Item {
+    //         index,
+    //         bin: binrange,
+    //         value: self.value_at_index(index).unwrap(),
+    //     }))
+    // }
 }
 
 impl<A: Axes, V: One + AddAssign> Fill<A> for ArrayHistogram<A, V> {
@@ -47,23 +56,23 @@ impl<A: Axes, V: One + AddAssign> Fill<A> for ArrayHistogram<A, V> {
     }
 }
 
-impl<A: Axes, V: AddAssign<W>, W> FillWeight<A, W> for ArrayHistogram<A, V> {
+impl<'a, A: Axes, V: AddAssign<W>, W> FillWeight<A, W> for ArrayHistogram<A, V> {
     fn fill_weight(&mut self, coordinate: A::Coordinate, weight: W) {
         let index = self.axes.index(coordinate);
         self.values[index] += weight;
     }
 }
 
-impl<'a, A: Axes + 'a, V: One + AddAssign + 'a> MutableHistogram<'a, A, V>
-    for ArrayHistogram<A, V>
-{
-    type ValuesMut = std::slice::IterMut<'a, V>;
+// impl<'a, A: Axes, V: One + AddAssign> MutableHistogram<'a, A, V>
+//     for &'a mut ArrayHistogram<A, V>
+// {
+//     type ValuesMut = std::slice::IterMut<'a, V>;
 
-    fn value_at_index_mut(&mut self, index: usize) -> Option<&mut V> {
-        self.values.get_mut(index)
-    }
+//     fn value_at_index_mut(&mut self, index: usize) -> Option<&mut V> {
+//         self.values.get_mut(index)
+//     }
 
-    fn values(&'a mut self) -> Self::ValuesMut {
-        todo!()
-    }
-}
+//     fn values(&'a mut self) -> Self::ValuesMut {
+//         todo!()
+//     }
+// }
