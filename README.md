@@ -31,6 +31,7 @@ source install-hook.sh
 - [ ] AnyD histogram.
 - [ ] Growable axis.
 - [ ] Re-binnable axis.
+- [ ] Check API and naming guidelines are met.
 - [ ] Documentation.
 - [ ] Make public on github.
 - [ ] Release to create.io.
