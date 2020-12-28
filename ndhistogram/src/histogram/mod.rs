@@ -30,10 +30,10 @@ pub trait FillWeight<A: Axes, W> {
     fn fill_weight(&mut self, coordinate: A::Coordinate, weight: W);
 }
 
-pub trait MutableHistogram<'a, A: Axes + 'a, V: 'a>: Histogram<'a, A, V> {
+pub trait MutableHistogram<'a, A: Axes, V: 'a>: Histogram<'a, A, V> {
     type ValuesMut: Iterator<Item = &'a mut V>;
 
-    fn value_at_index_mut(&'a mut self, index: usize) -> Option<&'a mut V>;
+    fn value_at_index_mut(&mut self, index: usize) -> Option<&mut V>;
     fn values(&'a mut self) -> Self::ValuesMut;
 
     // fn iter_mut(&'a mut self) -> Box<dyn Iterator<Item = Item<A::BinRange, &'a mut V>> + 'a> {
