@@ -22,7 +22,7 @@ pub trait Axis {
         Box::new(0..self.size())
     }
 
-    fn items<'a>(&'a self) -> Box<dyn Iterator<Item = (usize, Option<Self::BinRange>)> + 'a> {
+    fn iter<'a>(&'a self) -> Box<dyn Iterator<Item = (usize, Option<Self::BinRange>)> + 'a> {
         Box::new(self.indices().map(move |it| (it, self.bin(it))))
     }
     fn bins<'a>(&'a self) -> Box<dyn Iterator<Item = Option<Self::BinRange>> + 'a> {

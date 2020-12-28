@@ -41,3 +41,4 @@ source install-hook.sh
 
 - [x] Don't make user have to bother with references/dereferences to Copy-able / primitives
 - [ ] Harmonize indexes vs indices
+- [ ] Replace Box dyn iterators with static.

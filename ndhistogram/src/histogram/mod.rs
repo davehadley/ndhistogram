@@ -11,14 +11,16 @@ pub trait Histogram<'a, A: Axes + 'a, V: 'a> {
     fn axes(&self) -> &A;
 
     fn value_at_index(&self, index: usize) -> Option<&V>;
+
     fn value(&self, coordinate: A::Coordinate) -> Option<&V> {
         let index = self.axes().index(coordinate);
         self.value_at_index(index)
     }
 
     fn values(&'a self) -> Self::Values;
+
     fn iter(&'a self) -> Box<dyn Iterator<Item = Item<'a, A::BinRange, V>> + 'a> {
-        Box::new(self.axes().items().map(move |(index, binrange)| Item {
+        Box::new(self.axes().iter().map(move |(index, binrange)| Item {
             index,
             bin: binrange,
             value: self.value_at_index(index).unwrap(),
