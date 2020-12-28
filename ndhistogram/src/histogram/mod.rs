@@ -5,7 +5,7 @@ pub struct Item<'a, T, V> {
     pub bin: Option<T>,
     pub value: &'a V,
 }
-pub trait Histogram<'a, A: Axes + 'a, V: 'a> {
+pub trait Histogram<'a, A: Axes, V: 'a> {
     type Values: Iterator<Item = &'a V>;
     type Iter: Iterator<Item = Item<'a, A::BinRange, V>>;
 

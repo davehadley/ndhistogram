@@ -19,7 +19,7 @@ impl<A: Axes, V: Default + Clone> ArrayHistogram<A, V> {
     }
 }
 
-impl<'a, A: Axes + 'a, V: One + AddAssign + 'a> Histogram<'a, A, V> for ArrayHistogram<A, V> {
+impl<'a, A: Axes, V: One + AddAssign + 'a> Histogram<'a, A, V> for ArrayHistogram<A, V> {
     type Values = std::slice::Iter<'a, V>;
     type Iter = Box<dyn Iterator<Item = Item<'a, A::BinRange, V>> + 'a>;
 
