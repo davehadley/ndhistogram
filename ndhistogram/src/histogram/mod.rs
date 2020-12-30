@@ -2,14 +2,23 @@ use std::{fmt::Display, ops::AddAssign};
 
 use crate::axes::Axes;
 
+pub trait AddOne {
+    fn add_one(&mut self);
+}
+impl<T: One + AddAssign> AddOne for T {
+    fn add_one(&mut self) {
+        *self += Self::one();
+    }
+}
+
 // TODO: Replace with trait alias when stable
 // https://github.com/rust-lang/rfcs/blob/master/text/1733-trait-alias.md
 pub trait Value<Weight = Self>
 where
-    Self: One + AddAssign<Weight> + Clone,
+    Self: AddOne + AddAssign<Weight> + Clone,
 {
 }
-impl<T: One + AddAssign + Clone> Value for T {}
+impl<T: AddOne + AddAssign + Clone> Value for T {}
 
 #[derive(Debug)]
 pub struct Item<T, V> {

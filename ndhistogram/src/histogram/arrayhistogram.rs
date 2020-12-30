@@ -1,7 +1,5 @@
 use std::{iter::Map, ops::AddAssign};
 
-use num::One;
-
 use super::{Fill, FillWeight, Histogram, Item, MutableHistogram, Value};
 use crate::axes::Axes;
 
@@ -54,7 +52,7 @@ impl<'a, A: Axes, V: 'a + Value> Histogram<'a, A, V> for ArrayHistogram<A, V> {
 impl<A: Axes, V: Value> Fill<A> for ArrayHistogram<A, V> {
     fn fill(&mut self, coordinate: A::Coordinate) {
         let index = self.axes.index(coordinate);
-        self.values[index] += V::one();
+        self.values[index].add_one();
     }
 }
 
