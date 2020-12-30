@@ -69,13 +69,16 @@ fn test_binrange_bin_display() {
 }
 
 #[test]
+#[allow(clippy::float_cmp)]
 fn test_binrange_bin_conversion() {
     let start = 0.0;
     let end = 1.0;
     let bin = ContinuousBinRange::new(start, end);
-    let range: Range<_> = bin.try_into().unwrap();
+    let range: Range<_> = bin.clone().try_into().unwrap();
+    let bin2: ContinuousBinRange<_> = range.clone().into();
     assert_eq!(range.start, start);
     assert_eq!(range.end, end);
+    assert_eq!(bin, bin2);
 }
 
 #[test]
@@ -83,8 +86,10 @@ fn test_binrange_bin_conversion() {
 fn test_binrange_underflow_conversion() {
     let end = 1.0;
     let bin = ContinuousBinRange::underflow(end);
-    let range: RangeTo<_> = bin.try_into().unwrap();
+    let range: RangeTo<_> = bin.clone().try_into().unwrap();
+    let bin2: ContinuousBinRange<_> = range.clone().into();
     assert_eq!(range.end, end);
+    assert_eq!(bin, bin2);
 }
 
 #[test]
@@ -92,6 +97,34 @@ fn test_binrange_underflow_conversion() {
 fn test_binrange_overflow_conversion() {
     let start = 1.0;
     let bin = ContinuousBinRange::overflow(start);
-    let range: RangeFrom<_> = bin.try_into().unwrap();
+    let range: RangeFrom<_> = bin.clone().try_into().unwrap();
+    let bin2: ContinuousBinRange<_> = range.clone().into();
     assert_eq!(range.start, start);
+    assert_eq!(bin, bin2);
+}
+
+#[test]
+fn test_binrange_is_clone() {
+    let bin = ContinuousBinRange::new(0.0, 1.0);
+    assert_eq!(bin, bin.clone());
+}
+
+#[test]
+fn test_binrange_start_method() {
+    let underflow = ContinuousBinRange::underflow(0.0);
+    let overflow = ContinuousBinRange::overflow(1.0);
+    let bin = ContinuousBinRange::new(0.0, 1.0);
+    assert_eq!(bin.start(), Some(0.0));
+    assert_eq!(underflow.start(), None);
+    assert_eq!(overflow.start(), Some(1.0));
+}
+
+#[test]
+fn test_binrange_end_method() {
+    let underflow = ContinuousBinRange::underflow(0.0);
+    let overflow = ContinuousBinRange::overflow(1.0);
+    let bin = ContinuousBinRange::new(0.0, 1.0);
+    assert_eq!(bin.end(), Some(1.0));
+    assert_eq!(underflow.end(), Some(0.0));
+    assert_eq!(overflow.end(), None);
 }

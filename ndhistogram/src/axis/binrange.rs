@@ -3,7 +3,7 @@ use std::{
     fmt::Display,
     ops::{Range, RangeBounds, RangeFrom, RangeTo},
 };
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub enum ContinuousBinRange<T> {
     Underflow { end: T },
     Overflow { start: T },
