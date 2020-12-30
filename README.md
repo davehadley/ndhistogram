@@ -26,11 +26,14 @@ source install-hook.sh
 - [x] Make Histogram API match HashMap API.
 - [x] Histogram 1D underflow works as expected. --> make no distinction (except in BinRange enum), forces user to handle underflow/overflow
 - [x] Histogram 2D overflow works as expected.
-- [ ] Histogram/axis iteration.
-- [ ] Category axis.
-- [ ] AnyD histogram.
+- [ ] Test each axis method.
+- [ ] Test each histogram 1D method.
 - [ ] Growable axis.
 - [ ] Re-binnable axis.
+- [ ] Category axis.
+- [ ] Test each axis method.
+- [ ] Test each histogram 1D method.
+- [ ] AnyD histogram.
 - [ ] Check API and naming guidelines are met.
 - [ ] Documentation.
 - [ ] Make public on github.
