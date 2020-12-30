@@ -8,7 +8,6 @@ pub use uniform::Uniform;
 pub trait Axis: Clone {
     type Coordinate;
     type BinRange;
-    //type ItemIterator: Iterator<Item=(usize, Self::BinRange)>;
 
     fn index(&self, coordinate: Self::Coordinate) -> usize;
     fn numbins(&self) -> usize;
@@ -29,20 +28,3 @@ pub trait Axis: Clone {
         Box::new(self.indices().map(move |it| self.bin(it)))
     }
 }
-
-// trait IterAxis: Axis {
-//     type BinIterator;
-//     fn iter_indices(&self) -> std::ops::Range<usize> {
-//         0..self.size()
-//     }
-//     fn iter_bins(&self) -> Self::BinIterator;
-// }
-
-// impl <T> IntoIterator for T where T:Axis {
-//     type Item = (usize, T::BinRange);
-//     type IntoIter = ();
-
-//     fn into_iter(self) -> Self::IntoIter {
-//         self.iter_indices().map(|it| (it, self.bin(it)))
-//     }
-// }

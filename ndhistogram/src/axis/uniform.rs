@@ -90,3 +90,12 @@ impl Display for Uniform {
         )
     }
 }
+
+impl<'a> IntoIterator for &'a Uniform {
+    type Item = (usize, Option<<Uniform as Axis>::BinRange>);
+    type IntoIter = Box<dyn Iterator<Item = Self::Item> + 'a>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.iter()
+    }
+}
