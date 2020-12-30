@@ -30,7 +30,7 @@ pub struct Item<T, V> {
     pub value: V,
 }
 
-pub trait Histogram<'a, A: Axes, V: 'a + Value>: Clone {
+pub trait Histogram<'a, A: Axes, V: 'a>: Clone {
     type Values: Iterator<Item = &'a V>;
     type Iter: Iterator<Item = Item<A::BinRange, &'a V>>;
 
@@ -58,7 +58,7 @@ pub trait FillWeight<A: Axes, W> {
 //TODO: merge with histogram, I'm not sure that it makes sense for this to separate...
 // although it makes development easier as iter_mut can be hard to implement...
 // or it should be called something different like "DirectAccessHistogram"
-pub trait MutableHistogram<'a, A: Axes, V: 'a + Value>: Histogram<'a, A, V> {
+pub trait MutableHistogram<'a, A: Axes, V: 'a>: Histogram<'a, A, V> {
     type ValuesMut: Iterator<Item = &'a mut V>;
     type IterMut: Iterator<Item = Item<A::BinRange, &'a mut V>>;
 

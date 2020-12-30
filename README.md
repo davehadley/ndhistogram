@@ -23,7 +23,7 @@ source install-hook.sh
 - [x] Weighted Histogram 2D retrieving.
 - [x] Histogram 1D filling bin edges works as expected.
 - [x] Histogram 2D filling bin edges works as expected.
-- [ ] Make Histogram API match HashMap API.
+- [x] Make Histogram API match HashMap API.
 - [ ] Histogram 1D underflow works as expected.
 - [ ] Histogram 2D overflow works as expected.
 - [ ] Histogram/axis iteration.
@@ -39,7 +39,7 @@ source install-hook.sh
 - [ ] All Histograms must implement Display (enforce in trait?)
 - [ ] All Histograms must implement Eq (enforce in trait?)
 - [x] All Histograms must implement Index (enforce in trait?) --> decided against as Index can't return option, only panic on bad index.
-- [ ] Decide whether to merge Histogram traits into one big trait.
+- [ ] Decide if we want a trait alias that is "CompleteHistogram : Histogram + Fill + MutableHistogram + FillWeight"
 
 # Niggles
 
