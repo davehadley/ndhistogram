@@ -97,3 +97,13 @@ impl<'a, A: Axes, V: Value + 'a> IntoIterator for &'a ArrayHistogram<A, V> {
         self.iter()
     }
 }
+
+impl<'a, A: Axes, V: Value + 'a> IntoIterator for &'a mut ArrayHistogram<A, V> {
+    type Item = <<ArrayHistogram<A, V> as MutableHistogram<'a, A, V>>::IterMut as Iterator>::Item;
+
+    type IntoIter = <ArrayHistogram<A, V> as MutableHistogram<'a, A, V>>::IterMut;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.iter_mut()
+    }
+}
