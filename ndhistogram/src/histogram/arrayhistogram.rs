@@ -2,7 +2,7 @@ use std::{iter::Map, ops::AddAssign};
 
 use num::One;
 
-use super::{Fill, FillWeight, Histogram, Item, ItemMut, MutableHistogram};
+use super::{Fill, FillWeight, Histogram, Item, MutableHistogram};
 use crate::axes::Axes;
 
 #[derive(Debug)]
@@ -23,7 +23,7 @@ impl<A: Axes, V: Default + Clone> ArrayHistogram<A, V> {
 
 impl<'a, A: Axes, V: One + AddAssign + 'a> Histogram<'a, A, V> for ArrayHistogram<A, V> {
     type Values = std::slice::Iter<'a, V>;
-    type Iter = Box<dyn Iterator<Item = Item<'a, A::BinRange, V>> + 'a>;
+    type Iter = Box<dyn Iterator<Item = Item<A::BinRange, &'a V>> + 'a>;
 
     fn value(&self, coordinate: A::Coordinate) -> Option<&V> {
         let index = self.axes.index(coordinate);
@@ -67,7 +67,7 @@ impl<A: Axes, V: AddAssign<W>, W> FillWeight<A, W> for ArrayHistogram<A, V> {
 
 impl<'a, A: Axes, V: One + AddAssign + 'a> MutableHistogram<'a, A, V> for ArrayHistogram<A, V> {
     type ValuesMut = std::slice::IterMut<'a, V>;
-    type IterMut = Box<dyn Iterator<Item = ItemMut<'a, A::BinRange, V>> + 'a>;
+    type IterMut = Box<dyn Iterator<Item = Item<A::BinRange, &'a mut V>> + 'a>;
 
     fn value_at_index_mut(&mut self, index: usize) -> Option<&mut V> {
         self.values.get_mut(index)
@@ -82,7 +82,7 @@ impl<'a, A: Axes, V: One + AddAssign + 'a> MutableHistogram<'a, A, V> for ArrayH
             self.axes
                 .iter()
                 .zip(self.values.iter_mut())
-                .map(|((index, bin), value)| ItemMut { index, bin, value }),
+                .map(|((index, bin), value)| Item { index, bin, value }),
         )
     }
 }
