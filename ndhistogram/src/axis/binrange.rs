@@ -1,8 +1,9 @@
 use std::{
     convert::TryFrom,
+    fmt::Display,
     ops::{Range, RangeBounds, RangeFrom, RangeTo},
 };
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum ContinuousBinRange<T> {
     Underflow { end: T },
     Overflow { start: T },
@@ -90,5 +91,11 @@ impl<T> TryFrom<ContinuousBinRange<T>> for RangeFrom<T> {
             return Ok(RangeFrom { start });
         }
         Err(())
+    }
+}
+
+impl<T> Display for ContinuousBinRange<T> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        todo!();
     }
 }
