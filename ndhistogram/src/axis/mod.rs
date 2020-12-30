@@ -11,20 +11,17 @@ pub trait Axis: Clone {
 
     fn index(&self, coordinate: Self::Coordinate) -> usize;
     fn numbins(&self) -> usize;
-    fn size(&self) -> usize {
-        self.numbins() + 2
-    } // includes overflow and underflow
 
     fn bin(&self, index: usize) -> Option<Self::BinRange>;
 
     fn indices(&self) -> Box<dyn Iterator<Item = usize>> {
-        Box::new(0..self.size())
+        Box::new(0..self.numbins())
     }
 
-    fn iter<'a>(&'a self) -> Box<dyn Iterator<Item = (usize, Option<Self::BinRange>)> + 'a> {
-        Box::new(self.indices().map(move |it| (it, self.bin(it))))
+    fn iter<'a>(&'a self) -> Box<dyn Iterator<Item = (usize, Self::BinRange)> + 'a> {
+        Box::new(self.indices().map(move |it| (it, self.bin(it).unwrap())))
     }
-    fn bins<'a>(&'a self) -> Box<dyn Iterator<Item = Option<Self::BinRange>> + 'a> {
-        Box::new(self.indices().map(move |it| self.bin(it)))
+    fn bins<'a>(&'a self) -> Box<dyn Iterator<Item = Self::BinRange> + 'a> {
+        Box::new(self.indices().map(move |it| self.bin(it).unwrap()))
     }
 }

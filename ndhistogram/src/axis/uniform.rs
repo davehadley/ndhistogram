@@ -47,7 +47,7 @@ impl<T: Float> Axis for Uniform<T> {
     }
 
     fn numbins(&self) -> usize {
-        self.num
+        self.num + 2
     }
 
     fn bin(&self, index: usize) -> std::option::Option<<Self as Axis>::BinRange> {
@@ -61,12 +61,8 @@ impl<T: Float> Axis for Uniform<T> {
         Some(Self::BinRange::Bin { start, end })
     }
 
-    fn size(&self) -> usize {
-        self.numbins() + 2
-    }
-
     fn indices(&self) -> Box<dyn Iterator<Item = usize>> {
-        Box::new(0..self.size())
+        Box::new(0..self.numbins())
     }
 
     // fn items<'a>(&'a self) -> Box<dyn Iterator<Item = (usize, Option<Self::BinRange>)> + 'a> {
@@ -92,7 +88,7 @@ impl Display for Uniform {
 }
 
 impl<'a> IntoIterator for &'a Uniform {
-    type Item = (usize, Option<<Uniform as Axis>::BinRange>);
+    type Item = (usize, <Uniform as Axis>::BinRange);
     type IntoIter = Box<dyn Iterator<Item = Self::Item> + 'a>;
 
     fn into_iter(self) -> Self::IntoIter {

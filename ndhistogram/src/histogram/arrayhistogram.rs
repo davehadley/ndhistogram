@@ -14,7 +14,7 @@ pub struct ArrayHistogram<A, V: Clone> {
 
 impl<A: Axes, V: Default + Clone> ArrayHistogram<A, V> {
     pub fn new(axes: A) -> ArrayHistogram<A, V> {
-        let size = axes.size();
+        let size = axes.numbins();
         ArrayHistogram {
             axes,
             values: vec![V::default(); size],

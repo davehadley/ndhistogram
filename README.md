@@ -24,8 +24,8 @@ source install-hook.sh
 - [x] Histogram 1D filling bin edges works as expected.
 - [x] Histogram 2D filling bin edges works as expected.
 - [x] Make Histogram API match HashMap API.
-- [ ] Histogram 1D underflow works as expected.
-- [ ] Histogram 2D overflow works as expected.
+- [x] Histogram 1D underflow works as expected. --> make no distinction (except in BinRange enum), forces user to handle underflow/overflow
+- [x] Histogram 2D overflow works as expected.
 - [ ] Histogram/axis iteration.
 - [ ] Category axis.
 - [ ] AnyD histogram.

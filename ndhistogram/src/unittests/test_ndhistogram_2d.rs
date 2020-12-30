@@ -46,7 +46,7 @@ fn test_histogram_uniform_2d_unweighted_fill_bin_edges() {
     let actual: Vec<((usize, usize), f64)> = hist
         .axes()
         .bins()
-        .flatten()
+        //.flatten()
         .map(|bin| {
             (
                 (

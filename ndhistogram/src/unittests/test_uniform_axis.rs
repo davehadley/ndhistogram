@@ -5,15 +5,9 @@ use crate::axis::{Axis, Uniform};
 use std::{convert::TryFrom, ops::Range};
 
 #[test]
-fn test_uniform_size() {
-    let ax = Uniform::new(5, 0.0, 1.0);
-    assert_eq!(ax.size(), 5 + 2)
-}
-
-#[test]
 fn test_uniform_numbins() {
     let ax = Uniform::new(5, 0.0, 1.0);
-    assert_eq!(ax.numbins(), 5)
+    assert_eq!(ax.numbins(), 5 + 2)
 }
 
 #[test]
@@ -74,3 +68,13 @@ fn test_uniform_iterate_indices() {
     let expected = vec![0, 1, 2, 3, 4, 5, 6];
     assert_eq!(expected, actual);
 }
+
+// #[test]
+// fn test_uniform_iterate_items() {
+//     let ax = Uniform::new(2, 0.0, 1.0);
+//     let actual: Vec<_> = ax.into_iter().collect();
+//     let expected = vec![
+//         (0usize, ContinuousBinRange::Underflow{end:0.0f64}),
+//     ];
+//     assert_eq!(expected, actual);
+// }

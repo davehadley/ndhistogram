@@ -26,7 +26,7 @@ impl<T: AddOne + AddAssign + Clone> Value for T {}
 #[derive(Debug)]
 pub struct Item<T, V> {
     pub index: usize,
-    pub bin: Option<T>,
+    pub bin: T,
     pub value: V,
 }
 

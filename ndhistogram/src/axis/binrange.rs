@@ -9,6 +9,18 @@ pub enum ContinuousBinRange<T> {
     Bin { start: T, end: T },
 }
 
+impl<T> ContinuousBinRange<T> {
+    pub fn underflow(end: T) -> Self {
+        Self::Underflow { end }
+    }
+    pub fn overflow(start: T) -> Self {
+        Self::Overflow { start }
+    }
+    pub fn new(start: T, end: T) -> Self {
+        Self::Bin { start, end }
+    }
+}
+
 impl<T: Copy> ContinuousBinRange<T> {
     pub fn start(&self) -> Option<T> {
         match self {
