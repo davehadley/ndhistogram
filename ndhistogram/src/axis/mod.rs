@@ -5,7 +5,7 @@ pub mod binrange;
 mod uniform;
 pub use uniform::Uniform;
 
-pub trait Axis {
+pub trait Axis: Clone {
     type Coordinate;
     type BinRange;
     //type ItemIterator: Iterator<Item=(usize, Self::BinRange)>;

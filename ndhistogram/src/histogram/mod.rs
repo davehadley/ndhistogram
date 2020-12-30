@@ -6,7 +6,7 @@ pub struct Item<T, V> {
     pub value: V,
 }
 
-pub trait Histogram<'a, A: Axes, V: 'a> {
+pub trait Histogram<'a, A: Axes, V: 'a + Clone>: Clone {
     type Values: Iterator<Item = &'a V>;
     type Iter: Iterator<Item = Item<A::BinRange, &'a V>>;
 
@@ -31,7 +31,7 @@ pub trait FillWeight<A: Axes, W> {
     fn fill_weight(&mut self, coordinate: A::Coordinate, weight: W);
 }
 
-pub trait MutableHistogram<'a, A: Axes, V: 'a>: Histogram<'a, A, V> {
+pub trait MutableHistogram<'a, A: Axes, V: 'a + Clone>: Histogram<'a, A, V> {
     type ValuesMut: Iterator<Item = &'a mut V>;
     type IterMut: Iterator<Item = Item<A::BinRange, &'a mut V>>;
 
