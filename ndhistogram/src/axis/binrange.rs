@@ -94,8 +94,12 @@ impl<T> TryFrom<ContinuousBinRange<T>> for RangeFrom<T> {
     }
 }
 
-impl<T> Display for ContinuousBinRange<T> {
+impl<T: Display> Display for ContinuousBinRange<T> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        todo!();
+        match self {
+            ContinuousBinRange::Underflow { end } => write!(f, "(-inf, {})", end),
+            ContinuousBinRange::Overflow { start } => write!(f, "[{}, inf)", start),
+            ContinuousBinRange::Bin { start, end } => write!(f, "[{}, {})", start, end),
+        }
     }
 }

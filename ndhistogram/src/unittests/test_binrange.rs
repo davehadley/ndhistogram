@@ -1,3 +1,8 @@
+use std::{
+    convert::TryInto,
+    ops::{Range, RangeFrom, RangeTo},
+};
+
 use crate::axis::binrange::ContinuousBinRange;
 
 #[test]
@@ -61,4 +66,32 @@ fn test_binrange_overflow_display() {
 fn test_binrange_bin_display() {
     let bin = ContinuousBinRange::new(0.0, 1.0);
     println!("{}", bin);
+}
+
+#[test]
+fn test_binrange_bin_conversion() {
+    let start = 0.0;
+    let end = 1.0;
+    let bin = ContinuousBinRange::new(start, end);
+    let range: Range<_> = bin.try_into().unwrap();
+    assert_eq!(range.start, start);
+    assert_eq!(range.end, end);
+}
+
+#[test]
+#[allow(clippy::float_cmp)]
+fn test_binrange_underflow_conversion() {
+    let end = 1.0;
+    let bin = ContinuousBinRange::underflow(end);
+    let range: RangeTo<_> = bin.try_into().unwrap();
+    assert_eq!(range.end, end);
+}
+
+#[test]
+#[allow(clippy::float_cmp)]
+fn test_binrange_overflow_conversion() {
+    let start = 1.0;
+    let bin = ContinuousBinRange::overflow(start);
+    let range: RangeFrom<_> = bin.try_into().unwrap();
+    assert_eq!(range.start, start);
 }
