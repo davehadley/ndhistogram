@@ -2,7 +2,7 @@ use std::{iter::Map, ops::AddAssign};
 
 use num::One;
 
-use super::{Fill, FillWeight, Histogram, Item, MutableHistogram};
+use super::{Fill, FillWeight, Histogram, Item, MutableHistogram, Value};
 use crate::axes::Axes;
 
 #[derive(Debug, Clone)]
@@ -21,7 +21,7 @@ impl<A: Axes, V: Default + Clone> ArrayHistogram<A, V> {
     }
 }
 
-impl<'a, A: Axes, V: One + AddAssign + 'a + Clone> Histogram<'a, A, V> for ArrayHistogram<A, V> {
+impl<'a, A: Axes, V: 'a + Value> Histogram<'a, A, V> for ArrayHistogram<A, V> {
     type Values = std::slice::Iter<'a, V>;
     type Iter = Box<dyn Iterator<Item = Item<A::BinRange, &'a V>> + 'a>;
 
@@ -51,23 +51,21 @@ impl<'a, A: Axes, V: One + AddAssign + 'a + Clone> Histogram<'a, A, V> for Array
     }
 }
 
-impl<A: Axes, V: One + AddAssign + Clone> Fill<A> for ArrayHistogram<A, V> {
+impl<A: Axes, V: Value> Fill<A> for ArrayHistogram<A, V> {
     fn fill(&mut self, coordinate: A::Coordinate) {
         let index = self.axes.index(coordinate);
         self.values[index] += V::one();
     }
 }
 
-impl<A: Axes, V: AddAssign<W> + Clone, W> FillWeight<A, W> for ArrayHistogram<A, V> {
+impl<A: Axes, V: Value<W>, W> FillWeight<A, W> for ArrayHistogram<A, V> {
     fn fill_weight(&mut self, coordinate: A::Coordinate, weight: W) {
         let index = self.axes.index(coordinate);
         self.values[index] += weight;
     }
 }
 
-impl<'a, A: Axes, V: One + AddAssign + 'a + Clone> MutableHistogram<'a, A, V>
-    for ArrayHistogram<A, V>
-{
+impl<'a, A: Axes, V: 'a + Value> MutableHistogram<'a, A, V> for ArrayHistogram<A, V> {
     type ValuesMut = std::slice::IterMut<'a, V>;
     type IterMut = Box<dyn Iterator<Item = Item<A::BinRange, &'a mut V>> + 'a>;
 

@@ -1,4 +1,16 @@
+use std::{fmt::Display, ops::AddAssign};
+
 use crate::axes::Axes;
+
+// TODO: Replace with trait alias when stable
+// https://github.com/rust-lang/rfcs/blob/master/text/1733-trait-alias.md
+pub trait Value<Weight = Self>
+where
+    Self: One + AddAssign<Weight> + Clone,
+{
+}
+impl<T: One + AddAssign + Clone> Value for T {}
+
 #[derive(Debug)]
 pub struct Item<T, V> {
     pub index: usize,
@@ -6,7 +18,7 @@ pub struct Item<T, V> {
     pub value: V,
 }
 
-pub trait Histogram<'a, A: Axes, V: 'a + Clone>: Clone {
+pub trait Histogram<'a, A: Axes, V: 'a + Value>: Clone {
     type Values: Iterator<Item = &'a V>;
     type Iter: Iterator<Item = Item<A::BinRange, &'a V>>;
 
@@ -31,7 +43,7 @@ pub trait FillWeight<A: Axes, W> {
     fn fill_weight(&mut self, coordinate: A::Coordinate, weight: W);
 }
 
-pub trait MutableHistogram<'a, A: Axes, V: 'a + Clone>: Histogram<'a, A, V> {
+pub trait MutableHistogram<'a, A: Axes, V: 'a + Value>: Histogram<'a, A, V> {
     type ValuesMut: Iterator<Item = &'a mut V>;
     type IterMut: Iterator<Item = Item<A::BinRange, &'a mut V>>;
 
@@ -42,3 +54,4 @@ pub trait MutableHistogram<'a, A: Axes, V: 'a + Clone>: Histogram<'a, A, V> {
 
 mod arrayhistogram;
 pub use arrayhistogram::ArrayHistogram;
+use num::One;
