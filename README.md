@@ -36,6 +36,9 @@ source install-hook.sh
 - [ ] Make public on github.
 - [ ] Release to create.io.
 - [ ] numpy style slicing?
+- [ ] All Histograms must implement Display (enforce in trait?)
+- [ ] All Histograms must implement Eq (enforce in trait?)
+- [x] All Histograms must implement Index (enforce in trait?) --> decided against as Index can't return option, only panic on bad index.
 
 # Niggles
 

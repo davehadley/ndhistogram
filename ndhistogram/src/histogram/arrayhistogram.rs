@@ -1,4 +1,7 @@
-use std::{iter::Map, ops::AddAssign};
+use std::{
+    iter::Map,
+    ops::{AddAssign, Index},
+};
 
 use super::{Fill, FillWeight, Histogram, Item, MutableHistogram, Value};
 use crate::axes::Axes;
@@ -82,5 +85,15 @@ impl<'a, A: Axes, V: 'a + Value> MutableHistogram<'a, A, V> for ArrayHistogram<A
                 .zip(self.values.iter_mut())
                 .map(|((index, bin), value)| Item { index, bin, value }),
         )
+    }
+}
+
+impl<'a, A: Axes, V: Value + 'a> IntoIterator for &'a ArrayHistogram<A, V> {
+    type Item = <<ArrayHistogram<A, V> as Histogram<'a, A, V>>::Iter as Iterator>::Item;
+
+    type IntoIter = <ArrayHistogram<A, V> as Histogram<'a, A, V>>::Iter;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.iter()
     }
 }

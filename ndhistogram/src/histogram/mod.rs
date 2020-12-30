@@ -1,4 +1,7 @@
-use std::{fmt::Display, ops::AddAssign};
+use std::{
+    fmt::Display,
+    ops::{AddAssign, Index},
+};
 
 use crate::axes::Axes;
 
