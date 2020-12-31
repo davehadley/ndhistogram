@@ -46,3 +46,32 @@ fn test_histogram_uniform_1d_unweighted_fill_bin_edges() {
     let actual: Vec<f64> = hist.values().copied().collect();
     assert_eq!(actual, vec![1.0, 320.0, 54000.0, 7600000.0]);
 }
+
+#[test]
+fn test_histogram_uniform_1d_get_axes() {
+    let ax = Uniform::new(2, 0.0, 2.0);
+    let hist = ndhistogram!(ax.clone());
+    let axtuple = hist.axes();
+    assert_eq!(ax, axtuple.0);
+}
+
+#[test]
+fn test_histogram_uniform_1d_value_at_index() {
+    let mut hist = ndhistogram!(Uniform::new(2, 0.0, 2.0));
+    hist.fill(0.0);
+    assert_eq!(hist.value_at_index(0), Some(&0.0));
+    assert_eq!(hist.value_at_index(1), Some(&1.0));
+    assert_eq!(hist.value_at_index(2), Some(&0.0));
+    assert_eq!(hist.value_at_index(3), Some(&0.0));
+    assert_eq!(hist.value_at_index(4), None);
+}
+
+#[test]
+fn test_histogram_uniform_1d_value_at_coordinate() {
+    let mut hist = ndhistogram!(Uniform::new(2, 0.0, 2.0));
+    hist.fill(0.0);
+    assert_eq!(hist.value(0.0), Some(&1.0));
+    assert_eq!(hist.value(1.0), Some(&0.0));
+    assert_eq!(hist.value(-1.0), Some(&0.0));
+    assert_eq!(hist.value(2.0), Some(&0.0));
+}
