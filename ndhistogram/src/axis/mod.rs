@@ -20,11 +20,7 @@ pub trait Axis: Clone {
     }
 
     fn iter<'a>(&'a self) -> Box<dyn Iterator<Item = (usize, Self::BinRange)> + 'a> {
-        Box::new(self.indices().map(move |it| {
-            println!("{:?}", it);
-            println!("{:?}", self.bin(it).is_none());
-            (it, self.bin(it).unwrap())
-        }))
+        Box::new(self.indices().map(move |it| (it, self.bin(it).unwrap())))
     }
     fn bins<'a>(&'a self) -> Box<dyn Iterator<Item = Self::BinRange> + 'a> {
         Box::new(self.indices().map(move |it| self.bin(it).unwrap()))
