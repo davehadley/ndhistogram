@@ -82,10 +82,11 @@ fn test_histogram_uniform_1d_value_at_coordinate() {
 #[test]
 fn test_histogram_value_iterator() {
     let mut hist = ndhistogram!(Uniform::new(5, 0.0, 5.0));
-    let mut rng = thread_rng();
-    let norm = Normal::new(0.0, 5.0).unwrap();
-    let mut normiter = norm.sample_iter(&mut rng);
-    (0..100).for_each(|_| hist.fill(normiter.next().unwrap()));
+    Normal::new(0.0, 5.0)
+        .unwrap()
+        .sample_iter(thread_rng())
+        .take(100)
+        .for_each(|it| hist.fill(it));
     let actual: Vec<_> = hist.values().collect();
     let expected: Vec<_> = (0..7).map(|it| hist.value_at_index(it).unwrap()).collect();
     assert_eq!(actual, expected);
