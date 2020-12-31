@@ -3,7 +3,9 @@ use std::{
     ops::{AddAssign, Index},
 };
 
-use super::{Fill, FillWeight, Histogram, Item, MutableHistogram, Value};
+use super::{
+    Fill, FillWeight, Histogram, Item, Iter, IterMut, MutableHistogram, Value, Values, ValuesMut,
+};
 use crate::axes::Axes;
 
 #[derive(Debug, Clone)]
@@ -22,10 +24,7 @@ impl<A: Axes, V: Default + Clone> ArrayHistogram<A, V> {
     }
 }
 
-impl<'a, A: Axes, V: 'a + Value> Histogram<'a, A, V> for ArrayHistogram<A, V> {
-    type Values = std::slice::Iter<'a, V>;
-    type Iter = Box<dyn Iterator<Item = Item<A::BinRange, &'a V>> + 'a>;
-
+impl<A: Axes, V: Value> Histogram<A, V> for ArrayHistogram<A, V> {
     fn value(&self, coordinate: A::Coordinate) -> Option<&V> {
         let index = self.axes.index(coordinate);
         self.values.get(index)
@@ -39,11 +38,11 @@ impl<'a, A: Axes, V: 'a + Value> Histogram<'a, A, V> for ArrayHistogram<A, V> {
         self.values.get(index)
     }
 
-    fn values(&'a self) -> Self::Values {
-        self.values.iter()
+    fn values<'a>(&'a self) -> Box<dyn Iterator<Item = &'a V> + 'a> {
+        Box::new(self.values.iter())
     }
 
-    fn iter(&'a self) -> Self::Iter {
+    fn iter<'a>(&'a self) -> Box<dyn Iterator<Item = Item<A::BinRange, &'a V>> + 'a> {
         Box::new(self.axes().iter().map(move |(index, binrange)| Item {
             index,
             bin: binrange,
@@ -66,19 +65,16 @@ impl<A: Axes, V: Value<W>, W> FillWeight<A, W> for ArrayHistogram<A, V> {
     }
 }
 
-impl<'a, A: Axes, V: 'a + Value> MutableHistogram<'a, A, V> for ArrayHistogram<A, V> {
-    type ValuesMut = std::slice::IterMut<'a, V>;
-    type IterMut = Box<dyn Iterator<Item = Item<A::BinRange, &'a mut V>> + 'a>;
-
+impl<A: Axes, V: Value> MutableHistogram<A, V> for ArrayHistogram<A, V> {
     fn value_at_index_mut(&mut self, index: usize) -> Option<&mut V> {
         self.values.get_mut(index)
     }
 
-    fn values_mut(&'a mut self) -> Self::ValuesMut {
-        self.values.iter_mut()
+    fn values_mut(&mut self) -> ValuesMut<'_, V> {
+        Box::new(self.values.iter_mut())
     }
 
-    fn iter_mut(&'a mut self) -> Self::IterMut {
+    fn iter_mut(&mut self) -> IterMut<'_, A, V> {
         Box::new(
             self.axes
                 .iter()
@@ -88,10 +84,10 @@ impl<'a, A: Axes, V: 'a + Value> MutableHistogram<'a, A, V> for ArrayHistogram<A
     }
 }
 
-impl<'a, A: Axes, V: Value + 'a> IntoIterator for &'a ArrayHistogram<A, V> {
-    type Item = <<ArrayHistogram<A, V> as Histogram<'a, A, V>>::Iter as Iterator>::Item;
+impl<'a, A: Axes, V: Value> IntoIterator for &'a ArrayHistogram<A, V> {
+    type Item = Item<A::BinRange, &'a V>;
 
-    type IntoIter = <ArrayHistogram<A, V> as Histogram<'a, A, V>>::Iter;
+    type IntoIter = Iter<'a, A, V>;
 
     fn into_iter(self) -> Self::IntoIter {
         self.iter()
@@ -99,9 +95,9 @@ impl<'a, A: Axes, V: Value + 'a> IntoIterator for &'a ArrayHistogram<A, V> {
 }
 
 impl<'a, A: Axes, V: Value + 'a> IntoIterator for &'a mut ArrayHistogram<A, V> {
-    type Item = <<ArrayHistogram<A, V> as MutableHistogram<'a, A, V>>::IterMut as Iterator>::Item;
+    type Item = Item<A::BinRange, &'a mut V>;
 
-    type IntoIter = <ArrayHistogram<A, V> as MutableHistogram<'a, A, V>>::IterMut;
+    type IntoIter = IterMut<'a, A, V>;
 
     fn into_iter(self) -> Self::IntoIter {
         self.iter_mut()

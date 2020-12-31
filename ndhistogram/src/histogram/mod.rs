@@ -3,7 +3,7 @@ use std::{
     ops::{AddAssign, Index},
 };
 
-use crate::axes::Axes;
+use crate::{axes::Axes, axis::Axis};
 
 pub trait AddOne {
     fn add_one(&mut self);
@@ -36,10 +36,13 @@ impl<T, V> Item<T, V> {
     }
 }
 
-pub trait Histogram<'a, A: Axes, V: 'a>: Clone {
-    type Values: Iterator<Item = &'a V>;
-    type Iter: Iterator<Item = Item<A::BinRange, &'a V>>;
+type Values<'a, V> = Box<dyn Iterator<Item = &'a V> + 'a>;
+type Iter<'a, A, V> = Box<dyn Iterator<Item = Item<<A as Axis>::BinRange, &'a V>> + 'a>;
 
+type ValuesMut<'a, V> = Box<dyn Iterator<Item = &'a mut V> + 'a>;
+type IterMut<'a, A, V> = Box<dyn Iterator<Item = Item<<A as Axis>::BinRange, &'a mut V>> + 'a>;
+
+pub trait Histogram<A: Axes, V>: Clone {
     fn axes(&self) -> &A;
 
     fn value_at_index(&self, index: usize) -> Option<&V>;
@@ -49,8 +52,8 @@ pub trait Histogram<'a, A: Axes, V: 'a>: Clone {
         self.value_at_index(index)
     }
 
-    fn values(&'a self) -> Self::Values;
-    fn iter(&'a self) -> Self::Iter;
+    fn values(&self) -> Values<'_, V>;
+    fn iter(&self) -> Iter<'_, A, V>;
 }
 
 pub trait Fill<A: Axes> {
@@ -64,18 +67,15 @@ pub trait FillWeight<A: Axes, W> {
 //TODO: merge with histogram, I'm not sure that it makes sense for this to separate...
 // although it makes development easier as iter_mut can be hard to implement...
 // or it should be called something different like "DirectAccessHistogram"
-pub trait MutableHistogram<'a, A: Axes, V: 'a>: Histogram<'a, A, V> {
-    type ValuesMut: Iterator<Item = &'a mut V>;
-    type IterMut: Iterator<Item = Item<A::BinRange, &'a mut V>>;
-
+pub trait MutableHistogram<A: Axes, V>: Histogram<A, V> {
     fn value_at_index_mut(&mut self, index: usize) -> Option<&mut V>;
     fn value_mut(&mut self, coordinate: A::Coordinate) -> Option<&mut V> {
         let index = self.axes().index(coordinate);
         self.value_at_index_mut(index)
     }
 
-    fn values_mut(&'a mut self) -> Self::ValuesMut;
-    fn iter_mut(&'a mut self) -> Self::IterMut;
+    fn values_mut(&mut self) -> ValuesMut<'_, V>;
+    fn iter_mut(&mut self) -> IterMut<'_, A, V>;
 }
 
 mod arrayhistogram;

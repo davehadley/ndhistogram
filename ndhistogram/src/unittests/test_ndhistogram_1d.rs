@@ -79,7 +79,7 @@ fn test_histogram_uniform_1d_value_at_coordinate() {
     assert_eq!(hist.value(2.0), Some(&0.0));
 }
 
-fn make_normal_histogram() -> ArrayHistogram<(Uniform,), f64> {
+fn make_normal_histogram() -> impl Histogram<(Uniform,), f64> {
     let mut hist = ndhistogram!(Uniform::new(5, 0.0, 5.0));
     Normal::new(0.0, 5.0)
         .unwrap()
@@ -100,7 +100,7 @@ fn test_histogram_value_iterator() {
 #[test]
 fn test_histogram_item_iterator() {
     let hist = make_normal_histogram();
-    let actual: Vec<_> = hist.into_iter().collect();
+    let actual: Vec<_> = hist.iter().collect();
     let expected: Vec<_> = (0..7)
         .map(|it| {
             Item::new(
