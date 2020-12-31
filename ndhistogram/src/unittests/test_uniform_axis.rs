@@ -94,3 +94,15 @@ fn test_uniform_iterate_items() {
     ];
     assert_eq!(expected, actual);
 }
+
+#[test]
+fn test_uniform_iterate_bin() {
+    let ax = Uniform::new(1, 0.0, 1.0);
+    let actual: Vec<_> = ax.bins().collect();
+    let expected: Vec<_> = vec![
+        ContinuousBinRange::underflow(0.0),
+        ContinuousBinRange::new(0.0, 1.0),
+        ContinuousBinRange::overflow(1.0),
+    ];
+    assert_eq!(expected, actual);
+}
