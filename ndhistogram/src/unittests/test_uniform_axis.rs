@@ -106,3 +106,11 @@ fn test_uniform_iterate_bin() {
     ];
     assert_eq!(expected, actual);
 }
+
+#[test]
+fn test_iter_axis() {
+    let ax = Uniform::new(100, 0.0, 100.0);
+    let expected: Vec<_> = ax.iter().collect();
+    let actual: Vec<_> = ax.into_iter().collect();
+    assert_eq!(expected, actual);
+}
