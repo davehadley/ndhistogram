@@ -3,7 +3,7 @@ use rand_distr::{Distribution, Normal};
 
 use crate::{
     axis::{Axis, Uniform},
-    histogram::{ArrayHistogram, Fill, FillWeight, Histogram, Item},
+    histogram::{ArrayHistogram, Fill, FillWeight, Histogram, Item, MutableHistogram},
 };
 
 #[test]
@@ -111,4 +111,52 @@ fn test_histogram_item_iterator() {
         })
         .collect();
     assert_eq!(actual, expected);
+}
+
+#[test]
+fn test_histogram_uniform_1d_value_at_index_mut() {
+    let mut hist = ndhistogram!(Uniform::new(2, 0.0, 2.0));
+    *(hist.value_at_index_mut(1).unwrap()) = 2.0;
+    assert_eq!(hist.value_at_index(0), Some(&0.0));
+    assert_eq!(hist.value_at_index(1), Some(&2.0));
+    assert_eq!(hist.value_at_index(2), Some(&0.0));
+    assert_eq!(hist.value_at_index(3), Some(&0.0));
+    assert_eq!(hist.value_at_index(4), None);
+}
+
+#[test]
+fn test_histogram_uniform_1d_value_mut() {
+    let mut hist = ndhistogram!(Uniform::new(2, 0.0, 2.0));
+    *(hist.value_mut(0.0).unwrap()) = 2.0;
+    assert_eq!(hist.value_at_index(0), Some(&0.0));
+    assert_eq!(hist.value_at_index(1), Some(&2.0));
+    assert_eq!(hist.value_at_index(2), Some(&0.0));
+    assert_eq!(hist.value_at_index(3), Some(&0.0));
+    assert_eq!(hist.value_at_index(4), None);
+}
+
+#[test]
+fn test_histogram_uniform_1d_iter_values_mut() {
+    let mut hist = ndhistogram!(Uniform::new(2, 0.0, 2.0));
+    hist.values_mut()
+        .enumerate()
+        .for_each(|(index, value)| *value = index as f64);
+    assert_eq!(hist.value_at_index(0), Some(&0.0));
+    assert_eq!(hist.value_at_index(1), Some(&1.0));
+    assert_eq!(hist.value_at_index(2), Some(&2.0));
+    assert_eq!(hist.value_at_index(3), Some(&3.0));
+    assert_eq!(hist.value_at_index(4), None);
+}
+
+#[test]
+fn test_histogram_uniform_1d_iter_mut() {
+    let mut hist = ndhistogram!(Uniform::new(2, 0.0, 2.0));
+    (&mut hist)
+        .into_iter()
+        .for_each(|item| *item.value = item.index as f64);
+    assert_eq!(hist.value_at_index(0), Some(&0.0));
+    assert_eq!(hist.value_at_index(1), Some(&1.0));
+    assert_eq!(hist.value_at_index(2), Some(&2.0));
+    assert_eq!(hist.value_at_index(3), Some(&3.0));
+    assert_eq!(hist.value_at_index(4), None);
 }

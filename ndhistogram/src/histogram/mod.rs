@@ -69,6 +69,11 @@ pub trait MutableHistogram<'a, A: Axes, V: 'a>: Histogram<'a, A, V> {
     type IterMut: Iterator<Item = Item<A::BinRange, &'a mut V>>;
 
     fn value_at_index_mut(&mut self, index: usize) -> Option<&mut V>;
+    fn value_mut(&mut self, coordinate: A::Coordinate) -> Option<&mut V> {
+        let index = self.axes().index(coordinate);
+        self.value_at_index_mut(index)
+    }
+
     fn values_mut(&'a mut self) -> Self::ValuesMut;
     fn iter_mut(&'a mut self) -> Self::IterMut;
 }
