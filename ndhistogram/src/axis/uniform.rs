@@ -51,14 +51,16 @@ impl<T: Float> Axis for Uniform<T> {
     }
 
     fn bin(&self, index: usize) -> std::option::Option<<Self as Axis>::BinRange> {
-        if index == 0 || (index - 1) >= self.num {
+        if index == 0 {
+            return Some(Self::BinRange::underflow(self.low));
+        } else if index == (self.num + 1) {
+            return Some(Self::BinRange::overflow(self.high));
+        } else if index > (self.num + 1) {
             return None;
         }
-        // let start = ((index - 1) as f64) * (self.high - self.low) / (self.num as f64);
-        // let end = (index as f64) * (self.high - self.low) / (self.num as f64);
         let start = (T::from(index - 1)?) * (self.high - self.low) / (T::from(self.num)?);
         let end = (T::from(index)?) * (self.high - self.low) / (T::from(self.num)?);
-        Some(Self::BinRange::Bin { start, end })
+        Some(Self::BinRange::new(start, end))
     }
 
     fn indices(&self) -> Box<dyn Iterator<Item = usize>> {

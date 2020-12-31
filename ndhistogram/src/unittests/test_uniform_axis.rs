@@ -19,6 +19,19 @@ fn test_uniform_get_index() {
 }
 
 #[test]
+fn test_uniform_get_bin() {
+    let ax = Uniform::new(1, 0.0, 1.0);
+    let actual: Vec<_> = (0..4).map(|it| ax.bin(it)).collect();
+    let expected: Vec<_> = vec![
+        Some(ContinuousBinRange::underflow(0.0)),
+        Some(ContinuousBinRange::new(0.0, 1.0)),
+        Some(ContinuousBinRange::overflow(1.0)),
+        None,
+    ];
+    assert_eq!(expected, actual);
+}
+
+#[test]
 fn test_uniform_get_edges() {
     let ax = Uniform::new(5, 0.0, 1.0);
     let actual: Vec<Range<f64>> = Range::<i32> { start: -2, end: 7 }
@@ -69,12 +82,15 @@ fn test_uniform_iterate_indices() {
     assert_eq!(expected, actual);
 }
 
-// #[test]
-// fn test_uniform_iterate_items() {
-//     let ax = Uniform::new(2, 0.0, 1.0);
-//     let actual: Vec<_> = ax.into_iter().collect();
-//     let expected = vec![
-//         (0usize, ContinuousBinRange::Underflow{end:0.0f64}),
-//     ];
-//     assert_eq!(expected, actual);
-// }
+#[test]
+fn test_uniform_iterate_items() {
+    let ax = Uniform::new(2, 0.0, 2.0);
+    let actual: Vec<_> = ax.into_iter().collect();
+    let expected: Vec<(usize, _)> = vec![
+        (0, ContinuousBinRange::underflow(0.0)),
+        (1, ContinuousBinRange::new(0.0, 1.0)),
+        (2, ContinuousBinRange::new(1.0, 2.0)),
+        (3, ContinuousBinRange::overflow(2.0)),
+    ];
+    assert_eq!(expected, actual);
+}
