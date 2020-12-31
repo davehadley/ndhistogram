@@ -23,11 +23,17 @@ where
 }
 impl<T: AddOne + AddAssign + Clone> Value for T {}
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct Item<T, V> {
     pub index: usize,
     pub bin: T,
     pub value: V,
+}
+
+impl<T, V> Item<T, V> {
+    pub fn new(index: usize, bin: T, value: V) -> Item<T, V> {
+        Item { index, bin, value }
+    }
 }
 
 pub trait Histogram<'a, A: Axes, V: 'a>: Clone {

@@ -3,7 +3,7 @@ use rand_distr::{Distribution, Normal};
 
 use crate::{
     axis::{Axis, Uniform},
-    histogram::{Fill, FillWeight, Histogram},
+    histogram::{ArrayHistogram, Fill, FillWeight, Histogram, Item},
 };
 
 #[test]
@@ -79,15 +79,36 @@ fn test_histogram_uniform_1d_value_at_coordinate() {
     assert_eq!(hist.value(2.0), Some(&0.0));
 }
 
-#[test]
-fn test_histogram_value_iterator() {
+fn make_normal_histogram() -> ArrayHistogram<(Uniform,), f64> {
     let mut hist = ndhistogram!(Uniform::new(5, 0.0, 5.0));
     Normal::new(0.0, 5.0)
         .unwrap()
         .sample_iter(thread_rng())
         .take(100)
         .for_each(|it| hist.fill(it));
+    hist
+}
+
+#[test]
+fn test_histogram_value_iterator() {
+    let hist = make_normal_histogram();
     let actual: Vec<_> = hist.values().collect();
     let expected: Vec<_> = (0..7).map(|it| hist.value_at_index(it).unwrap()).collect();
+    assert_eq!(actual, expected);
+}
+
+#[test]
+fn test_histogram_item_iterator() {
+    let hist = make_normal_histogram();
+    let actual: Vec<_> = hist.into_iter().collect();
+    let expected: Vec<_> = (0..7)
+        .map(|it| {
+            Item::new(
+                it,
+                hist.axes().bin(it).unwrap(),
+                hist.value_at_index(it).unwrap(),
+            )
+        })
+        .collect();
     assert_eq!(actual, expected);
 }
