@@ -26,7 +26,7 @@ impl<A: Axes, V: Default + Clone> ArrayHistogram<A, V> {
 
 impl<A: Axes, V: Value> Histogram<A, V> for ArrayHistogram<A, V> {
     fn value(&self, coordinate: A::Coordinate) -> Option<&V> {
-        let index = self.axes.index(coordinate);
+        let index = self.axes.index(coordinate)?;
         self.values.get(index)
     }
 
@@ -54,14 +54,18 @@ impl<A: Axes, V: Value> Histogram<A, V> for ArrayHistogram<A, V> {
 impl<A: Axes, V: Value> Fill<A> for ArrayHistogram<A, V> {
     fn fill(&mut self, coordinate: A::Coordinate) {
         let index = self.axes.index(coordinate);
-        self.values[index].add_one();
+        if let Some(index) = index {
+            self.values[index].add_one();
+        }
     }
 }
 
 impl<A: Axes, V: Value<W>, W> FillWeight<A, W> for ArrayHistogram<A, V> {
     fn fill_weight(&mut self, coordinate: A::Coordinate, weight: W) {
         let index = self.axes.index(coordinate);
-        self.values[index] += weight;
+        if let Some(index) = index {
+            self.values[index] += weight;
+        }
     }
 }
 

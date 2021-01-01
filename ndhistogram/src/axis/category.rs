@@ -30,8 +30,8 @@ impl<T: Value> Axis for Category<T> {
 
     type BinRange = SingleValuedBinRange<T>;
 
-    fn index(&self, coordinate: Self::Coordinate) -> usize {
-        *(self.map.get(&coordinate).unwrap())
+    fn index(&self, coordinate: Self::Coordinate) -> Option<usize> {
+        Some(*(self.map.get(&coordinate)?))
     }
 
     fn numbins(&self) -> usize {

@@ -12,7 +12,7 @@ fn test_category_numbins() {
 fn test_category_get_index() {
     let cats: Vec<_> = vec!["A", "B"];
     let ax = Category::<&str>::new(cats.clone());
-    let actual: Vec<usize> = cats.iter().map(|c| ax.index(c)).collect();
+    let actual: Vec<usize> = cats.iter().map(|c| ax.index(c).unwrap()).collect();
     let expected = vec![1, 2];
     assert_eq!(expected, actual)
 }
@@ -21,7 +21,7 @@ fn test_category_get_index() {
 fn test_category_get_index_overflow() {
     let cats = ["A", "B", "C"];
     let ax = Category::new(&cats);
-    assert_eq!(ax.index(&"D"), 0)
+    assert_eq!(ax.index(&"D").unwrap(), 0)
 }
 
 // #[test]

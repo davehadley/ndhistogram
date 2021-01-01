@@ -16,7 +16,7 @@ pub trait Axis: Clone {
     type Coordinate;
     type BinRange;
 
-    fn index(&self, coordinate: Self::Coordinate) -> usize;
+    fn index(&self, coordinate: Self::Coordinate) -> Option<usize>;
     fn numbins(&self) -> usize;
 
     fn bin(&self, index: usize) -> Option<Self::BinRange>;

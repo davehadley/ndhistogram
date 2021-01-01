@@ -35,15 +35,15 @@ impl<T: Float> Axis for Uniform<T> {
     type Coordinate = T;
     type BinRange = ContinuousBinRange<T>;
 
-    fn index(&self, coordinate: Self::Coordinate) -> usize {
+    fn index(&self, coordinate: Self::Coordinate) -> Option<usize> {
         let frac = (coordinate - self.low) / (self.high - self.low);
         if frac < T::zero() {
-            return 0;
+            return Some(0);
         } else if frac >= T::one() {
-            return self.num + 1;
+            return Some(self.num + 1);
         }
         let idx: T = T::from(self.num).unwrap() * frac;
-        (idx.to_usize().unwrap()) + 1
+        Some((idx.to_usize().unwrap()) + 1)
     }
 
     fn numbins(&self) -> usize {

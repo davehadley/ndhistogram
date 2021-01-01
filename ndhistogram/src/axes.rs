@@ -8,7 +8,7 @@ impl<X: Axis> Axis for (X,) {
     type Coordinate = X::Coordinate;
     type BinRange = X::BinRange;
 
-    fn index(&self, coordinate: Self::Coordinate) -> usize {
+    fn index(&self, coordinate: Self::Coordinate) -> Option<usize> {
         self.0.index(coordinate)
     }
 
@@ -27,10 +27,10 @@ impl<X: Axis, Y: Axis> Axis for (X, Y) {
     type Coordinate = (X::Coordinate, Y::Coordinate);
     type BinRange = (X::BinRange, Y::BinRange);
 
-    fn index(&self, coordinate: Self::Coordinate) -> usize {
-        let ix = self.0.index(coordinate.0);
-        let iy = self.1.index(coordinate.1);
-        ix + self.0.numbins() * iy
+    fn index(&self, coordinate: Self::Coordinate) -> Option<usize> {
+        let ix = self.0.index(coordinate.0)?;
+        let iy = self.1.index(coordinate.1)?;
+        Some(ix + self.0.numbins() * iy)
     }
 
     fn numbins(&self) -> usize {
