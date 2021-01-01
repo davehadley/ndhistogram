@@ -36,6 +36,8 @@ impl<T, V> Item<T, V> {
     }
 }
 
+// TODO: Using generic associated types would give a cleaner interface and avoid boxing the iterators
+// https://github.com/rust-lang/rfcs/blob/master/text/1598-generic_associated_types.md
 type Values<'a, V> = Box<dyn Iterator<Item = &'a V> + 'a>;
 type Iter<'a, A, V> = Box<dyn Iterator<Item = Item<<A as Axis>::BinRange, &'a V>> + 'a>;
 
