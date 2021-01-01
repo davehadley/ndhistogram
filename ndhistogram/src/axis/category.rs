@@ -1,39 +1,44 @@
 use std::collections::HashMap;
+use std::hash::Hash;
 
 use super::binrange::SingleValuedBinRange;
 use super::Axis;
 
+// Type-bound alias
+pub trait Value: Eq + Hash + Clone {}
+impl<T: Eq + Hash + Clone> Value for T {}
+
 #[derive(Debug, Clone)]
-pub struct Category<T = String> {
+pub struct Category<T> {
     map: HashMap<T, usize>,
 }
 
-// impl<T> Axis for Category<T> {
-//     type Coordinate = T;
+impl<T: Value> Category<T> {
+    pub fn new<I: IntoIterator<Item = T>>(values: I) -> Category<T> {
+        Category {
+            map: values
+                .into_iter()
+                .enumerate()
+                .map(|(index, value)| (value, index))
+                .collect(),
+        }
+    }
+}
 
-//     type BinRange = SingleValuedBinRange;
+impl<T: Value> Axis for Category<T> {
+    type Coordinate = T;
 
-//     fn index(&self, coordinate: Self::Coordinate) -> usize {
-//         todo!()
-//     }
+    type BinRange = SingleValuedBinRange<T>;
 
-//     fn numbins(&self) -> usize {
-//         todo!()
-//     }
+    fn index(&self, coordinate: Self::Coordinate) -> usize {
+        *(self.map.get(&coordinate).unwrap())
+    }
 
-//     fn bin(&self, index: usize) -> Option<Self::BinRange> {
-//         todo!()
-//     }
+    fn numbins(&self) -> usize {
+        self.map.len() + 1
+    }
 
-//     fn indices(&self) -> Box<dyn Iterator<Item = usize>> {
-//         Box::new(0..super.numbins())
-//     }
-
-//     fn iter<'a>(&'a self) -> Box<dyn Iterator<Item = (usize, Self::BinRange)> + 'a> {
-//         Box::new(super.indices().map(move |it| (it, super.bin(it).unwrap())))
-//     }
-
-//     fn bins<'a>(&'a self) -> Box<dyn Iterator<Item = Self::BinRange> + 'a> {
-//         Box::new(super.indices().map(move |it| super.bin(it).unwrap()))
-//     }
-// }
+    fn bin(&self, index: usize) -> Option<Self::BinRange> {
+        todo!()
+    }
+}

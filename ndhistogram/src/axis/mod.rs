@@ -1,12 +1,16 @@
 use std::fmt::Debug;
+use std::fmt::Display;
 use std::ops::Range;
-use std::{collections::binary_heap::Iter, fmt::Display};
 
 pub mod binrange;
 mod uniform;
 pub use uniform::Uniform;
 mod category;
 pub use category::Category;
+
+type Iter<'a, BinRange> = Box<dyn Iterator<Item = (usize, BinRange)> + 'a>;
+type Indices = Box<dyn Iterator<Item = usize>>;
+type Bins<'a, BinRange> = Box<dyn Iterator<Item = BinRange> + 'a>;
 
 pub trait Axis: Clone {
     type Coordinate;
@@ -17,15 +21,15 @@ pub trait Axis: Clone {
 
     fn bin(&self, index: usize) -> Option<Self::BinRange>;
 
-    fn indices(&self) -> Box<dyn Iterator<Item = usize>> {
+    fn indices(&self) -> Indices {
         Box::new(0..self.numbins())
     }
 
-    fn iter<'a>(&'a self) -> Box<dyn Iterator<Item = (usize, Self::BinRange)> + 'a> {
+    fn iter(&self) -> Iter<'_, Self::BinRange> {
         Box::new(self.indices().map(move |it| (it, self.bin(it).unwrap())))
     }
 
-    fn bins<'a>(&'a self) -> Box<dyn Iterator<Item = Self::BinRange> + 'a> {
+    fn bins(&self) -> Bins<'_, Self::BinRange> {
         Box::new(self.indices().map(move |it| self.bin(it).unwrap()))
     }
 }
