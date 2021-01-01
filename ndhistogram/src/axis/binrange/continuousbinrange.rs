@@ -1,3 +1,5 @@
+// TODO: rename to in BinInterval (as this object is valid for discrete values eg integers)
+
 use std::{
     convert::TryFrom,
     fmt::Display,

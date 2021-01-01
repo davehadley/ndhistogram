@@ -5,6 +5,8 @@ use std::{collections::binary_heap::Iter, fmt::Display};
 pub mod binrange;
 mod uniform;
 pub use uniform::Uniform;
+mod category;
+pub use category::Category;
 
 pub trait Axis: Clone {
     type Coordinate;
