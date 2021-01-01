@@ -24,19 +24,20 @@ fn test_category_get_index_overflow() {
     assert_eq!(ax.index(&"D").unwrap(), 0)
 }
 
-// #[test]
-// fn test_category_get_bin() {
-//     let cats = ["A", "B", "C"];
-//     let ax = Category::new(1, 0.0, 1.0);
-//     let actual: Vec<_> = (0..4).map(|it| ax.bin(it)).collect();
-//     let expected: Vec<_> = vec![
-//         Some(ContinuousBinRange::underflow(0.0)),
-//         Some(ContinuousBinRange::new(0.0, 1.0)),
-//         Some(ContinuousBinRange::overflow(1.0)),
-//         None,
-//     ];
-//     assert_eq!(expected, actual);
-// }
+#[test]
+fn test_category_get_bin() {
+    let cats = ["A", "B", "C"];
+    let ax = Category::new(&cats);
+    let actual: Vec<_> = (0..4).map(|it| ax.bin(it)).collect();
+    let expected: Vec<_> = vec![
+        Some(SingleValuedBinRange::new(&"A")),
+        Some(SingleValuedBinRange::new(&"B")),
+        Some(SingleValuedBinRange::new(&"C")),
+        Some(SingleValuedBinRange::overflow()),
+        None,
+    ];
+    assert_eq!(expected, actual);
+}
 
 // #[test]
 // fn test_category_get_edges() {
