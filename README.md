@@ -27,7 +27,7 @@ source install-hook.sh
 - [x] Histogram 1D underflow works as expected. --> make no distinction (except in BinRange enum), forces user to handle underflow/overflow
 - [x] Histogram 2D overflow works as expected.
 - [x] Test each axis method.
-- [ ] Test each histogram 1D method.
+- [x] Test each histogram 1D method.
 - [ ] Growable axis.
 - [ ] Re-binnable axis.
 - [ ] Category axis.
