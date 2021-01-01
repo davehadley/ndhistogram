@@ -19,7 +19,7 @@ impl<T: Value> Category<T> {
             map: values
                 .into_iter()
                 .enumerate()
-                .map(|(index, value)| (value, index))
+                .map(|(index, value)| (value, index + 1))
                 .collect(),
         }
     }
@@ -31,7 +31,11 @@ impl<T: Value> Axis for Category<T> {
     type BinRange = SingleValuedBinRange<T>;
 
     fn index(&self, coordinate: Self::Coordinate) -> Option<usize> {
-        Some(*(self.map.get(&coordinate)?))
+        let index = self.map.get(&coordinate);
+        match index {
+            Some(index) => Some(*index),
+            None => Some(0),
+        }
     }
 
     fn numbins(&self) -> usize {
