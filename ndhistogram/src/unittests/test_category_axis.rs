@@ -13,22 +13,22 @@ fn test_category_get_index() {
     let cats: Vec<_> = vec!["A", "B"];
     let ax = Category::<&str>::new(cats.clone());
     let actual: Vec<usize> = cats.iter().map(|c| ax.index(c).unwrap()).collect();
-    let expected = vec![1, 2];
+    let expected = vec![0, 1];
     assert_eq!(expected, actual)
 }
 
 #[test]
 fn test_category_get_index_overflow() {
-    let cats = ["A", "B", "C"];
+    let cats = ["A", "B"];
     let ax = Category::new(&cats);
-    assert_eq!(ax.index(&"D").unwrap(), 0)
+    assert_eq!(ax.index(&"D").unwrap(), 2)
 }
 
 #[test]
 fn test_category_get_bin() {
     let cats = ["A", "B", "C"];
     let ax = Category::new(&cats);
-    let actual: Vec<_> = (0..4).map(|it| ax.bin(it)).collect();
+    let actual: Vec<_> = (0..5).map(|it| ax.bin(it)).collect();
     let expected: Vec<_> = vec![
         Some(SingleValuedBinRange::new(&"A")),
         Some(SingleValuedBinRange::new(&"B")),
