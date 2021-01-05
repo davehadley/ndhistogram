@@ -1,5 +1,5 @@
-use std::collections::HashMap;
 use std::hash::Hash;
+use std::{collections::HashMap, fmt::Display};
 
 use super::binrange::SingleValuedBinRange;
 use super::Axis;
@@ -73,5 +73,17 @@ impl<T: Value> Axis for Category<T> {
                 }
             }
         }
+    }
+}
+
+impl<T: Display + Value> Display for Category<T> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let comma_separated_list = self
+            .bins()
+            .take(10)
+            .map(|it| it.to_string())
+            .collect::<Vec<_>>()
+            .join(", ");
+        write!(f, "{{{}}}", comma_separated_list)
     }
 }

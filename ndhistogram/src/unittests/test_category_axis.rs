@@ -62,8 +62,9 @@ fn test_category_debug_display() {
 
 #[test]
 fn test_category_display() {
-    let ax = Category::new(5, 0.0, 1.0);
+    let (_, ax) = category_abc();
     println!("{}", ax);
+    assert_eq!(format!("{}", ax), "{{A}, {B}, {C}, {overflow}}")
 }
 
 // #[test]
