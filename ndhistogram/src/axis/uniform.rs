@@ -35,8 +35,8 @@ impl<T: Float> Axis for Uniform<T> {
     type Coordinate = T;
     type BinRange = ContinuousBinRange<T>;
 
-    fn index(&self, coordinate: Self::Coordinate) -> Option<usize> {
-        let frac = (coordinate - self.low) / (self.high - self.low);
+    fn index(&self, coordinate: &Self::Coordinate) -> Option<usize> {
+        let frac = (*coordinate - self.low) / (self.high - self.low);
         if frac < T::zero() {
             return Some(0);
         } else if frac >= T::one() {

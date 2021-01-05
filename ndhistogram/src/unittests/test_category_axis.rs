@@ -21,15 +21,15 @@ fn test_category_numbins() {
 #[test]
 fn test_category_get_index() {
     let (cats, ax) = category_ab();
-    let actual: Vec<usize> = cats.iter().map(|c| ax.index(c).unwrap()).collect();
+    let actual: Vec<usize> = cats.iter().map(|c| ax.index(&c).unwrap()).collect();
     let expected = vec![0, 1];
     assert_eq!(expected, actual)
 }
 
 #[test]
 fn test_category_get_index_overflow() {
-    let cats = ["A", "B"];
-    let ax = Category::new(&cats);
+    let cats = vec!["A", "B"];
+    let ax = Category::new(cats);
     assert_eq!(ax.index(&"D").unwrap(), 2)
 }
 

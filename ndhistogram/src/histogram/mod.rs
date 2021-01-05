@@ -49,7 +49,7 @@ pub trait Histogram<A: Axes, V>: Clone {
 
     fn value_at_index(&self, index: usize) -> Option<&V>;
 
-    fn value(&self, coordinate: A::Coordinate) -> Option<&V> {
+    fn value(&self, coordinate: &A::Coordinate) -> Option<&V> {
         let index = self.axes().index(coordinate)?;
         self.value_at_index(index)
     }
@@ -59,11 +59,11 @@ pub trait Histogram<A: Axes, V>: Clone {
 }
 
 pub trait Fill<A: Axes> {
-    fn fill(&mut self, coordinate: A::Coordinate);
+    fn fill(&mut self, coordinate: &A::Coordinate);
 }
 
 pub trait FillWeight<A: Axes, W> {
-    fn fill_weight(&mut self, coordinate: A::Coordinate, weight: W);
+    fn fill_weight(&mut self, coordinate: &A::Coordinate, weight: W);
 }
 
 //TODO: merge with histogram, I'm not sure that it makes sense for this to separate...
@@ -71,7 +71,7 @@ pub trait FillWeight<A: Axes, W> {
 // or it should be called something different like "DirectAccessHistogram"
 pub trait MutableHistogram<A: Axes, V>: Histogram<A, V> {
     fn value_at_index_mut(&mut self, index: usize) -> Option<&mut V>;
-    fn value_mut(&mut self, coordinate: A::Coordinate) -> Option<&mut V> {
+    fn value_mut(&mut self, coordinate: &A::Coordinate) -> Option<&mut V> {
         let index = self.axes().index(coordinate)?;
         self.value_at_index_mut(index)
     }
