@@ -87,22 +87,22 @@ fn test_category_iterate_items() {
     assert_eq!(expected, actual);
 }
 
-// #[test]
-// fn test_category_iterate_bin() {
-//     let ax = Category::new(1, 0.0, 1.0);
-//     let actual: Vec<_> = ax.bins().collect();
-//     let expected: Vec<_> = vec![
-//         SingleValuedBinRange::underflow(0.0),
-//         SingleValuedBinRange::new(0.0, 1.0),
-//         SingleValuedBinRange::overflow(1.0),
-//     ];
-//     assert_eq!(expected, actual);
-// }
+#[test]
+fn test_category_iterate_bin() {
+    let ax = Category::new(vec!["A", "B"]);
+    let actual: Vec<_> = ax.bins().collect();
+    let expected: Vec<_> = vec![
+        SingleValuedBinRange::new("A"),
+        SingleValuedBinRange::new("B"),
+        SingleValuedBinRange::overflow(),
+    ];
+    assert_eq!(expected, actual);
+}
 
-// #[test]
-// fn test_iter_axis() {
-//     let ax = Category::new(100, 0.0, 100.0);
-//     let expected: Vec<_> = ax.iter().collect();
-//     let actual: Vec<_> = ax.into_iter().collect();
-//     assert_eq!(expected, actual);
-// }
+#[test]
+fn test_iter_axis() {
+    let ax = Category::new(vec!["A", "B"]);
+    let expected: Vec<_> = ax.iter().collect();
+    let actual: Vec<_> = ax.into_iter().collect();
+    assert_eq!(expected, actual);
+}
