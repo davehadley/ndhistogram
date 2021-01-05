@@ -35,13 +35,13 @@ fn test_category_get_index_overflow() {
 
 #[test]
 fn test_category_get_bin() {
-    let cats = ["A", "B", "C"];
-    let ax = Category::new(&cats);
+    let cats = vec!["A", "B", "C"];
+    let ax = Category::new(cats);
     let actual: Vec<_> = (0..5).map(|it| ax.bin(it)).collect();
     let expected: Vec<_> = vec![
-        Some(SingleValuedBinRange::new(&"A")),
-        Some(SingleValuedBinRange::new(&"B")),
-        Some(SingleValuedBinRange::new(&"C")),
+        Some(SingleValuedBinRange::new("A")),
+        Some(SingleValuedBinRange::new("B")),
+        Some(SingleValuedBinRange::new("C")),
         Some(SingleValuedBinRange::overflow()),
         None,
     ];
@@ -50,21 +50,21 @@ fn test_category_get_bin() {
 
 #[test]
 fn test_category_clone() {
-    let ax = Category::new(&["A", "B", "C"]);
+    let ax = Category::new(vec!["A", "B", "C"]);
     assert_eq!(ax, ax.clone());
 }
 
 #[test]
 fn test_category_debug_display() {
-    let ax = Category::new(&["A", "B", "C"]);
+    let ax = Category::new(vec!["A", "B", "C"]);
     println!("{:?}", ax);
 }
 
-// #[test]
-// fn test_category_display() {
-//     let ax = Category::new(5, 0.0, 1.0);
-//     println!("{}", ax);
-// }
+#[test]
+fn test_category_display() {
+    let ax = Category::new(5, 0.0, 1.0);
+    println!("{}", ax);
+}
 
 // #[test]
 // fn test_category_iterate_indices() {
