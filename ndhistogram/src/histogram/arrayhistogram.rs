@@ -59,9 +59,7 @@ impl<A: Axes, V: Value> Fill<A> for ArrayHistogram<A, V> {
                 self.values[index].add_one();
             }
             None => {
-                let _ = self.grow(coordinate).map(|_| {
-                    self.fill(coordinate);
-                });
+                let _ = self.grow(coordinate).map(|_| self.fill(coordinate) );
             }
         }
     }
