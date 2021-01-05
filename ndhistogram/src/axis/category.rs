@@ -8,8 +8,11 @@ use super::Axis;
 pub trait Value: Eq + Hash + Clone {}
 impl<T: Eq + Hash + Clone> Value for T {}
 
-#[derive(Debug, Clone, Default)]
-pub struct Category<T> {
+#[derive(Debug, Clone, Default, PartialEq)]
+pub struct Category<T>
+where
+    T: Value,
+{
     map_t_to_index: HashMap<T, usize>,
     map_index_to_t: HashMap<usize, T>,
 }
