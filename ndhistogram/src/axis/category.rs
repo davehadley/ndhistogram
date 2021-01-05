@@ -87,3 +87,12 @@ impl<T: Display + Value> Display for Category<T> {
         write!(f, "{{{}}}", comma_separated_list)
     }
 }
+
+impl<'a, T: Value> IntoIterator for &'a Category<T> {
+    type Item = (usize, <Category<T> as Axis>::BinRange);
+    type IntoIter = Box<dyn Iterator<Item = Self::Item> + 'a>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.iter()
+    }
+}

@@ -75,27 +75,26 @@ fn test_category_iterate_indices() {
     assert_eq!(expected, actual);
 }
 
-// #[test]
-// fn test_category_iterate_items() {
-//     let ax = Category::new(2, 0.0, 2.0);
-//     let actual: Vec<_> = ax.into_iter().collect();
-//     let expected: Vec<(usize, _)> = vec![
-//         (0, ContinuousBinRange::underflow(0.0)),
-//         (1, ContinuousBinRange::new(0.0, 1.0)),
-//         (2, ContinuousBinRange::new(1.0, 2.0)),
-//         (3, ContinuousBinRange::overflow(2.0)),
-//     ];
-//     assert_eq!(expected, actual);
-// }
+#[test]
+fn test_category_iterate_items() {
+    let ax = Category::new(vec!["A", "B"]);
+    let actual: Vec<_> = ax.into_iter().collect();
+    let expected: Vec<(usize, _)> = vec![
+        (0, SingleValuedBinRange::new("A")),
+        (1, SingleValuedBinRange::new("B")),
+        (2, SingleValuedBinRange::overflow()),
+    ];
+    assert_eq!(expected, actual);
+}
 
 // #[test]
 // fn test_category_iterate_bin() {
 //     let ax = Category::new(1, 0.0, 1.0);
 //     let actual: Vec<_> = ax.bins().collect();
 //     let expected: Vec<_> = vec![
-//         ContinuousBinRange::underflow(0.0),
-//         ContinuousBinRange::new(0.0, 1.0),
-//         ContinuousBinRange::overflow(1.0),
+//         SingleValuedBinRange::underflow(0.0),
+//         SingleValuedBinRange::new(0.0, 1.0),
+//         SingleValuedBinRange::overflow(1.0),
 //     ];
 //     assert_eq!(expected, actual);
 // }
