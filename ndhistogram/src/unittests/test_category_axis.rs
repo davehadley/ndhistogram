@@ -67,13 +67,13 @@ fn test_category_display() {
     assert_eq!(format!("{}", ax), "{{A}, {B}, {C}, {overflow}}")
 }
 
-// #[test]
-// fn test_category_iterate_indices() {
-//     let ax = Category::new(5, 0.0, 1.0);
-//     let actual: Vec<usize> = ax.indices().collect();
-//     let expected = vec![0, 1, 2, 3, 4, 5, 6];
-//     assert_eq!(expected, actual);
-// }
+#[test]
+fn test_category_iterate_indices() {
+    let ax = Category::new(vec!["A", "B", "C"]);
+    let actual: Vec<usize> = ax.indices().collect();
+    let expected = vec![0, 1, 2, 3];
+    assert_eq!(expected, actual);
+}
 
 // #[test]
 // fn test_category_iterate_items() {
