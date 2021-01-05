@@ -28,7 +28,7 @@ source install-hook.sh
 - [x] Histogram 2D overflow works as expected.
 - [x] Test each axis method.
 - [x] Test each histogram 1D method.
-- [ ] Category axis.
+- [x] Category axis.
 - [ ] Growable axis.
 - [ ] Re-binnable axis.
 - [ ] Test each axis method.
