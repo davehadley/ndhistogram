@@ -5,7 +5,7 @@ use crate::{
 
 #[test]
 fn test_histogram_category_grows() {
-    let mut hist = ndhistogram!(Category::new(vec!["A", "B"]); i32);
+    let mut hist = ndhistogram!(Category::growable(vec!["A", "B"]); i32);
     assert_eq!(hist.value(&"C"), Some(&0));
     hist.fill(&"C");
     assert_eq!(hist.value(&"C"), Some(&1));

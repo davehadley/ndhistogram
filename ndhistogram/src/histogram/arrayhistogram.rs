@@ -4,9 +4,10 @@ use std::{
 };
 
 use super::{
-    Fill, FillWeight, Histogram, Item, Iter, IterMut, MutableHistogram, Value, Values, ValuesMut,
+    Fill, FillWeight, Grow, Histogram, Item, Iter, IterMut, MutableHistogram, Value, Values,
+    ValuesMut,
 };
-use crate::axes::Axes;
+use crate::{axes::Axes, axis::Axis};
 
 #[derive(Debug, Clone)]
 pub struct ArrayHistogram<A, V: Clone> {
@@ -53,9 +54,15 @@ impl<A: Axes, V: Value> Histogram<A, V> for ArrayHistogram<A, V> {
 
 impl<A: Axes, V: Value> Fill<A> for ArrayHistogram<A, V> {
     fn fill(&mut self, coordinate: &A::Coordinate) {
-        let index = self.axes.index(coordinate);
-        if let Some(index) = index {
-            self.values[index].add_one();
+        match self.axes.index(coordinate) {
+            Some(index) => {
+                self.values[index].add_one();
+            }
+            None => {
+                let _ = self.grow(coordinate).map(|_| {
+                    self.fill(coordinate);
+                });
+            }
         }
     }
 }
@@ -105,5 +112,11 @@ impl<'a, A: Axes, V: Value + 'a> IntoIterator for &'a mut ArrayHistogram<A, V> {
 
     fn into_iter(self) -> Self::IntoIter {
         self.iter_mut()
+    }
+}
+
+impl<A: Axes, V: Value> Grow<<A as Axis>::Coordinate> for ArrayHistogram<A, V> {
+    fn grow(&mut self, newcoordinate: &<A as Axis>::Coordinate) -> Result<(), ()> {
+        todo!()
     }
 }

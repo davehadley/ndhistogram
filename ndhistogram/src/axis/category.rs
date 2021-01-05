@@ -15,6 +15,7 @@ where
 {
     map_t_to_index: HashMap<T, usize>,
     map_index_to_t: HashMap<usize, T>,
+    isgrow: bool,
 }
 
 impl<T: Value> Category<T> {
@@ -37,14 +38,23 @@ impl<T: Value> Category<T> {
         self.map_index_to_t.len()
     }
 
-    pub fn new<I: IntoIterator<Item = T>>(values: I) -> Category<T> {
-        let mut cat = Category {
+    fn constructor<I: IntoIterator<Item = T>>(values: I, grow: bool) -> Self {
+        let mut cat = Self {
             map_t_to_index: HashMap::new(),
             map_index_to_t: HashMap::new(),
+            isgrow: grow,
         };
         // TODO: is it faster to directly construct the hashmap rather than repeatedly insert?
         values.into_iter().for_each(|it| cat.insert(it));
         cat
+    }
+
+    pub fn new<I: IntoIterator<Item = T>>(values: I) -> Self {
+        Self::constructor(values, true)
+    }
+
+    pub fn growable<I: IntoIterator<Item = T>>(values: I) -> Self {
+        Self::constructor(values, true)
     }
 }
 

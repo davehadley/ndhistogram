@@ -66,6 +66,10 @@ pub trait FillWeight<A: Axes, W> {
     fn fill_weight(&mut self, coordinate: &A::Coordinate, weight: W);
 }
 
+pub trait Grow<Coordinate> {
+    fn grow(&mut self, newcoordinate: &Coordinate) -> Result<(), ()>;
+}
+
 //TODO: merge with histogram, I'm not sure that it makes sense for this to separate...
 // although it makes development easier as iter_mut can be hard to implement...
 // or it should be called something different like "DirectAccessHistogram"
