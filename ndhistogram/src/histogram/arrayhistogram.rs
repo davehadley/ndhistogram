@@ -52,14 +52,17 @@ impl<A: Axes, V: Value> Histogram<A, V> for ArrayHistogram<A, V> {
     }
 }
 
-impl<A: Axes, V: Value> Fill<A> for ArrayHistogram<A, V> {
+impl<A: Axes, V: Value> Fill<A> for ArrayHistogram<A, V>
+where
+    Self: Grow<A::Coordinate>,
+{
     fn fill(&mut self, coordinate: &A::Coordinate) {
         match self.axes.index(coordinate) {
             Some(index) => {
                 self.values[index].add_one();
             }
             None => {
-                let _ = self.grow(coordinate).map(|_| self.fill(coordinate) );
+                let _ = self.grow(coordinate).map(|_| self.fill(coordinate));
             }
         }
     }
@@ -113,8 +116,30 @@ impl<'a, A: Axes, V: Value + 'a> IntoIterator for &'a mut ArrayHistogram<A, V> {
     }
 }
 
-impl<A: Axes, V: Value> Grow<<A as Axis>::Coordinate> for ArrayHistogram<A, V> {
+impl<A: Axes, V: Value + Default> Grow<<A as Axis>::Coordinate> for ArrayHistogram<A, V>
+where
+    A: Grow<<A as Axis>::Coordinate>,
+    A::BinRange: PartialEq,
+{
     fn grow(&mut self, newcoordinate: &<A as Axis>::Coordinate) -> Result<(), ()> {
-        todo!()
+        let oldindices: Vec<_> = self.axes().iter().collect();
+        self.axes.grow(newcoordinate)?;
+        let newindices: Vec<_> = self.axes().iter().collect();
+        let mut newvalues = vec![V::default(); self.axes.numbins()];
+        let iternew = newindices.iter();
+        let mut iterold = oldindices.iter();
+        iternew
+            .map(|(newindex, newrange)| {
+                while let Some((oldindex, oldrange)) = iterold.next() {
+                    if oldrange == newrange {
+                        return Some((oldindex, newindex));
+                    };
+                }
+                None
+            })
+            .flatten()
+            .for_each(|(oldindex, newindex)| newvalues[*newindex] = self.values[*newindex].clone()); // TODO: unncessary clone
+        self.values = newvalues;
+        Ok(())
     }
 }

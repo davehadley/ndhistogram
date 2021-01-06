@@ -1,3 +1,5 @@
+use crate::histogram::Grow;
+
 use super::axis::Axis;
 
 pub trait Axes: Axis {}
@@ -44,5 +46,21 @@ impl<X: Axis, Y: Axis> Axis for (X, Y) {
         let bx = self.0.bin(ix)?;
         let by = self.1.bin(iy)?;
         Some((bx, by))
+    }
+}
+
+impl<X: Axis + Grow<<X as Axis>::Coordinate>> Grow<<Self as Axis>::Coordinate> for (X,) {
+    fn grow(&mut self, newcoordinate: &<Self as Axis>::Coordinate) -> Result<(), ()> {
+        self.0.grow(newcoordinate)
+    }
+}
+
+impl<X: Axis + Grow<<X as Axis>::Coordinate>, Y: Axis + Grow<<Y as Axis>::Coordinate>>
+    Grow<<Self as Axis>::Coordinate> for (X, Y)
+{
+    fn grow(&mut self, newcoordinate: &<Self as Axis>::Coordinate) -> Result<(), ()> {
+        self.0.grow(&newcoordinate.0)?;
+        self.1.grow(&newcoordinate.1)?;
+        Ok(())
     }
 }

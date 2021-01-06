@@ -1,6 +1,8 @@
 use std::hash::Hash;
 use std::{collections::HashMap, fmt::Display};
 
+use crate::histogram::Grow;
+
 use super::binrange::SingleValuedBinRange;
 use super::Axis;
 
@@ -104,5 +106,12 @@ impl<'a, T: Value> IntoIterator for &'a Category<T> {
 
     fn into_iter(self) -> Self::IntoIter {
         self.iter()
+    }
+}
+
+impl<T: Value> Grow<T> for Category<T> {
+    fn grow(&mut self, newcoordinate: &T) -> Result<(), ()> {
+        self.insert(newcoordinate.clone());
+        Ok(())
     }
 }

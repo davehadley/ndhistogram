@@ -7,6 +7,8 @@ use std::{
     ops::{RangeBounds, RangeFrom, RangeTo, Sub},
 };
 
+use crate::histogram::Grow;
+
 use super::{binrange::ContinuousBinRange, Axis};
 
 #[derive(Clone, PartialEq, Debug)]
@@ -95,5 +97,13 @@ impl<'a> IntoIterator for &'a Uniform {
 
     fn into_iter(self) -> Self::IntoIter {
         self.iter()
+    }
+}
+
+impl<T> Grow<T> for Uniform<T> {
+    fn grow(&mut self, newcoordinate: &T) -> Result<(), ()> {
+        //self.insert(newcoordinate.clone());
+        //Ok(())
+        Err(())
     }
 }
