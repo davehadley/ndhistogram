@@ -103,7 +103,7 @@ impl<'a> IntoIterator for &'a Uniform {
 impl<T> Grow<T> for Uniform<T> {
     fn grow(&mut self, newcoordinate: &T) -> Result<(), ()> {
         //self.insert(newcoordinate.clone());
-        //Ok(())
-        Err(())
+        Ok(())
+        //Err(())
     }
 }

@@ -121,6 +121,7 @@ where
     A: Grow<<A as Axis>::Coordinate>,
     A::BinRange: PartialEq,
 {
+    #[allow(clippy::while_let_on_iterator)]
     fn grow(&mut self, newcoordinate: &<A as Axis>::Coordinate) -> Result<(), ()> {
         let oldindices: Vec<_> = self.axes().iter().collect();
         self.axes.grow(newcoordinate)?;

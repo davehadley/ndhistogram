@@ -17,6 +17,7 @@ where
 {
     map_t_to_index: HashMap<T, usize>,
     map_index_to_t: HashMap<usize, T>,
+    // TODO: use const generics when stable https://rust-lang.github.io/rfcs/2000-const-generics.html
     isgrow: bool,
 }
 
@@ -52,7 +53,7 @@ impl<T: Value> Category<T> {
     }
 
     pub fn new<I: IntoIterator<Item = T>>(values: I) -> Self {
-        Self::constructor(values, true)
+        Self::constructor(values, false)
     }
 
     pub fn growable<I: IntoIterator<Item = T>>(values: I) -> Self {
@@ -66,11 +67,16 @@ impl<T: Value> Axis for Category<T> {
     type BinRange = SingleValuedBinRange<T>;
 
     fn index(&self, coordinate: &Self::Coordinate) -> Option<usize> {
-        self.get_index(&coordinate).or_else(|| Some(self.len()))
+        self.get_index(&coordinate)
+            .or_else(|| if self.isgrow { None } else { Some(self.len()) })
     }
 
     fn numbins(&self) -> usize {
-        self.len() + 1
+        if self.isgrow {
+            self.len()
+        } else {
+            self.len() + 1
+        }
     }
 
     fn bin(&self, index: usize) -> Option<Self::BinRange> {
@@ -78,7 +84,7 @@ impl<T: Value> Axis for Category<T> {
         match value {
             Some(value) => Some(Self::BinRange::new(value.clone())),
             None => {
-                if index == self.len() {
+                if index == self.len() && !self.isgrow {
                     Some(Self::BinRange::overflow())
                 } else {
                     None
@@ -111,7 +117,10 @@ impl<'a, T: Value> IntoIterator for &'a Category<T> {
 
 impl<T: Value> Grow<T> for Category<T> {
     fn grow(&mut self, newcoordinate: &T) -> Result<(), ()> {
-        self.insert(newcoordinate.clone());
-        Ok(())
+        if self.isgrow {
+            self.insert(newcoordinate.clone());
+            return Ok(());
+        }
+        Err(())
     }
 }
