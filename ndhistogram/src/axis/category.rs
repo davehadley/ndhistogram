@@ -3,8 +3,8 @@ use std::{collections::HashMap, fmt::Display};
 
 use crate::histogram::Grow;
 
-use super::binrange::SingleValuedBinRange;
 use super::Axis;
+use super::{binrange::SingleValuedBinRange, AxisIndex, Index};
 
 // Type-bound alias
 pub trait Value: Eq + Hash + Clone {}
@@ -66,7 +66,7 @@ impl<T: Value> Axis for Category<T> {
 
     type BinRange = SingleValuedBinRange<T>;
 
-    fn index(&self, coordinate: &Self::Coordinate) -> Option<usize> {
+    fn index(&self, coordinate: &Self::Coordinate) -> Option<AxisIndex> {
         self.get_index(&coordinate)
             .or_else(|| if self.isgrow { None } else { Some(self.len()) })
     }
