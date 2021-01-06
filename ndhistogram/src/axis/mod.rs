@@ -17,7 +17,6 @@ pub trait Axis: Clone {
     type BinRange;
 
     fn index(&self, coordinate: &Self::Coordinate) -> Option<usize>;
-    fn index_from_range(&self, coordinate: &Self::BinRange) -> Option<usize>;
     fn numbins(&self) -> usize;
 
     fn bin(&self, index: usize) -> Option<Self::BinRange>;
@@ -33,7 +32,4 @@ pub trait Axis: Clone {
     fn bins(&self) -> Bins<'_, Self::BinRange> {
         Box::new(self.indices().map(move |it| self.bin(it).unwrap()))
     }
-
-    fn grow(&self, newcoordinate: &Self::Coordinate) -> Result<Self, ()> { Err(()) }
-
 }

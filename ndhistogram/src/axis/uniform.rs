@@ -67,10 +67,13 @@ impl<T: Float> Axis for Uniform<T> {
         Box::new(0..self.numbins())
     }
 
-    fn index_from_range(&self, coordinate: &Self::BinRange) -> Option<usize> {
-        self.index(&coordinate.start()?)
-    }
+    // fn items<'a>(&'a self) -> Box<dyn Iterator<Item = (usize, Option<Self::BinRange>)> + 'a> {
+    //     Box::new(self.indices().map(move |it| (it, self.bin(it))))
+    // }
 
+    // fn bins<'a>(&'a self) -> Box<dyn Iterator<Item = Option<Self::BinRange>> + 'a> {
+    //     Box::new(self.indices().map(move |it| self.bin(it)))
+    // }
 }
 
 impl Display for Uniform {

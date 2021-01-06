@@ -1,4 +1,7 @@
-use std::{iter::Map, ops::{AddAssign, Index}};
+use std::{
+    iter::Map,
+    ops::{AddAssign, Index},
+};
 
 use super::{
     Fill, FillWeight, Grow, Histogram, Item, Iter, IterMut, MutableHistogram, Value, Values,
@@ -56,7 +59,7 @@ impl<A: Axes, V: Value> Fill<A> for ArrayHistogram<A, V> {
                 self.values[index].add_one();
             }
             None => {
-                let _ = self.grow(coordinate).map(|_| self.fill(coordinate));
+                let _ = self.grow(coordinate).map(|_| self.fill(coordinate) );
             }
         }
     }
@@ -112,7 +115,6 @@ impl<'a, A: Axes, V: Value + 'a> IntoIterator for &'a mut ArrayHistogram<A, V> {
 
 impl<A: Axes, V: Value> Grow<<A as Axis>::Coordinate> for ArrayHistogram<A, V> {
     fn grow(&mut self, newcoordinate: &<A as Axis>::Coordinate) -> Result<(), ()> {
-        let newaxes = self.axes.grow(newcoordinate)?;
-        Err(())
+        todo!()
     }
 }
