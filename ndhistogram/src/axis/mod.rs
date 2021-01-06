@@ -34,7 +34,6 @@ pub trait Axis: Clone {
         Box::new(self.indices().map(move |it| self.bin(it).unwrap()))
     }
 
-    fn grow(&self, newcoordinate: &Self::Coordinate) -> Result<Self, ()> {
-        Err(())
-    }
+    fn grow(&self, newcoordinate: &Self::Coordinate) -> Result<Self, ()> { Err(()) }
+
 }

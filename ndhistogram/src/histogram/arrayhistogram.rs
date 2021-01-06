@@ -1,7 +1,4 @@
-use std::{
-    iter::Map,
-    ops::{AddAssign, Index},
-};
+use std::{iter::Map, ops::{AddAssign, Index}};
 
 use super::{
     Fill, FillWeight, Grow, Histogram, Item, Iter, IterMut, MutableHistogram, Value, Values,

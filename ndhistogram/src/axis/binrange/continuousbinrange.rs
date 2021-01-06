@@ -24,7 +24,7 @@ impl<T> ContinuousBinRange<T> {
     }
 }
 
-impl<T: Copy + PartialOrd> ContinuousBinRange<T> {
+impl<T: Copy> ContinuousBinRange<T> {
     pub fn start(&self) -> Option<T> {
         match self {
             ContinuousBinRange::Underflow { end: _ } => None,
@@ -38,20 +38,6 @@ impl<T: Copy + PartialOrd> ContinuousBinRange<T> {
             ContinuousBinRange::Underflow { end } => Some(*end),
             ContinuousBinRange::Overflow { start: _ } => None,
             ContinuousBinRange::Bin { start: _, end } => Some(*end),
-        }
-    }
-
-    pub fn contains(&self, value: &T) -> bool {
-        match self {
-            ContinuousBinRange::Underflow { end } => RangeTo::<T>::try_from(self.clone())
-                .unwrap()
-                .contains(value),
-            ContinuousBinRange::Overflow { start: _ } => {
-                RangeFrom::try_from(self.clone()).unwrap().contains(value)
-            }
-            ContinuousBinRange::Bin { start: _, end } => {
-                Range::try_from(self.clone()).unwrap().contains(value)
-            }
         }
     }
 }
