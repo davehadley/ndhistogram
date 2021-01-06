@@ -29,7 +29,7 @@ source install-hook.sh
 - [x] Test each axis method.
 - [x] Test each histogram 1D method.
 - [x] Category axis.
-- [ ] Growable axis.
+- [x] Growable axis.
 - [ ] Re-binnable axis.
 - [ ] Test each axis method.
 - [ ] Test each histogram 1D method.
@@ -43,9 +43,13 @@ source install-hook.sh
 - [ ] All Histograms must implement Eq (enforce in trait?)
 - [x] All Histograms must implement Index (enforce in trait?) --> decided against as Index can't return option, only panic on bad index.
 - [ ] Decide if we want a trait alias that is "CompleteHistogram : Histogram + Fill + MutableHistogram + FillWeight"
+- [ ] Variable binning
+- [ ] Uniform with mapping binning
+- [ ] Implement grow for Uniform
 
 # Niggles
 
 - [x] Don't make user have to bother with references/dereferences to Copy-able / primitives
 - [ ] Harmonize indexes vs indices
 - [ ] Replace Box dyn iterators with static.
+- [ ] Implement proper floating point behaviour on grow with float axis (binrange equality)
