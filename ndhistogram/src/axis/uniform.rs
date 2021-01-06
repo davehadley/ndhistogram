@@ -68,9 +68,8 @@ impl<T: Float> Axis for Uniform<T> {
     }
 
     fn index_from_range(&self, coordinate: &Self::BinRange) -> Option<usize> {
-        self.index(&coordinate.start()?)
+        let r = coordinate.into();
     }
-
 }
 
 impl Display for Uniform {
