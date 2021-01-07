@@ -30,15 +30,16 @@ source install-hook.sh
 - [x] Test each histogram 1D method.
 - [x] Category axis.
 - [x] Growable axis.
-- [ ] Noflow
-- [ ] Re-binnable axis.
-- [ ] Test each axis method.
-- [ ] Test each histogram 1D method.
-- [ ] AnyD histogram.
+- [x] Noflow
+- [ ] AnyD histogram
+- [ ] Remove grow.
+- [ ] Mega refactor
 - [ ] Check API and naming guidelines are met.
 - [ ] Documentation.
 - [ ] Make public on github.
 - [ ] Release to create.io.
+- [ ] Variable binning
+- [ ] Integer binning
 - [ ] numpy style slicing?
 - [ ] All Histograms must implement Display (enforce in trait?)
 - [ ] All Histograms must implement Eq (enforce in trait?)
@@ -48,6 +49,11 @@ source install-hook.sh
 - [ ] Uniform with mapping binning
 - [ ] Implement grow for Uniform
 - [ ] Make Uniform work for non-float
+- [ ] Re-binnable axis.
+- [ ] Reinstate grow
+- [ ] Test each axis method.
+- [ ] Test each histogram 1D method.
+
 
 # Niggles
 
