@@ -1,4 +1,4 @@
-use num::{Float, FromPrimitive, NumCast};
+use num::{Float, FromPrimitive, Num, NumCast};
 use std::{
     fmt::{Debug, Display},
     iter::Map,
@@ -30,6 +30,15 @@ where
             panic!("Invalid axis range bins (low::{:?}, high:{:?})", low, high);
         }
         Uniform { num, low, high }
+    }
+}
+
+impl<T> Uniform<T> {
+    pub fn low(&self) -> &T {
+        &self.low
+    }
+    pub fn high(&self) -> &T {
+        &self.high
     }
 }
 
@@ -78,7 +87,7 @@ impl<T: Float> Axis for Uniform<T> {
     // }
 }
 
-impl Display for Uniform {
+impl<T: Float + Display> Display for Uniform<T> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
@@ -91,8 +100,8 @@ impl Display for Uniform {
     }
 }
 
-impl<'a> IntoIterator for &'a Uniform {
-    type Item = (usize, <Uniform as Axis>::BinRange);
+impl<'a, T: Float> IntoIterator for &'a Uniform<T> {
+    type Item = (usize, <Uniform<T> as Axis>::BinRange);
     type IntoIter = Box<dyn Iterator<Item = Self::Item> + 'a>;
 
     fn into_iter(self) -> Self::IntoIter {

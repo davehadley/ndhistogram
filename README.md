@@ -30,6 +30,7 @@ source install-hook.sh
 - [x] Test each histogram 1D method.
 - [x] Category axis.
 - [x] Growable axis.
+- [ ] Noflow
 - [ ] Re-binnable axis.
 - [ ] Test each axis method.
 - [ ] Test each histogram 1D method.
@@ -46,6 +47,7 @@ source install-hook.sh
 - [ ] Variable binning
 - [ ] Uniform with mapping binning
 - [ ] Implement grow for Uniform
+- [ ] Make Uniform work for non-float
 
 # Niggles
 

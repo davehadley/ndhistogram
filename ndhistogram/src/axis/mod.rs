@@ -5,6 +5,8 @@ use std::ops::Range;
 pub mod binrange;
 mod uniform;
 pub use uniform::Uniform;
+mod uniformnoflow;
+pub use uniformnoflow::UniformNoFlow;
 mod category;
 pub use category::Category;
 
