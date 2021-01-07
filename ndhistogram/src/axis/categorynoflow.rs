@@ -23,7 +23,7 @@ impl<T: Value> Axis for CategoryNoFlow<T> {
 
     fn index(&self, coordinate: &Self::Coordinate) -> Option<usize> {
         let index = self.axis.index(coordinate)?;
-        if index == self.axis.numbins() {
+        if index == self.axis.numbins() - 1 {
             return None;
         }
         Some(index)
@@ -34,7 +34,7 @@ impl<T: Value> Axis for CategoryNoFlow<T> {
     }
 
     fn bin(&self, index: usize) -> Option<Self::BinRange> {
-        let bin = self.axis.bin(index + 1)?;
+        let bin = self.axis.bin(index)?;
         match bin {
             SingleValuedBinRange::Overflow => None,
             SingleValuedBinRange::Bin { value: _ } => Some(bin),
