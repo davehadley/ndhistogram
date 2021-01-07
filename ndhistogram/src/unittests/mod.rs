@@ -2,6 +2,7 @@ mod test_axes;
 mod test_binrange;
 mod test_category_axis;
 mod test_category_binrange;
+mod test_categorynoflow_axis;
 mod test_growable_histogram;
 mod test_ndhistogram_1d;
 mod test_ndhistogram_1d_category;

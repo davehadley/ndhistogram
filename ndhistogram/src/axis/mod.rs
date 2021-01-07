@@ -9,6 +9,8 @@ mod uniformnoflow;
 pub use uniformnoflow::UniformNoFlow;
 mod category;
 pub use category::Category;
+mod categorynoflow;
+pub use categorynoflow::CategoryNoFlow;
 
 type Iter<'a, BinRange> = Box<dyn Iterator<Item = (usize, BinRange)> + 'a>;
 type Indices = Box<dyn Iterator<Item = usize>>;
