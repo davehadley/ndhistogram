@@ -1,3 +1,5 @@
+use ndarray::Array3;
+
 use crate::histogram::Grow;
 
 use super::axis::Axis;
@@ -63,8 +65,36 @@ macro_rules! impl_axes {
             fn index(&self, coordinate: &Self::Coordinate) -> Option<usize> {
                 let numbins = [$(self.$nth_index.numbins()),*];
                 let indices = [$(self.$nth_index.index(&coordinate.$nth_index)?),*];
-                let index = numbins.iter().rev().skip(1).zip(indices.iter().rev()).fold(indices[0], |acc, (nbin, idx)| acc + nbin*idx);
+
+
+                let index = numbins.iter()
+                    .rev()
+                    .scan(1, |acc, nbin| Some(*acc * *nbin))
+                    .skip(1)
+                    .zip(indices.iter().rev())
+                    .fold(indices[0], |acc, (nbin, idx)| acc + nbin*idx);
                 Some(index)
+
+                // fNdimPlusOne = ndim + 1;
+                // fSizes = new Long64_t[ndim + 1];
+                // Int_t overBins = addOverflow ? 2 : 0;
+                // fSizes[ndim] = 1;
+                // for (Int_t i = 0; i < ndim; ++i) {
+                //    fSizes[ndim - i - 1] = fSizes[ndim - i] * (nbins[ndim - i - 1] + overBins);
+                // }
+                // Get the linear bin number for each dimension's bin index
+                // Long64_t bin = idx[fNdimPlusOne - 2];
+                // for (Int_t d = 0; d < fNdimPlusOne - 2; ++d) {
+                //     bin += fSizes[d + 1] * idx[d];
+                // }
+
+                // let index = numbins.iter()
+                //     .scan(1, |acc, nbin| Some(*acc * *nbin))
+                //     .skip(1)
+                //     .zip(indices.iter())
+                //     .fold(indices[indices.len()-1], |acc, (nbin, idx)| acc + nbin*idx);
+                // Some(index)
+
             }
 
             fn numbins(&self) -> usize {
@@ -133,4 +163,11 @@ impl<X: Axis + Grow<<X as Axis>::Coordinate>, Y: Axis + Grow<<Y as Axis>::Coordi
         self.1.grow(&newcoordinate.1)?;
         Ok(())
     }
+}
+
+fn blha() {
+    use ndarray::Array3;
+    let mut temperature = Array3::<f64>::zeros((3, 4, 5));
+    // Increase the temperature in this location
+    temperature[[2, 2, 2]] += 0.5;
 }
