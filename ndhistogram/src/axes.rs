@@ -2,10 +2,6 @@ use crate::histogram::Grow;
 
 use super::axis::Axis;
 
-pub trait Axes: Axis {}
-
-impl<X: Axis> Axes for (X,) {}
-
 impl<X: Axis> Axis for (X,) {
     type Coordinate = X::Coordinate;
     type BinRange = X::BinRange;
@@ -48,6 +44,18 @@ impl<X: Axis, Y: Axis> Axis for (X, Y) {
         Some((bx, by))
     }
 }
+
+macro_rules! impl_axes {
+    () => {
+        pub trait Axes: Axis {}
+    };
+    ( ($index:tt => $type_parameter:ident), $( ($nth_index:tt => $nth_type_parameter:ident), )* ) => {
+        impl<X: Axis> Axes for (X,) {}
+        impl_axes!($(($nth_index => $nth_type_parameter), )*);
+    };
+}
+
+impl_axes! {(0 => T),}
 
 impl<X: Axis + Grow<<X as Axis>::Coordinate>> Grow<<Self as Axis>::Coordinate> for (X,) {
     fn grow(&mut self, newcoordinate: &<Self as Axis>::Coordinate) -> Result<(), ()> {
