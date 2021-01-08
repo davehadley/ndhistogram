@@ -53,27 +53,27 @@ macro_rules! impl_axes {
 
         impl_axes!();
     };
-    ( ($index:tt => $type_parameter:ident), $( ($nth_index:tt => $nth_type_parameter:ident), )+ ) => {
-        impl<$type_parameter: Axis, $($nth_type_parameter: Axis),*> Axes for ($type_parameter, $($nth_type_parameter),*) {}
+    ( $( ($nth_index:tt => $nth_type_parameter:ident), )+ ) => {
+        impl<$($nth_type_parameter: Axis),*> Axes for ($($nth_type_parameter),*) {}
 
-        impl<$type_parameter: Axis, $($nth_type_parameter: Axis),*> Axis for ($type_parameter, $($nth_type_parameter),*) {
-            type Coordinate = ($type_parameter::Coordinate, $($nth_type_parameter::Coordinate),*);
-            type BinRange = ($type_parameter::BinRange, $($nth_type_parameter::BinRange),*);
+        impl<$($nth_type_parameter: Axis),*> Axis for ($($nth_type_parameter),*) {
+            type Coordinate = ($($nth_type_parameter::Coordinate),*);
+            type BinRange = ($($nth_type_parameter::BinRange),*);
 
             fn index(&self, coordinate: &Self::Coordinate) -> Option<usize> {
-                let numbins = [self.$index.numbins(), $(self.$nth_index.numbins()),*];
-                let indices = [self.$index.index(&coordinate.$index)?, $(self.$nth_index.index(&coordinate.$nth_index)?),*];
+                let numbins = [$(self.$nth_index.numbins()),*];
+                let indices = [$(self.$nth_index.index(&coordinate.$nth_index)?),*];
                 let index = numbins.iter().rev().skip(1).zip(indices.iter().rev()).fold(indices[0], |acc, (nbin, idx)| acc + nbin*idx);
                 Some(index)
             }
 
             fn numbins(&self) -> usize {
                 //let arr = [self.$index.numbins(), $(self.$nth_index.numbins()),*];
-                $(self.$nth_index.numbins()*)* self.$index.numbins()
+                $(self.$nth_index.numbins()*)* 1
             }
 
             fn bin(&self, index: usize) -> Option<Self::BinRange> {
-                let numbins = [self.$index.numbins(), $(self.$nth_index.numbins()),*];
+                let numbins = [$(self.$nth_index.numbins()),*];
                 let product = numbins.iter().scan(1, |acc, it| Some(*acc * *it));
                 let mut index = index;
                 let index: Vec<_> = product.map(|nb| {
@@ -83,14 +83,13 @@ macro_rules! impl_axes {
                 } ).collect();
                 Some(
                     (
-                        self.$index.bin(index[$index])?,
                         $(self.$nth_index.bin(index[$nth_index])?),*
                 )
             )
             }
         }
 
-        impl_axes!(@REMOVELAST ($index => $type_parameter), $(($nth_index => $nth_type_parameter),)*);
+        impl_axes!(@REMOVELAST $(($nth_index => $nth_type_parameter),)*);
     };
     (@REMOVELAST ($index:tt => $type_parameter:ident), $( ($nth_index:tt => $nth_type_parameter:ident), )+ ) => {
         impl_axes!($(($nth_index => $nth_type_parameter),)*);
