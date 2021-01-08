@@ -61,10 +61,14 @@ macro_rules! impl_axes {
             type BinRange = ($type_parameter::BinRange, $($nth_type_parameter::BinRange),*);
 
             fn index(&self, coordinate: &Self::Coordinate) -> Option<usize> {
-                // let arr = [self.$index.numbins(), $(self.$nth_index.numbins()),*];
-                let ix = self.0.index(&coordinate.0)?;
-                let iy = self.1.index(&coordinate.1)?;
-                Some(ix + self.0.numbins() * iy)
+                let numbins = [self.$index.numbins(), $(self.$nth_index.numbins()),*];
+                let indices = [self.$index.index(&coordinate.$index)?, $(self.$nth_index.index(&coordinate.$nth_index)?),*];
+                let index = numbins.iter().rev().skip(1).zip(indices.iter().rev()).fold(0, |acc, (nbin, idx)| acc + nbin*idx);
+                Some(index)
+                // let ix = self.0.index(&coordinate.0)?;
+                // let iy = self.1.index(&coordinate.1)?;
+                // Some(ix + self.0.numbins() * iy)
+                // //x + WIDTH * (y + DEPTH * z)
             }
 
             fn numbins(&self) -> usize {
