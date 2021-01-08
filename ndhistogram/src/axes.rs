@@ -66,8 +66,8 @@ macro_rules! impl_axes {
             }
 
             fn numbins(&self) -> usize {
-                //self.0.numbins()
-                todo!()
+                //let arr = [self.$index.numbins(), $(self.$nth_index.numbins()),*];
+                $(self.$nth_index.numbins()*)* self.$index.numbins()
             }
 
             fn bin(&self, index: usize) -> Option<Self::BinRange> {
