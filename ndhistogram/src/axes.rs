@@ -106,6 +106,17 @@ impl_axes! {
     (0 => X),
     (1 => Y),
     (2 => Z),
+    (3 => T),
+    (4 => T1),
+    (5 => T2),
+    (6 => T3),
+    (7 => T4),
+    (8 => T5),
+    (9 => T6),
+    (10 => T7),
+    (11 => T8),
+    (12 => T9),
+    (13 => T10),
 }
 
 impl<X: Axis + Grow<<X as Axis>::Coordinate>> Grow<<Self as Axis>::Coordinate> for (X,) {
