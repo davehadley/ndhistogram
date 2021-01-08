@@ -19,8 +19,6 @@ impl<X: Axis> Axis for (X,) {
     }
 }
 
-impl<X: Axis, Y: Axis> Axes for (X, Y) {}
-
 impl<X: Axis, Y: Axis> Axis for (X, Y) {
     type Coordinate = (X::Coordinate, Y::Coordinate);
     type BinRange = (X::BinRange, Y::BinRange);
@@ -50,12 +48,12 @@ macro_rules! impl_axes {
         pub trait Axes: Axis {}
     };
     ( ($index:tt => $type_parameter:ident), $( ($nth_index:tt => $nth_type_parameter:ident), )* ) => {
-        impl<X: Axis> Axes for (X,) {}
+        impl<$type_parameter: Axis, $($nth_type_parameter: Axis)*> Axes for ($type_parameter, $($nth_type_parameter)*) {}
         impl_axes!($(($nth_index => $nth_type_parameter), )*);
     };
 }
 
-impl_axes! {(0 => T),}
+impl_axes! {(0 => X), (0 => Y),}
 
 impl<X: Axis + Grow<<X as Axis>::Coordinate>> Grow<<Self as Axis>::Coordinate> for (X,) {
     fn grow(&mut self, newcoordinate: &<Self as Axis>::Coordinate) -> Result<(), ()> {
