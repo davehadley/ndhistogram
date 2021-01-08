@@ -54,11 +54,11 @@ macro_rules! impl_axes {
         impl_axes!();
     };
     ( ($index:tt => $type_parameter:ident), $( ($nth_index:tt => $nth_type_parameter:ident), )+ ) => {
-        impl<$type_parameter: Axis, $($nth_type_parameter: Axis)*> Axes for ($type_parameter, $($nth_type_parameter)*) {}
+        impl<$type_parameter: Axis, $($nth_type_parameter: Axis),*> Axes for ($type_parameter, $($nth_type_parameter),*) {}
 
-        impl<$type_parameter: Axis, $($nth_type_parameter: Axis)*> Axis for ($type_parameter, $($nth_type_parameter)*) {
-            type Coordinate = ($type_parameter::Coordinate, $($nth_type_parameter::Coordinate)*);
-            type BinRange = ($type_parameter::BinRange, $($nth_type_parameter::BinRange)*);
+        impl<$type_parameter: Axis, $($nth_type_parameter: Axis),*> Axis for ($type_parameter, $($nth_type_parameter),*) {
+            type Coordinate = ($type_parameter::Coordinate, $($nth_type_parameter::Coordinate),*);
+            type BinRange = ($type_parameter::BinRange, $($nth_type_parameter::BinRange),*);
 
             fn index(&self, coordinate: &Self::Coordinate) -> Option<usize> {
                 //self.0.index(coordinate)
@@ -80,7 +80,11 @@ macro_rules! impl_axes {
     };
 }
 
-impl_axes! {(0 => X), (0 => Y),}
+impl_axes! {
+    (0 => X),
+    (1 => Y),
+    (1 => Z),
+}
 
 impl<X: Axis + Grow<<X as Axis>::Coordinate>> Grow<<Self as Axis>::Coordinate> for (X,) {
     fn grow(&mut self, newcoordinate: &<Self as Axis>::Coordinate) -> Result<(), ()> {
