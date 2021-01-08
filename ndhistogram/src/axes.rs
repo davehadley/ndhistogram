@@ -61,8 +61,10 @@ macro_rules! impl_axes {
             type BinRange = ($type_parameter::BinRange, $($nth_type_parameter::BinRange),*);
 
             fn index(&self, coordinate: &Self::Coordinate) -> Option<usize> {
-                //self.0.index(coordinate)
-                todo!()
+                // let arr = [self.$index.numbins(), $(self.$nth_index.numbins()),*];
+                let ix = self.0.index(&coordinate.0)?;
+                let iy = self.1.index(&coordinate.1)?;
+                Some(ix + self.0.numbins() * iy)
             }
 
             fn numbins(&self) -> usize {
@@ -71,8 +73,13 @@ macro_rules! impl_axes {
             }
 
             fn bin(&self, index: usize) -> Option<Self::BinRange> {
-                //self.0.bin(index)
-                todo!()
+                //let arr = [self.$index.numbins(), $(self.$nth_index.numbins()),*];
+        let ix = index % self.0.numbins();
+        let iy = index / self.0.numbins();
+
+        let bx = self.0.bin(ix)?;
+        let by = self.1.bin(iy)?;
+        Some((bx, by))
             }
         }
 
@@ -83,7 +90,7 @@ macro_rules! impl_axes {
 impl_axes! {
     (0 => X),
     (1 => Y),
-    (1 => Z),
+    //(1 => Z),
 }
 
 impl<X: Axis + Grow<<X as Axis>::Coordinate>> Grow<<Self as Axis>::Coordinate> for (X,) {
