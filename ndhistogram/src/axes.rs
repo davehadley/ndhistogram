@@ -63,12 +63,8 @@ macro_rules! impl_axes {
             fn index(&self, coordinate: &Self::Coordinate) -> Option<usize> {
                 let numbins = [self.$index.numbins(), $(self.$nth_index.numbins()),*];
                 let indices = [self.$index.index(&coordinate.$index)?, $(self.$nth_index.index(&coordinate.$nth_index)?),*];
-                let index = numbins.iter().rev().skip(1).zip(indices.iter().rev()).fold(0, |acc, (nbin, idx)| acc + nbin*idx);
+                let index = numbins.iter().rev().skip(1).zip(indices.iter().rev()).fold(indices[0], |acc, (nbin, idx)| acc + nbin*idx);
                 Some(index)
-                // let ix = self.0.index(&coordinate.0)?;
-                // let iy = self.1.index(&coordinate.1)?;
-                // Some(ix + self.0.numbins() * iy)
-                // //x + WIDTH * (y + DEPTH * z)
             }
 
             fn numbins(&self) -> usize {
@@ -77,6 +73,8 @@ macro_rules! impl_axes {
             }
 
             fn bin(&self, index: usize) -> Option<Self::BinRange> {
+                let numbins = [self.$index.numbins(), $(self.$nth_index.numbins()),*];
+
                 //let arr = [self.$index.numbins(), $(self.$nth_index.numbins()),*];
                 let ix = index % self.0.numbins();
                 let iy = index / self.0.numbins();
@@ -84,6 +82,14 @@ macro_rules! impl_axes {
                 let bx = self.0.bin(ix)?;
                 let by = self.1.bin(iy)?;
                 Some((bx, by))
+
+                // public int[] to3D( int idx ) {
+                //     final int z = idx / (xMax * yMax);
+                //     idx -= (z * xMax * yMax);
+                //     final int y = idx / xMax;
+                //     final int x = idx % xMax;
+                //     return new int[]{ x, y, z };
+                // }
             }
         }
 
