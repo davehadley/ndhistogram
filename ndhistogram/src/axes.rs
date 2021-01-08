@@ -74,12 +74,12 @@ macro_rules! impl_axes {
 
             fn bin(&self, index: usize) -> Option<Self::BinRange> {
                 //let arr = [self.$index.numbins(), $(self.$nth_index.numbins()),*];
-        let ix = index % self.0.numbins();
-        let iy = index / self.0.numbins();
+                let ix = index % self.0.numbins();
+                let iy = index / self.0.numbins();
 
-        let bx = self.0.bin(ix)?;
-        let by = self.1.bin(iy)?;
-        Some((bx, by))
+                let bx = self.0.bin(ix)?;
+                let by = self.1.bin(iy)?;
+                Some((bx, by))
             }
         }
 
