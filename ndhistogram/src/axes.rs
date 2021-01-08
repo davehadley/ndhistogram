@@ -87,15 +87,6 @@ macro_rules! impl_axes {
                         $(self.$nth_index.bin(index[$nth_index])?),*
                 )
             )
-
-                // //let arr = [self.$index.numbins(), $(self.$nth_index.numbins()),*];
-                // let ix = index % self.0.numbins();
-                // let iy = index / self.0.numbins();
-
-                // let bx = self.0.bin(ix)?;
-                // let by = self.1.bin(iy)?;
-                // Some((bx, by))
-
             }
         }
 
@@ -106,7 +97,7 @@ macro_rules! impl_axes {
 impl_axes! {
     (0 => X),
     (1 => Y),
-    //(1 => Z),
+    (2 => Z),
 }
 
 impl<X: Axis + Grow<<X as Axis>::Coordinate>> Grow<<Self as Axis>::Coordinate> for (X,) {
