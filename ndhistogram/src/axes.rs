@@ -74,22 +74,28 @@ macro_rules! impl_axes {
 
             fn bin(&self, index: usize) -> Option<Self::BinRange> {
                 let numbins = [self.$index.numbins(), $(self.$nth_index.numbins()),*];
+                let product = numbins.iter().scan(1, |acc, it| Some(*acc * *it));
+                let mut index = index;
+                let index: Vec<_> = product.map(|nb| {
+                    let v = index % nb;
+                    index /= nb;
+                    v
+                } ).collect();
+                Some(
+                    (
+                        self.$index.bin(index[$index])?,
+                        $(self.$nth_index.bin(index[$nth_index])?),*
+                )
+            )
 
-                //let arr = [self.$index.numbins(), $(self.$nth_index.numbins()),*];
-                let ix = index % self.0.numbins();
-                let iy = index / self.0.numbins();
+                // //let arr = [self.$index.numbins(), $(self.$nth_index.numbins()),*];
+                // let ix = index % self.0.numbins();
+                // let iy = index / self.0.numbins();
 
-                let bx = self.0.bin(ix)?;
-                let by = self.1.bin(iy)?;
-                Some((bx, by))
+                // let bx = self.0.bin(ix)?;
+                // let by = self.1.bin(iy)?;
+                // Some((bx, by))
 
-                // public int[] to3D( int idx ) {
-                //     final int z = idx / (xMax * yMax);
-                //     idx -= (z * xMax * yMax);
-                //     final int y = idx / xMax;
-                //     final int x = idx % xMax;
-                //     return new int[]{ x, y, z };
-                // }
             }
         }
 
