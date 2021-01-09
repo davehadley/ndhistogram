@@ -31,13 +31,17 @@ source install-hook.sh
 - [x] Category axis.
 - [x] Growable axis.
 - [x] Noflow
-- [ ] AnyD histogram
+- [ ] Fix Histogram traits.
+- [ ] Fix Fill traits.
+- [ ] Make Axes a struct to permit future optimisations.
 - [ ] Remove grow.
 - [ ] Mega refactor
 - [ ] Check API and naming guidelines are met.
 - [ ] Documentation.
 - [ ] Make public on github.
 - [ ] Release to create.io.
+- [ ] AnyD histogram
+- [ ] Implement Fill trait for weights tracker.
 - [ ] Variable binning
 - [ ] Integer binning
 - [ ] numpy style slicing?
