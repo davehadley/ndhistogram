@@ -98,15 +98,15 @@ macro_rules! impl_axes {
             }
         }
 
-        impl_axes!(@REMOVELAST $(($nth_index => $nth_type_parameter),)*);
+        impl_axes!(@REMOVELAST $(($nth_index: $nth_type_parameter),)*);
     };
-    (@REMOVELAST ($index:tt => $type_parameter:ident), $( ($nth_index:tt => $nth_type_parameter:ident), )+ ) => {
-        impl_axes!(@REMOVELAST ($index => $type_parameter), @SEPARATOR $(($nth_index => $nth_type_parameter),)*);
+    (@REMOVELAST ($index:tt: $type_parameter:ident), $( ($nth_index:tt: $nth_type_parameter:ident), )+ ) => {
+        impl_axes!(@REMOVELAST ($index: $type_parameter), @SEPARATOR $(($nth_index: $nth_type_parameter),)*);
     };
-    (@REMOVELAST $( ($first_index:tt => $first_type_parameter:ident), )+ @SEPARATOR ($index:tt => $type_parameter:ident), $( ($nth_index:tt => $nth_type_parameter:ident), )+ ) => {
-        impl_axes!(@REMOVELAST $(($first_index => $first_type_parameter),)* ($index => $type_parameter), @SEPARATOR $(($nth_index => $nth_type_parameter),)*);
+    (@REMOVELAST $( ($first_index:tt: $first_type_parameter:ident), )+ @SEPARATOR ($index:tt: $type_parameter:ident), $( ($nth_index:tt: $nth_type_parameter:ident), )+ ) => {
+        impl_axes!(@REMOVELAST $(($first_index: $first_type_parameter),)* ($index: $type_parameter), @SEPARATOR $(($nth_index: $nth_type_parameter),)*);
     };
-    (@REMOVELAST $( ($first_index:tt => $first_type_parameter:ident), )+ @SEPARATOR ($index:tt => $type_parameter:ident), ) => {
+    (@REMOVELAST $( ($first_index:tt: $first_type_parameter:ident), )+ @SEPARATOR ($index:tt: $type_parameter:ident), ) => {
         //impl_axes!($(($first_index => $first_type_parameter),)*);
         impl_axes!($($first_type_parameter: $first_index,)*);
     };
