@@ -100,15 +100,25 @@ macro_rules! impl_axes {
 
         impl_axes!(@REMOVELAST $([$nth_index AND $nth_type_parameter],)*);
     };
+
+    // TODO: yuk! so ugly. clean this up by moving it out into another macro
+    // Remove the last element of the impl_axes! { x: 0 .... n-1: N-1, n: N}
+    // and call impl_axes! { x: 0 .... n-1: N-1}
     (@REMOVELAST [$index:tt AND $type_parameter:ident], $( [$nth_index:tt AND $nth_type_parameter:ident], )+ ) => {
         impl_axes!(@REMOVELAST [$index AND $type_parameter], @SEPARATOR $([$nth_index AND $nth_type_parameter],)*);
     };
+    // optimisation to reduce levels of recursion required (move 4 at once)
+    (@REMOVELAST $( [$first_index:tt AND $first_type_parameter:ident], )+ @SEPARATOR [$index1:tt AND $type_parameter1:ident], [$index2:tt AND $type_parameter2:ident], [$index3:tt AND $type_parameter3:ident], [$index4:tt AND $type_parameter4:ident], $( [$nth_index:tt AND $nth_type_parameter:ident], )+ ) => {
+        impl_axes!(@REMOVELAST $([$first_index AND $first_type_parameter],)* [$index1 AND $type_parameter1], [$index2 AND $type_parameter2], [$index3 AND $type_parameter3], [$index4 AND $type_parameter4], @SEPARATOR $([$nth_index AND $nth_type_parameter],)*);
+    };
+    // optimisation to reduce levels of recursion required (move 2 at once)
     (@REMOVELAST $( [$first_index:tt AND $first_type_parameter:ident], )+ @SEPARATOR [$index1:tt AND $type_parameter1:ident], [$index2:tt AND $type_parameter2:ident], $( [$nth_index:tt AND $nth_type_parameter:ident], )+ ) => {
         impl_axes!(@REMOVELAST $([$first_index AND $first_type_parameter],)* [$index1 AND $type_parameter1], [$index2 AND $type_parameter2], @SEPARATOR $([$nth_index AND $nth_type_parameter],)*);
     };
     (@REMOVELAST $( [$first_index:tt AND $first_type_parameter:ident], )+ @SEPARATOR [$index:tt AND $type_parameter:ident], $( [$nth_index:tt AND $nth_type_parameter:ident], )+ ) => {
         impl_axes!(@REMOVELAST $([$first_index AND $first_type_parameter],)* [$index AND $type_parameter], @SEPARATOR $([$nth_index AND $nth_type_parameter],)*);
     };
+    // all pairs have been moved to the left
     (@REMOVELAST $( [$first_index:tt AND $first_type_parameter:ident], )+ @SEPARATOR [$index:tt AND $type_parameter:ident], ) => {
         //impl_axes!($(($first_index => $first_type_parameter),)*);
         impl_axes!($($first_type_parameter: $first_index,)*);
@@ -134,6 +144,9 @@ impl_axes! {
     d15: 15,
     d16: 16,
     d17: 17,
+    d18: 18,
+    d19: 19,
+    d20: 20,
 }
 
 impl<X: Axis + Grow<<X as Axis>::Coordinate>> Grow<<Self as Axis>::Coordinate> for (X,) {
