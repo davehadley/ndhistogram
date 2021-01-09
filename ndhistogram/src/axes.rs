@@ -71,32 +71,7 @@ macro_rules! impl_axes {
                     .skip(1)
                     .zip(indices.iter().rev())
                     .fold(indices[0], |acc, (nbin, idx)| acc + nbin*idx);
-                //println!("DEBUG coordinate={:?}", coordinate);
-                println!("DEBUG numbins={:?}", numbins);
-                println!("DEBUG indices={:?}", indices);
-                println!("DEBUG index={:?}", index);
                 Some(index)
-
-                // fNdimPlusOne = ndim + 1;
-                // fSizes = new Long64_t[ndim + 1];
-                // Int_t overBins = addOverflow ? 2 : 0;
-                // fSizes[ndim] = 1;
-                // for (Int_t i = 0; i < ndim; ++i) {
-                //    fSizes[ndim - i - 1] = fSizes[ndim - i] * (nbins[ndim - i - 1] + overBins);
-                // }
-                // Get the linear bin number for each dimension's bin index
-                // Long64_t bin = idx[fNdimPlusOne - 2];
-                // for (Int_t d = 0; d < fNdimPlusOne - 2; ++d) {
-                //     bin += fSizes[d + 1] * idx[d];
-                // }
-
-                // let index = numbins.iter()
-                //     .scan(1, |acc, nbin| Some(*acc * *nbin))
-                //     .skip(1)
-                //     .zip(indices.iter())
-                //     .fold(indices[indices.len()-1], |acc, (nbin, idx)| acc + nbin*idx);
-                // Some(index)
-
             }
 
             fn numbins(&self) -> usize {
