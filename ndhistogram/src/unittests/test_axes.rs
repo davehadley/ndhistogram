@@ -35,6 +35,21 @@ fn test_axes_2d_iter() {
 }
 
 #[test]
+fn test_axes_2d_index() {
+    let x = CategoryNoFlow::new(vec!["A", "B"]);
+    let y = CategoryNoFlow::new(vec!["C", "D"]);
+    let xy = (x.clone(), y.clone());
+    let actual = vec![
+        xy.index(&("A", "C")),
+        xy.index(&("B", "C")),
+        xy.index(&("A", "D")),
+        xy.index(&("B", "D")),
+    ];
+    let expected: Vec<_> = (0..4).map(|it| Some(it)).collect();
+    assert_eq!(expected, actual)
+}
+
+#[test]
 fn test_axes_3d_numbins() {
     let x = Uniform::new(5, 0.0, 1.0);
     let y = Uniform::new(4, 0.0, 1.0);
@@ -59,5 +74,25 @@ fn test_axes_3d_iter() {
         (6, (new("x0"), new("y1"), new("z1"))),
         (7, (new("x1"), new("y1"), new("z1"))),
     ];
+    assert_eq!(expected, actual)
+}
+
+#[test]
+fn test_axes_3d_index() {
+    let x = CategoryNoFlow::new(vec!["x0", "x1"]);
+    let y = CategoryNoFlow::new(vec!["y0", "y1"]);
+    let z = CategoryNoFlow::new(vec!["z0", "z1"]);
+    let xyz = (x.clone(), y.clone(), z.clone());
+    let actual = vec![
+        xyz.index(&("x0", "y0", "z0")),
+        xyz.index(&("x1", "y0", "z0")),
+        xyz.index(&("x0", "y1", "z0")),
+        xyz.index(&("x1", "y1", "z0")),
+        xyz.index(&("x0", "y0", "z1")),
+        xyz.index(&("x1", "y0", "z1")),
+        xyz.index(&("x0", "y1", "z1")),
+        xyz.index(&("x1", "y1", "z1")),
+    ];
+    let expected: Vec<_> = (0..8).map(|it| Some(it)).collect();
     assert_eq!(expected, actual)
 }

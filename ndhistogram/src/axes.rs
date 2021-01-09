@@ -63,16 +63,18 @@ macro_rules! impl_axes {
             type BinRange = ($($nth_type_parameter::BinRange),*);
 
             fn index(&self, coordinate: &Self::Coordinate) -> Option<usize> {
-                let numbins = [$(self.$nth_index.numbins()),*];
+                let numbins: Vec<_> = [$(self.$nth_index.numbins()),*].iter().scan(1, |acc, nbin| {*acc *= *nbin; Some(*acc)}).collect();
                 let indices = [$(self.$nth_index.index(&coordinate.$nth_index)?),*];
-
 
                 let index = numbins.iter()
                     .rev()
-                    .scan(1, |acc, nbin| Some(*acc * *nbin))
                     .skip(1)
                     .zip(indices.iter().rev())
                     .fold(indices[0], |acc, (nbin, idx)| acc + nbin*idx);
+                //println!("DEBUG coordinate={:?}", coordinate);
+                println!("DEBUG numbins={:?}", numbins);
+                println!("DEBUG indices={:?}", indices);
+                println!("DEBUG index={:?}", index);
                 Some(index)
 
                 // fNdimPlusOne = ndim + 1;
