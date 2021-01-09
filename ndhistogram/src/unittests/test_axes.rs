@@ -109,7 +109,7 @@ fn test_axes_3d_index() {
         xyz.index(&("x0", "y1", "z1")),
         xyz.index(&("x1", "y1", "z1")),
     ];
-    let expected: Vec<_> = (0..8).map(|it| Some(it)).collect();
+    let expected: Vec<_> = (0..8).map(Some).collect();
     assert_eq!(expected, actual)
 }
 

@@ -124,3 +124,11 @@ macro_rules! make_test_nd_axes {
 make_test_nd_axes!(macro_test_axes_2d(x: 0, y: 1));
 make_test_nd_axes!(macro_test_axes_3d(x: 0, y: 1, z: 2));
 make_test_nd_axes!(macro_test_axes_4d(x: 0, y: 1, z: 2, t: 3));
+make_test_nd_axes!(macro_test_axes_5d(x0: 0, x1: 1, x2: 2, x3: 3, x4: 4));
+make_test_nd_axes!(macro_test_axes_6d(x0: 0, x1: 1, x2: 2, x3: 3, x4: 4, x5: 5));
+make_test_nd_axes!(macro_test_axes_7d(x0: 0, x1: 1, x2: 2, x3: 3, x4: 4, x5: 5, x6: 6));
+make_test_nd_axes!(macro_test_axes_8d(x0: 0, x1: 1, x2: 2, x3: 3, x4: 4, x5: 5, x6: 6, x7: 7));
+make_test_nd_axes!(macro_test_axes_9d(x0: 0, x1: 1, x2: 2, x3: 3, x4: 4, x5: 5, x6: 6, x7: 7, x8: 8));
+make_test_nd_axes!(macro_test_axes_10d(x0: 0, x1: 1, x2: 2, x3: 3, x4: 4, x5: 5, x6: 6, x7: 7, x8: 8, x9: 9));
+make_test_nd_axes!(macro_test_axes_11d(x0: 0, x1: 1, x2: 2, x3: 3, x4: 4, x5: 5, x6: 6, x7: 7, x8: 8, x9: 9, x10: 10));
+make_test_nd_axes!(macro_test_axes_12d(x0: 0, x1: 1, x2: 2, x3: 3, x4: 4, x5: 5, x6: 6, x7: 7, x8: 8, x9: 9, x10: 10, x11: 11));
