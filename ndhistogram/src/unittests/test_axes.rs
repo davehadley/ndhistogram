@@ -45,7 +45,23 @@ fn test_axes_2d_index() {
         xy.index(&("A", "D")),
         xy.index(&("B", "D")),
     ];
-    let expected: Vec<_> = (0..4).map(|it| Some(it)).collect();
+    let expected: Vec<_> = (0..4).map(Some).collect();
+    assert_eq!(expected, actual)
+}
+
+#[test]
+fn test_axes_2d_bin() {
+    let x = CategoryNoFlow::new(vec!["A", "B"]);
+    let y = CategoryNoFlow::new(vec!["C", "D"]);
+    let xy = (x.clone(), y.clone());
+    let actual = vec![xy.bin(0), xy.bin(1), xy.bin(2), xy.bin(3)];
+    let new = SingleValuedBinRange::new;
+    let expected = vec![
+        Some((new("A"), new("C"))),
+        Some((new("B"), new("C"))),
+        Some((new("A"), new("D"))),
+        Some((new("B"), new("D"))),
+    ];
     assert_eq!(expected, actual)
 }
 
@@ -94,5 +110,26 @@ fn test_axes_3d_index() {
         xyz.index(&("x1", "y1", "z1")),
     ];
     let expected: Vec<_> = (0..8).map(|it| Some(it)).collect();
+    assert_eq!(expected, actual)
+}
+
+#[test]
+fn test_axes_3d_bin() {
+    let x = CategoryNoFlow::new(vec!["x0", "x1"]);
+    let y = CategoryNoFlow::new(vec!["y0", "y1"]);
+    let z = CategoryNoFlow::new(vec!["z0", "z1"]);
+    let xyz = (x.clone(), y.clone(), z.clone());
+    let actual: Vec<_> = (0..8).map(|index| xyz.bin(index)).collect();
+    let new = SingleValuedBinRange::new;
+    let expected = vec![
+        Some((new("x0"), new("y0"), new("z0"))),
+        Some((new("x1"), new("y0"), new("z0"))),
+        Some((new("x0"), new("y1"), new("z0"))),
+        Some((new("x1"), new("y1"), new("z0"))),
+        Some((new("x0"), new("y0"), new("z1"))),
+        Some((new("x1"), new("y0"), new("z1"))),
+        Some((new("x0"), new("y1"), new("z1"))),
+        Some((new("x1"), new("y1"), new("z1"))),
+    ];
     assert_eq!(expected, actual)
 }

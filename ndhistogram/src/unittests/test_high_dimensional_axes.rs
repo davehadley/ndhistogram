@@ -122,5 +122,5 @@ macro_rules! make_test_nd_axes {
 }
 
 make_test_nd_axes!(macro_test_axes_2d(x: 0, y: 1));
-//make_test_nd_axes!(macro_test_axes_3d(x: 0, y: 1, z: 2));
-//make_test_nd_axes!(macro_test_axes_4d(x: 0, y: 1, z: 2, t: 3));
+make_test_nd_axes!(macro_test_axes_3d(x: 0, y: 1, z: 2));
+make_test_nd_axes!(macro_test_axes_4d(x: 0, y: 1, z: 2, t: 3));
