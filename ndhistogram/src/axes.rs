@@ -98,36 +98,20 @@ macro_rules! impl_axes {
             }
         }
 
-        impl_axes!(@REMOVELAST $(($nth_index: $nth_type_parameter),)*);
+        impl_axes!(@REMOVELAST $(($nth_index AND $nth_type_parameter),)*);
     };
-    (@REMOVELAST ($index:tt: $type_parameter:ident), $( ($nth_index:tt: $nth_type_parameter:ident), )+ ) => {
-        impl_axes!(@REMOVELAST ($index: $type_parameter), @SEPARATOR $(($nth_index: $nth_type_parameter),)*);
+    (@REMOVELAST ($index:tt AND $type_parameter:ident), $( ($nth_index:tt AND $nth_type_parameter:ident), )+ ) => {
+        impl_axes!(@REMOVELAST ($index AND $type_parameter), @SEPARATOR $(($nth_index AND $nth_type_parameter),)*);
     };
-    (@REMOVELAST $( ($first_index:tt: $first_type_parameter:ident), )+ @SEPARATOR ($index:tt: $type_parameter:ident), $( ($nth_index:tt: $nth_type_parameter:ident), )+ ) => {
-        impl_axes!(@REMOVELAST $(($first_index: $first_type_parameter),)* ($index: $type_parameter), @SEPARATOR $(($nth_index: $nth_type_parameter),)*);
+    (@REMOVELAST $( ($first_index:tt AND $first_type_parameter:ident), )+ @SEPARATOR ($index:tt AND $type_parameter:ident), $( ($nth_index:tt AND $nth_type_parameter:ident), )+ ) => {
+        impl_axes!(@REMOVELAST $(($first_index AND $first_type_parameter),)* ($index AND $type_parameter), @SEPARATOR $(($nth_index AND $nth_type_parameter),)*);
     };
-    (@REMOVELAST $( ($first_index:tt: $first_type_parameter:ident), )+ @SEPARATOR ($index:tt: $type_parameter:ident), ) => {
+    (@REMOVELAST $( ($first_index:tt AND $first_type_parameter:ident), )+ @SEPARATOR ($index:tt AND $type_parameter:ident), ) => {
         //impl_axes!($(($first_index => $first_type_parameter),)*);
         impl_axes!($($first_type_parameter: $first_index,)*);
     };
 }
 
-// impl_axes! {
-//     (0 => X),
-//     (1 => Y),
-//     (2 => Z),
-//     (3 => T),
-//     (4 => T1),
-//     (5 => T2),
-//     (6 => T3),
-//     (7 => T4),
-//     (8 => T5),
-//     (9 => T6),
-//     (10 => T7),
-//     (11 => T8),
-//     (12 => T9),
-//     (13 => T10),
-// }
 impl_axes! {
     x: 0,
     y: 1,
