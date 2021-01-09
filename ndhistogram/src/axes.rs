@@ -32,7 +32,8 @@ macro_rules! impl_axes {
     () => {
         pub trait Axes: Axis {}
     };
-    ( ($index:tt => $type_parameter:ident), ) => {
+    //( ($index:tt => $type_parameter:ident), ) => {
+        ( $type_parameter:ident: $index:tt, ) => {
 
         impl<X: Axis> Axes for (X,) {}
 
@@ -55,7 +56,8 @@ macro_rules! impl_axes {
 
         impl_axes!();
     };
-    ( $( ($nth_index:tt => $nth_type_parameter:ident), )+ ) => {
+    //( $( ($nth_index:tt => $nth_type_parameter:ident), )+ ) => {
+        ( $($nth_type_parameter:ident: $nth_index:tt, )+ ) => {
         impl<$($nth_type_parameter: Axis),*> Axes for ($($nth_type_parameter),*) {}
 
         impl<$($nth_type_parameter: Axis),*> Axis for ($($nth_type_parameter),*) {
@@ -105,25 +107,42 @@ macro_rules! impl_axes {
         impl_axes!(@REMOVELAST $(($first_index => $first_type_parameter),)* ($index => $type_parameter), @SEPARATOR $(($nth_index => $nth_type_parameter),)*);
     };
     (@REMOVELAST $( ($first_index:tt => $first_type_parameter:ident), )+ @SEPARATOR ($index:tt => $type_parameter:ident), ) => {
-        impl_axes!($(($first_index => $first_type_parameter),)*);
+        //impl_axes!($(($first_index => $first_type_parameter),)*);
+        impl_axes!($($first_type_parameter: $first_index,)*);
     };
 }
 
+// impl_axes! {
+//     (0 => X),
+//     (1 => Y),
+//     (2 => Z),
+//     (3 => T),
+//     (4 => T1),
+//     (5 => T2),
+//     (6 => T3),
+//     (7 => T4),
+//     (8 => T5),
+//     (9 => T6),
+//     (10 => T7),
+//     (11 => T8),
+//     (12 => T9),
+//     (13 => T10),
+// }
 impl_axes! {
-    (0 => X),
-    (1 => Y),
-    (2 => Z),
-    (3 => T),
-    (4 => T1),
-    (5 => T2),
-    (6 => T3),
-    (7 => T4),
-    (8 => T5),
-    (9 => T6),
-    (10 => T7),
-    (11 => T8),
-    (12 => T9),
-    (13 => T10),
+    x: 0,
+    y: 1,
+    z: 2,
+    t: 3,
+    d4: 4,
+    d5: 5,
+    d6: 6,
+    d7: 7,
+    d8: 8,
+    d9: 9,
+    d10: 10,
+    d11: 11,
+    d12: 12,
+    d13: 13,
 }
 
 impl<X: Axis + Grow<<X as Axis>::Coordinate>> Grow<<Self as Axis>::Coordinate> for (X,) {
