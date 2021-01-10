@@ -40,6 +40,7 @@ pub trait Histogram<A: Axes, V> {
             value.fill()
         }
     }
+
     fn fill_weight<W>(&mut self, coordinate: &A::Coordinate, weight: W)
     where
         V: FillWeight<W>,

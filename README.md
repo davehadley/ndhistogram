@@ -31,14 +31,15 @@ source install-hook.sh
 - [x] Category axis.
 - [x] Growable axis.
 - [x] Noflow
-- [ ] Fix Histogram traits.
-- [ ] Fix Fill traits.
-- [ ] Make Histogram "Item" an associated type.
+- [x] Fix Histogram traits.
+- [x] Fix Fill traits.
+- [x] Make Histogram "Item" an associated type. --> hard to do without GAT
 - [ ] Move Axes to Axis module?
 - [ ] Move unit tests out to tests directory.
 - [ ] Make Axes a struct to permit future optimisations.
-- [ ] Remove grow.
+- [x] Remove grow.
 - [ ] Mega refactor
+- [ ] Add tests for integer histogram 
 - [ ] Check API and naming guidelines are met.
 - [ ] Documentation.
 - [ ] Make public on github.
