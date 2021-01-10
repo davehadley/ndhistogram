@@ -160,3 +160,9 @@ fn test_histogram_uniform_1d_iter_mut() {
     assert_eq!(hist.value_at_index(3), Some(&3.0));
     assert_eq!(hist.value_at_index(4), None);
 }
+
+#[test]
+fn test_histogram_display() {
+    let hist = ndhistogram!(Uniform::new(2, 0.0, 2.0));
+    format!("{}", hist);
+}

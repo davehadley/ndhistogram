@@ -1,13 +1,29 @@
 use super::axis::Axis;
 
+// Count idents in macro from: <https://danielkeep.github.io/tlborm/book/blk-counting.html>
+macro_rules! count_idents {
+    ($($idents:ident),* $(,)*) => {
+        {
+            #[allow(dead_code, non_camel_case_types)]
+            enum Idents { $($idents,)* __CountIdentsLast }
+            const COUNT: usize = Idents::__CountIdentsLast as usize;
+            COUNT
+        }
+    };
+}
+
 macro_rules! impl_axes {
     () => {
-        pub trait Axes: Axis {}
+        pub trait Axes: Axis {
+            fn num_dim(&self) -> usize;
+        }
     };
     //( ($index:tt => $type_parameter:ident), ) => {
         ( $type_parameter:ident: $index:tt, ) => {
 
-        impl<X: Axis> Axes for (X,) {}
+        impl<X: Axis> Axes for (X,) {
+            fn num_dim(&self) -> usize { 1 }
+        }
 
         impl<X: Axis> Axis for (X,) {
             type Coordinate = X::Coordinate;
@@ -30,7 +46,9 @@ macro_rules! impl_axes {
     };
     //( $( ($nth_index:tt => $nth_type_parameter:ident), )+ ) => {
         ( $($nth_type_parameter:ident: $nth_index:tt, )+ ) => {
-        impl<$($nth_type_parameter: Axis),*> Axes for ($($nth_type_parameter),*) {}
+        impl<$($nth_type_parameter: Axis),*> Axes for ($($nth_type_parameter),*) {
+            fn num_dim(&self) -> usize { count_idents!($($nth_type_parameter),*) }
+        }
 
         impl<$($nth_type_parameter: Axis),*> Axis for ($($nth_type_parameter),*) {
             type Coordinate = ($($nth_type_parameter::Coordinate),*);
