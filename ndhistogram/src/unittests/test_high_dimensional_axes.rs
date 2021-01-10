@@ -4,13 +4,12 @@ use rand::{
 };
 
 use crate::axis::{Axis, Category, Uniform};
-use crate::AxesTuple;
 
 #[test]
 fn test_axes_2d() {
     let xaxis = Uniform::new(3, 0.0, 3.0);
     let yaxis = Category::new(vec!["A", "B"]);
-    let axes3d = AxesTuple::from((xaxis.clone(), yaxis.clone()));
+    let axes3d = (xaxis.clone(), yaxis.clone());
     let mut rng = StdRng::seed_from_u64(12);
     let ntests = 10000;
     (0..ntests)
@@ -70,14 +69,14 @@ fn test_axes_2d() {
 macro_rules! make_nd_axes {
     () => {(,)};
     ($($d:ident)+) => {
-        AxesTuple::from((
+        (
         $(
             {
                 let $d = Uniform::new(2, 0.0, 2.0);
                 $d
             },
         )*
-    ))
+    )
     };
 }
 

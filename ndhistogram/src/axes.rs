@@ -2,40 +2,40 @@ use ndarray::Array3;
 
 use super::axis::Axis;
 
+// impl<X: Axis, Y: Axis> Axis for (X, Y) {
+//     type Coordinate = (X::Coordinate, Y::Coordinate);
+//     type BinRange = (X::BinRange, Y::BinRange);
+
+//     fn index(&self, coordinate: &Self::Coordinate) -> Option<usize> {
+//         let ix = self.0.index(&coordinate.0)?;
+//         let iy = self.1.index(&coordinate.1)?;
+//         Some(ix + self.0.numbins() * iy)
+//     }
+
+//     fn numbins(&self) -> usize {
+//         self.0.numbins() * self.1.numbins()
+//     }
+
+//     fn bin(&self, index: usize) -> Option<Self::BinRange> {
+//         let ix = index % self.0.numbins();
+//         let iy = index / self.0.numbins();
+
+//         let bx = self.0.bin(ix)?;
+//         let by = self.1.bin(iy)?;
+//         Some((bx, by))
+//     }
+// }
+
 macro_rules! impl_axes {
     () => {
-
-        pub trait Axes : Axis {
-
-        }
-
-        #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Default, Hash)]
-        pub struct AxesTuple<T> { axes: T }
-
-        impl <T> core::ops::Deref for AxesTuple<T> {
-            type Target = T;
-
-            fn deref (self: &'_ Self) -> &'_ Self::Target
-            {
-                &self.axes
-            }
-        }
-
+        pub trait Axes: Axis {}
     };
     //( ($index:tt => $type_parameter:ident), ) => {
         ( $type_parameter:ident: $index:tt, ) => {
 
-        impl<X: Axis> AxesTuple<(X,)> {
-            pub fn new(axes: (X,)) -> AxesTuple<(X,)> { AxesTuple{axes} }
-        }
+        impl<X: Axis> Axes for (X,) {}
 
-        impl<X: Axis> From<(X,)> for AxesTuple<(X,)> {
-            fn from(item: (X,)) -> Self { Self::new(item) }
-        }
-
-        impl<X: Axis> Axes for AxesTuple<(X,)> {}
-
-        impl<X: Axis> Axis for AxesTuple<(X,)> {
+        impl<X: Axis> Axis for (X,) {
             type Coordinate = X::Coordinate;
             type BinRange = X::BinRange;
 
@@ -56,19 +56,9 @@ macro_rules! impl_axes {
     };
     //( $( ($nth_index:tt => $nth_type_parameter:ident), )+ ) => {
         ( $($nth_type_parameter:ident: $nth_index:tt, )+ ) => {
-        impl<$($nth_type_parameter: Axis),*> AxesTuple<($($nth_type_parameter),*)> {}
+        impl<$($nth_type_parameter: Axis),*> Axes for ($($nth_type_parameter),*) {}
 
-        impl<$($nth_type_parameter: Axis),*> Axes for AxesTuple<($($nth_type_parameter),*)> {}
-
-        impl<$($nth_type_parameter: Axis),*> AxesTuple<($($nth_type_parameter),*)> {
-            pub fn new(axes: ($($nth_type_parameter),*)) -> AxesTuple<($($nth_type_parameter),*)> { AxesTuple{axes} }
-        }
-
-        impl<$($nth_type_parameter: Axis),*> From<($($nth_type_parameter),*)> for AxesTuple<($($nth_type_parameter),*)> {
-            fn from(item: ($($nth_type_parameter),*)) -> Self { Self::new(item) }
-        }
-
-        impl<$($nth_type_parameter: Axis),*> Axis for AxesTuple<($($nth_type_parameter),*)> {
+        impl<$($nth_type_parameter: Axis),*> Axis for ($($nth_type_parameter),*) {
             type Coordinate = ($($nth_type_parameter::Coordinate),*);
             type BinRange = ($($nth_type_parameter::BinRange),*);
 

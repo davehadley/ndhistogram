@@ -7,8 +7,6 @@
 // TODO: add warning for missing_docs before publishing
 
 mod axes;
-pub use axes::Axes;
-pub use axes::AxesTuple;
 pub mod axis;
 mod histogram;
 
