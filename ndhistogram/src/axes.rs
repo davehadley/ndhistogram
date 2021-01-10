@@ -1,5 +1,3 @@
-use ndarray::Array3;
-
 use super::axis::Axis;
 
 macro_rules! impl_axes {

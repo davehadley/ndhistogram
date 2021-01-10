@@ -37,7 +37,7 @@ source install-hook.sh
 - [x] Move Axes to Axis module? --> decided not to do this
 - [x] Move unit tests out to tests directory.
 - [x] Remove grow.
-- [ ] Mega refactor
+- [x] Mega refactor
 - [ ] Remove unneeded dependencies
 - [ ] Add tests for integer histogram 
 - [ ] Check API and naming guidelines are met.
