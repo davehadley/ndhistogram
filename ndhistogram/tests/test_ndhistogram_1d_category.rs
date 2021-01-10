@@ -1,6 +1,6 @@
 use ndhistogram::{
     axis::{Axis, Category},
-    ndhistogram, ArrayHistogram, Histogram, Item,
+    ndhistogram, VecHistogram, Histogram, Item,
 };
 
 #[test]
@@ -67,7 +67,7 @@ fn test_histogram_category_1d_value_at_coordinate() {
     assert_eq!(hist.value(&"C"), Some(&0));
 }
 
-fn make_simple_cat_histogram() -> ArrayHistogram<(Category<&'static str>,), i32> {
+fn make_simple_cat_histogram() -> VecHistogram<(Category<&'static str>,), i32> {
     let mut hist = ndhistogram!(Category::new(vec!["A", "B"]); i32);
     hist.fill(&"A");
     hist.fill_weight(&"B", 2);

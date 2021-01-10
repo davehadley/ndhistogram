@@ -10,7 +10,7 @@ mod axes;
 pub mod axis;
 mod histogram;
 
-pub use histogram::arrayhistogram::ArrayHistogram;
+pub use histogram::vechistogram::VecHistogram;
 pub use histogram::fill::Fill;
 pub use histogram::fill::FillWeight;
 pub use histogram::histogram::Histogram;

@@ -8,7 +8,7 @@ macro_rules! ndhistogram {
                 $x,
             )*
         );
-            $crate::ArrayHistogram::<_, $type>::new(axes)
+            $crate::VecHistogram::<_, $type>::new(axes)
         }
     };
     ($( $x:expr ),+ $(,)*) => {
@@ -18,7 +18,7 @@ macro_rules! ndhistogram {
                 $x,
             )*
         );
-            $crate::ArrayHistogram::<_, f64>::new(axes)
+            $crate::VecHistogram::<_, f64>::new(axes)
         }
     };
 

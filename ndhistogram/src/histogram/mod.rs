@@ -1,4 +1,4 @@
-pub mod arrayhistogram;
+pub mod vechistogram;
 pub mod fill;
 
 #[allow(clippy::module_inception)]

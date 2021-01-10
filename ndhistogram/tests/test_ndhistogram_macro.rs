@@ -1,14 +1,14 @@
 use std::any::Any;
 
 use ndhistogram::ndhistogram;
-use ndhistogram::{axis::Uniform, ArrayHistogram};
+use ndhistogram::{axis::Uniform, VecHistogram};
 
 #[test]
 fn test_ndhistogram_1d_uniform_constructor() {
     let hist = ndhistogram!(Uniform::new(5, 0.0, 1.0));
     assert_eq!(
         hist.type_id(),
-        ArrayHistogram::<_, f64>::new((Uniform::new(5, 0.0, 1.0),)).type_id()
+        VecHistogram::<_, f64>::new((Uniform::new(5, 0.0, 1.0),)).type_id()
     )
 }
 
@@ -17,7 +17,7 @@ fn test_ndhistogram_1d_uniform_constructor_with_explicittype() {
     let hist = ndhistogram!(Uniform::new(5, 0.0, 1.0); f64);
     assert_eq!(
         hist.type_id(),
-        ArrayHistogram::<_, f64>::new((Uniform::new(5, 0.0, 1.0),)).type_id()
+        VecHistogram::<_, f64>::new((Uniform::new(5, 0.0, 1.0),)).type_id()
     )
 }
 
@@ -27,7 +27,7 @@ fn test_ndhistogram_1d_uniform_constructor_with_ident() {
     let hist = ndhistogram!(ax);
     assert_eq!(
         hist.type_id(),
-        ArrayHistogram::<_, f64>::new((Uniform::new(5, 0.0, 1.0),)).type_id()
+        VecHistogram::<_, f64>::new((Uniform::new(5, 0.0, 1.0),)).type_id()
     )
 }
 
@@ -36,7 +36,7 @@ fn test_ndhistogram_2d_uniform_constructor() {
     let hist = ndhistogram!(Uniform::new(5, 0.0, 1.0), Uniform::new(5, 0.0, 1.0));
     assert_eq!(
         hist.type_id(),
-        ArrayHistogram::<_, f64>::new((Uniform::new(5, 0.0, 1.0), Uniform::new(5, 0.0, 1.0)))
+        VecHistogram::<_, f64>::new((Uniform::new(5, 0.0, 1.0), Uniform::new(5, 0.0, 1.0)))
             .type_id()
     )
 }
@@ -46,7 +46,7 @@ fn test_ndhistogram_2d_uniform_constructor_with_explicit_type() {
     let hist = ndhistogram!(Uniform::new(5, 0.0, 1.0), Uniform::new(5, 0.0, 1.0); f64);
     assert_eq!(
         hist.type_id(),
-        ArrayHistogram::<_, f64>::new((Uniform::new(5, 0.0, 1.0), Uniform::new(5, 0.0, 1.0)))
+        VecHistogram::<_, f64>::new((Uniform::new(5, 0.0, 1.0), Uniform::new(5, 0.0, 1.0)))
             .type_id()
     )
 }
@@ -58,7 +58,7 @@ fn test_ndhistogram_2d_uniform_constructor_with_ident() {
     let hist = ndhistogram!(x, y);
     assert_eq!(
         hist.type_id(),
-        ArrayHistogram::<_, f64>::new((Uniform::new(5, 0.0, 1.0), Uniform::new(5, 0.0, 1.0)))
+        VecHistogram::<_, f64>::new((Uniform::new(5, 0.0, 1.0), Uniform::new(5, 0.0, 1.0)))
             .type_id()
     )
 }
