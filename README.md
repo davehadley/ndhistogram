@@ -38,7 +38,7 @@ source install-hook.sh
 - [x] Move unit tests out to tests directory.
 - [x] Remove grow.
 - [x] Mega refactor
-- [ ] Remove unneeded dependencies
+- [x] Remove unneeded dependencies
 - [ ] Add tests for integer histogram 
 - [ ] Check API and naming guidelines are met.
 - [ ] Documentation.
