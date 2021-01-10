@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use crate::{
     axis::{Axis, Uniform},
-    histogram::{Fill, FillWeight, Histogram},
+    {Fill, FillWeight, Histogram},
 };
 
 #[test]

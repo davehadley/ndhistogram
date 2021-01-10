@@ -8,7 +8,13 @@
 
 mod axes;
 pub mod axis;
-pub mod histogram;
+mod histogram;
+
+pub use histogram::arrayhistogram::ArrayHistogram;
+pub use histogram::fill::Fill;
+pub use histogram::fill::FillWeight;
+pub use histogram::histogram::Histogram;
+pub use histogram::histogram::Item;
 
 #[macro_use]
 mod macros;

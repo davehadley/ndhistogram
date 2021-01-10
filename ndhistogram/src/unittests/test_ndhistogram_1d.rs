@@ -3,7 +3,7 @@ use rand_distr::{Distribution, Normal};
 
 use crate::{
     axis::{Axis, Uniform},
-    histogram::{ArrayHistogram, Fill, FillWeight, Histogram, Item},
+    {ArrayHistogram, Fill, FillWeight, Histogram, Item},
 };
 
 #[test]

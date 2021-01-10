@@ -3,11 +3,12 @@ use std::{
     ops::{AddAssign, Index},
 };
 
-use super::{Fill, FillWeight, Histogram, Item, Iter, IterMut, Value, Values, ValuesMut};
 use crate::{axes::Axes, axis::Axis};
 
+use super::histogram::{Histogram, Item, Iter, IterMut, ValuesMut};
+
 #[derive(Debug, Clone)]
-pub struct ArrayHistogram<A, V: Clone> {
+pub struct ArrayHistogram<A, V> {
     axes: A,
     values: Vec<V>,
 }
@@ -22,7 +23,7 @@ impl<A: Axes, V: Default + Clone> ArrayHistogram<A, V> {
     }
 }
 
-impl<A: Axes, V: Value> Histogram<A, V> for ArrayHistogram<A, V> {
+impl<A: Axes, V> Histogram<A, V> for ArrayHistogram<A, V> {
     fn value(&self, coordinate: &A::Coordinate) -> Option<&V> {
         let index = self.axes.index(coordinate)?;
         self.values.get(index)
@@ -66,7 +67,7 @@ impl<A: Axes, V: Value> Histogram<A, V> for ArrayHistogram<A, V> {
     }
 }
 
-impl<'a, A: Axes, V: Value> IntoIterator for &'a ArrayHistogram<A, V> {
+impl<'a, A: Axes, V> IntoIterator for &'a ArrayHistogram<A, V> {
     type Item = Item<A::BinRange, &'a V>;
 
     type IntoIter = Iter<'a, A, V>;
@@ -76,7 +77,7 @@ impl<'a, A: Axes, V: Value> IntoIterator for &'a ArrayHistogram<A, V> {
     }
 }
 
-impl<'a, A: Axes, V: Value + 'a> IntoIterator for &'a mut ArrayHistogram<A, V> {
+impl<'a, A: Axes, V: 'a> IntoIterator for &'a mut ArrayHistogram<A, V> {
     type Item = Item<A::BinRange, &'a mut V>;
 
     type IntoIter = IterMut<'a, A, V>;

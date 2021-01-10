@@ -1,6 +1,6 @@
 use crate::{
     axis::{binrange::SingleValuedBinRange, Category},
-    histogram::{Fill, Histogram, Item},
+    {Fill, Histogram, Item},
 };
 
 #[test]

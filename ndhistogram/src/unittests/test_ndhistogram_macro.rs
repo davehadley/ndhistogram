@@ -1,6 +1,6 @@
 use std::any::Any;
 
-use crate::{axis::Uniform, histogram::ArrayHistogram};
+use crate::{axis::Uniform, ArrayHistogram};
 
 #[test]
 fn test_ndhistogram_1d_uniform_constructor() {

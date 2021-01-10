@@ -33,6 +33,9 @@ source install-hook.sh
 - [x] Noflow
 - [ ] Fix Histogram traits.
 - [ ] Fix Fill traits.
+- [ ] Make Histogram "Item" an associated type.
+- [ ] Move Axes to Axis module?
+- [ ] Move unit tests out to tests directory.
 - [ ] Make Axes a struct to permit future optimisations.
 - [ ] Remove grow.
 - [ ] Mega refactor
