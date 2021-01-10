@@ -7,7 +7,7 @@ use std::{
     ops::{RangeBounds, RangeFrom, RangeTo, Sub},
 };
 
-use super::{binrange::ContinuousBinRange, Axis};
+use super::{bininterval::BinInterval, Axis};
 
 #[derive(Clone, PartialEq, Debug)]
 pub struct Uniform<T = f64> {
@@ -43,7 +43,7 @@ impl<T> Uniform<T> {
 // TODO: relax float retriction or add implementation for Integers
 impl<T: Float> Axis for Uniform<T> {
     type Coordinate = T;
-    type BinRange = ContinuousBinRange<T>;
+    type BinRange = BinInterval<T>;
 
     fn index(&self, coordinate: &Self::Coordinate) -> Option<usize> {
         let frac = (*coordinate - self.low) / (self.high - self.low);

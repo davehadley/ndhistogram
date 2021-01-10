@@ -1,4 +1,4 @@
-use ndhistogram::axis::{binrange::ContinuousBinRange, Axis, Uniform};
+use ndhistogram::axis::{bininterval::BinInterval, Axis, Uniform};
 
 use std::{convert::TryFrom, ops::Range};
 
@@ -23,9 +23,9 @@ fn test_uniform_get_bin() {
     let ax = Uniform::new(1, 0.0, 1.0);
     let actual: Vec<_> = (0..4).map(|it| ax.bin(it)).collect();
     let expected: Vec<_> = vec![
-        Some(ContinuousBinRange::underflow(0.0)),
-        Some(ContinuousBinRange::new(0.0, 1.0)),
-        Some(ContinuousBinRange::overflow(1.0)),
+        Some(BinInterval::underflow(0.0)),
+        Some(BinInterval::new(0.0, 1.0)),
+        Some(BinInterval::overflow(1.0)),
         None,
     ];
     assert_eq!(expected, actual);
@@ -87,10 +87,10 @@ fn test_uniform_iterate_items() {
     let ax = Uniform::new(2, 0.0, 2.0);
     let actual: Vec<_> = ax.into_iter().collect();
     let expected: Vec<(usize, _)> = vec![
-        (0, ContinuousBinRange::underflow(0.0)),
-        (1, ContinuousBinRange::new(0.0, 1.0)),
-        (2, ContinuousBinRange::new(1.0, 2.0)),
-        (3, ContinuousBinRange::overflow(2.0)),
+        (0, BinInterval::underflow(0.0)),
+        (1, BinInterval::new(0.0, 1.0)),
+        (2, BinInterval::new(1.0, 2.0)),
+        (3, BinInterval::overflow(2.0)),
     ];
     assert_eq!(expected, actual);
 }
@@ -100,9 +100,9 @@ fn test_uniform_iterate_bin() {
     let ax = Uniform::new(1, 0.0, 1.0);
     let actual: Vec<_> = ax.bins().collect();
     let expected: Vec<_> = vec![
-        ContinuousBinRange::underflow(0.0),
-        ContinuousBinRange::new(0.0, 1.0),
-        ContinuousBinRange::overflow(1.0),
+        BinInterval::underflow(0.0),
+        BinInterval::new(0.0, 1.0),
+        BinInterval::overflow(1.0),
     ];
     assert_eq!(expected, actual);
 }

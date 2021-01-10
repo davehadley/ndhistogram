@@ -1,4 +1,4 @@
-use ndhistogram::axis::{binrange::SingleValuedBinRange, Axis, Category};
+use ndhistogram::axis::{bininterval::SingleValueBinInterval, Axis, Category};
 
 #[test]
 fn test_category_numbins() {
@@ -28,10 +28,10 @@ fn test_category_get_bin() {
     let ax = Category::new(cats);
     let actual: Vec<_> = (0..5).map(|it| ax.bin(it)).collect();
     let expected: Vec<_> = vec![
-        Some(SingleValuedBinRange::new("A")),
-        Some(SingleValuedBinRange::new("B")),
-        Some(SingleValuedBinRange::new("C")),
-        Some(SingleValuedBinRange::overflow()),
+        Some(SingleValueBinInterval::new("A")),
+        Some(SingleValueBinInterval::new("B")),
+        Some(SingleValueBinInterval::new("C")),
+        Some(SingleValueBinInterval::overflow()),
         None,
     ];
     assert_eq!(expected, actual);
@@ -69,9 +69,9 @@ fn test_category_iterate_items() {
     let ax = Category::new(vec!["A", "B"]);
     let actual: Vec<_> = ax.into_iter().collect();
     let expected: Vec<(usize, _)> = vec![
-        (0, SingleValuedBinRange::new("A")),
-        (1, SingleValuedBinRange::new("B")),
-        (2, SingleValuedBinRange::overflow()),
+        (0, SingleValueBinInterval::new("A")),
+        (1, SingleValueBinInterval::new("B")),
+        (2, SingleValueBinInterval::overflow()),
     ];
     assert_eq!(expected, actual);
 }
@@ -81,9 +81,9 @@ fn test_category_iterate_bin() {
     let ax = Category::new(vec!["A", "B"]);
     let actual: Vec<_> = ax.bins().collect();
     let expected: Vec<_> = vec![
-        SingleValuedBinRange::new("A"),
-        SingleValuedBinRange::new("B"),
-        SingleValuedBinRange::overflow(),
+        SingleValueBinInterval::new("A"),
+        SingleValueBinInterval::new("B"),
+        SingleValueBinInterval::overflow(),
     ];
     assert_eq!(expected, actual);
 }
@@ -110,14 +110,14 @@ fn test_string_category() {
     assert_eq!(category.index(&"A".to_string()), Some(0));
     assert_eq!(
         category.bin(0),
-        Some(SingleValuedBinRange::new(String::from("A")))
+        Some(SingleValueBinInterval::new(String::from("A")))
     );
     assert_eq!(
         category.bins().collect::<Vec<_>>(),
         vec![
-            SingleValuedBinRange::new(String::from("A")),
-            SingleValuedBinRange::new(String::from("B")),
-            SingleValuedBinRange::overflow()
+            SingleValueBinInterval::new(String::from("A")),
+            SingleValueBinInterval::new(String::from("B")),
+            SingleValueBinInterval::overflow()
         ]
     );
 }

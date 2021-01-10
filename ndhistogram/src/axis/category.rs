@@ -1,7 +1,7 @@
 use std::hash::Hash;
 use std::{collections::HashMap, fmt::Display};
 
-use super::binrange::SingleValuedBinRange;
+use super::bininterval::SingleValueBinInterval;
 use super::Axis;
 
 // Type-bound alias
@@ -62,7 +62,7 @@ impl<T: Value> Category<T> {
 impl<T: Value> Axis for Category<T> {
     type Coordinate = T;
 
-    type BinRange = SingleValuedBinRange<T>;
+    type BinRange = SingleValueBinInterval<T>;
 
     fn index(&self, coordinate: &Self::Coordinate) -> Option<usize> {
         self.get_index(&coordinate)

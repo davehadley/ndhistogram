@@ -1,6 +1,6 @@
 use num::Float;
 
-use super::{binrange::ContinuousBinRange, Axis, Uniform};
+use super::{bininterval::BinInterval, Axis, Uniform};
 use std::fmt::{Debug, Display};
 
 #[derive(Clone, PartialEq, Debug)]
@@ -18,7 +18,7 @@ impl<T: Float> UniformNoFlow<T> {
 
 impl<T: Float> Axis for UniformNoFlow<T> {
     type Coordinate = T;
-    type BinRange = ContinuousBinRange<T>;
+    type BinRange = BinInterval<T>;
 
     fn index(&self, coordinate: &Self::Coordinate) -> Option<usize> {
         let index = self.axis.index(coordinate)?;
@@ -35,9 +35,9 @@ impl<T: Float> Axis for UniformNoFlow<T> {
     fn bin(&self, index: usize) -> Option<Self::BinRange> {
         let bin = self.axis.bin(index + 1)?;
         match bin {
-            ContinuousBinRange::Underflow { end: _ } => None,
-            ContinuousBinRange::Overflow { start: _ } => None,
-            ContinuousBinRange::Bin { start: _, end: _ } => Some(bin),
+            BinInterval::Underflow { end: _ } => None,
+            BinInterval::Overflow { start: _ } => None,
+            BinInterval::Bin { start: _, end: _ } => Some(bin),
         }
     }
 }

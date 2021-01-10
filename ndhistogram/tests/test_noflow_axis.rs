@@ -1,4 +1,4 @@
-use ndhistogram::axis::{binrange::ContinuousBinRange, Axis, UniformNoFlow};
+use ndhistogram::axis::{bininterval::BinInterval, Axis, UniformNoFlow};
 
 #[test]
 fn test_uniformnoflow_axis_numbins() {
@@ -25,8 +25,8 @@ fn test_uniformnoflow_get_bin() {
     let ax = UniformNoFlow::new(2, 0.0, 2.0);
     let actual: Vec<_> = (0..3).map(|it| ax.bin(it)).collect();
     let expected: Vec<_> = vec![
-        Some(ContinuousBinRange::new(0.0, 1.0)),
-        Some(ContinuousBinRange::new(1.0, 2.0)),
+        Some(BinInterval::new(0.0, 1.0)),
+        Some(BinInterval::new(1.0, 2.0)),
         None,
     ];
     assert_eq!(expected, actual);
@@ -45,10 +45,7 @@ fn test_uniform_noflow_bins() {
     let actual: Vec<_> = ax.bins().collect();
     assert_eq!(
         actual,
-        vec![
-            ContinuousBinRange::new(0.0, 1.0),
-            ContinuousBinRange::new(1.0, 2.0)
-        ]
+        vec![BinInterval::new(0.0, 1.0), BinInterval::new(1.0, 2.0)]
     );
 }
 
@@ -59,8 +56,8 @@ fn test_uniform_noflow_iter() {
     assert_eq!(
         actual,
         vec![
-            (0, ContinuousBinRange::new(0.0, 1.0)),
-            (1, ContinuousBinRange::new(1.0, 2.0))
+            (0, BinInterval::new(0.0, 1.0)),
+            (1, BinInterval::new(1.0, 2.0))
         ]
     );
 }

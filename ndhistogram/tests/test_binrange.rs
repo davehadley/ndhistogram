@@ -3,21 +3,21 @@ use std::{
     ops::{Range, RangeFrom, RangeTo},
 };
 
-use ndhistogram::axis::binrange::ContinuousBinRange;
+use ndhistogram::axis::bininterval::BinInterval;
 
 #[test]
 fn test_binrange_equality() {
-    let underflow0a = ContinuousBinRange::underflow(0.0);
-    let underflow0b = ContinuousBinRange::underflow(0.0);
-    let underflow1a = ContinuousBinRange::underflow(1.0);
+    let underflow0a = BinInterval::underflow(0.0);
+    let underflow0b = BinInterval::underflow(0.0);
+    let underflow1a = BinInterval::underflow(1.0);
 
-    let overflow0a = ContinuousBinRange::overflow(0.0);
-    let overflow0b = ContinuousBinRange::overflow(0.0);
-    let overflow1a = ContinuousBinRange::overflow(1.0);
+    let overflow0a = BinInterval::overflow(0.0);
+    let overflow0b = BinInterval::overflow(0.0);
+    let overflow1a = BinInterval::overflow(1.0);
 
-    let bin0a = ContinuousBinRange::new(0.0, 1.0);
-    let bin0b = ContinuousBinRange::new(0.0, 1.0);
-    let bin1a = ContinuousBinRange::new(1.0, 2.0);
+    let bin0a = BinInterval::new(0.0, 1.0);
+    let bin0b = BinInterval::new(0.0, 1.0);
+    let bin1a = BinInterval::new(1.0, 2.0);
 
     assert_eq!(underflow0a, underflow0b);
     assert_eq!(overflow0a, overflow0b);
@@ -34,37 +34,37 @@ fn test_binrange_equality() {
 
 #[test]
 fn test_binrange_underflow_debug() {
-    let underflow = ContinuousBinRange::underflow(0.0);
+    let underflow = BinInterval::underflow(0.0);
     println!("{:?}", underflow);
 }
 
 #[test]
 fn test_binrange_overflow_debug() {
-    let overflow = ContinuousBinRange::overflow(0.0);
+    let overflow = BinInterval::overflow(0.0);
     println!("{:?}", overflow);
 }
 
 #[test]
 fn test_binrange_bin_debug() {
-    let bin = ContinuousBinRange::new(0.0, 1.0);
+    let bin = BinInterval::new(0.0, 1.0);
     println!("{:?}", bin);
 }
 
 #[test]
 fn test_binrange_underflow_display() {
-    let underflow = ContinuousBinRange::underflow(0.0);
+    let underflow = BinInterval::underflow(0.0);
     println!("{}", underflow);
 }
 
 #[test]
 fn test_binrange_overflow_display() {
-    let overflow = ContinuousBinRange::overflow(0.0);
+    let overflow = BinInterval::overflow(0.0);
     println!("{}", overflow);
 }
 
 #[test]
 fn test_binrange_bin_display() {
-    let bin = ContinuousBinRange::new(0.0, 1.0);
+    let bin = BinInterval::new(0.0, 1.0);
     println!("{}", bin);
 }
 
@@ -73,9 +73,9 @@ fn test_binrange_bin_display() {
 fn test_binrange_bin_conversion() {
     let start = 0.0;
     let end = 1.0;
-    let bin = ContinuousBinRange::new(start, end);
+    let bin = BinInterval::new(start, end);
     let range: Range<_> = bin.clone().try_into().unwrap();
-    let bin2: ContinuousBinRange<_> = range.clone().into();
+    let bin2: BinInterval<_> = range.clone().into();
     assert_eq!(range.start, start);
     assert_eq!(range.end, end);
     assert_eq!(bin, bin2);
@@ -85,9 +85,9 @@ fn test_binrange_bin_conversion() {
 #[allow(clippy::float_cmp)]
 fn test_binrange_underflow_conversion() {
     let end = 1.0;
-    let bin = ContinuousBinRange::underflow(end);
+    let bin = BinInterval::underflow(end);
     let range: RangeTo<_> = bin.clone().try_into().unwrap();
-    let bin2: ContinuousBinRange<_> = range.clone().into();
+    let bin2: BinInterval<_> = range.clone().into();
     assert_eq!(range.end, end);
     assert_eq!(bin, bin2);
 }
@@ -96,24 +96,24 @@ fn test_binrange_underflow_conversion() {
 #[allow(clippy::float_cmp)]
 fn test_binrange_overflow_conversion() {
     let start = 1.0;
-    let bin = ContinuousBinRange::overflow(start);
+    let bin = BinInterval::overflow(start);
     let range: RangeFrom<_> = bin.clone().try_into().unwrap();
-    let bin2: ContinuousBinRange<_> = range.clone().into();
+    let bin2: BinInterval<_> = range.clone().into();
     assert_eq!(range.start, start);
     assert_eq!(bin, bin2);
 }
 
 #[test]
 fn test_binrange_is_clone() {
-    let bin = ContinuousBinRange::new(0.0, 1.0);
+    let bin = BinInterval::new(0.0, 1.0);
     assert_eq!(bin, bin.clone());
 }
 
 #[test]
 fn test_binrange_start_method() {
-    let underflow = ContinuousBinRange::underflow(0.0);
-    let overflow = ContinuousBinRange::overflow(1.0);
-    let bin = ContinuousBinRange::new(0.0, 1.0);
+    let underflow = BinInterval::underflow(0.0);
+    let overflow = BinInterval::overflow(1.0);
+    let bin = BinInterval::new(0.0, 1.0);
     assert_eq!(bin.start(), Some(0.0));
     assert_eq!(underflow.start(), None);
     assert_eq!(overflow.start(), Some(1.0));
@@ -121,9 +121,9 @@ fn test_binrange_start_method() {
 
 #[test]
 fn test_binrange_end_method() {
-    let underflow = ContinuousBinRange::underflow(0.0);
-    let overflow = ContinuousBinRange::overflow(1.0);
-    let bin = ContinuousBinRange::new(0.0, 1.0);
+    let underflow = BinInterval::underflow(0.0);
+    let overflow = BinInterval::overflow(1.0);
+    let bin = BinInterval::new(0.0, 1.0);
     assert_eq!(bin.end(), Some(1.0));
     assert_eq!(underflow.end(), Some(0.0));
     assert_eq!(overflow.end(), None);

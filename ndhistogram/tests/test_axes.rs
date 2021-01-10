@@ -1,4 +1,6 @@
-use ndhistogram::axis::{binrange::SingleValuedBinRange, Axis, Category, CategoryNoFlow, Uniform};
+use ndhistogram::axis::{
+    bininterval::SingleValueBinInterval, Axis, Category, CategoryNoFlow, Uniform,
+};
 
 #[test]
 fn test_axes_2d_numbins() {
@@ -12,8 +14,8 @@ fn test_axes_2d_iter() {
     let x = Category::new(vec!["A", "B"]);
     let y = Category::new(vec!["C", "D"]);
     let actual: Vec<_> = (x, y).iter().collect();
-    let new = SingleValuedBinRange::new;
-    let overflow = SingleValuedBinRange::overflow;
+    let new = SingleValueBinInterval::new;
+    let overflow = SingleValueBinInterval::overflow;
     let expected = vec![
         (0, (new("A"), new("C"))),
         (1, (new("B"), new("C"))),
@@ -49,7 +51,7 @@ fn test_axes_2d_bin() {
     let y = CategoryNoFlow::new(vec!["C", "D"]);
     let xy = (x.clone(), y.clone());
     let actual = vec![xy.bin(0), xy.bin(1), xy.bin(2), xy.bin(3)];
-    let new = SingleValuedBinRange::new;
+    let new = SingleValueBinInterval::new;
     let expected = vec![
         Some((new("A"), new("C"))),
         Some((new("B"), new("C"))),
@@ -73,7 +75,7 @@ fn test_axes_3d_iter() {
     let y = CategoryNoFlow::new(vec!["y0", "y1"]);
     let z = CategoryNoFlow::new(vec!["z0", "z1"]);
     let actual: Vec<_> = (x, y, z).iter().collect();
-    let new = SingleValuedBinRange::new;
+    let new = SingleValueBinInterval::new;
     let expected = vec![
         (0, (new("x0"), new("y0"), new("z0"))),
         (1, (new("x1"), new("y0"), new("z0"))),
@@ -114,7 +116,7 @@ fn test_axes_3d_bin() {
     let z = CategoryNoFlow::new(vec!["z0", "z1"]);
     let xyz = (x.clone(), y.clone(), z.clone());
     let actual: Vec<_> = (0..8).map(|index| xyz.bin(index)).collect();
-    let new = SingleValuedBinRange::new;
+    let new = SingleValueBinInterval::new;
     let expected = vec![
         Some((new("x0"), new("y0"), new("z0"))),
         Some((new("x1"), new("y0"), new("z0"))),

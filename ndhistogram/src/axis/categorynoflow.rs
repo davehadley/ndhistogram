@@ -1,4 +1,4 @@
-use super::{binrange::SingleValuedBinRange, category::Value, Axis, Category};
+use super::{bininterval::SingleValueBinInterval, category::Value, Axis, Category};
 use std::fmt::{Debug, Display};
 
 #[derive(Clone, PartialEq, Debug)]
@@ -19,7 +19,7 @@ impl<T: Value> CategoryNoFlow<T> {
 
 impl<T: Value> Axis for CategoryNoFlow<T> {
     type Coordinate = T;
-    type BinRange = SingleValuedBinRange<T>;
+    type BinRange = SingleValueBinInterval<T>;
 
     fn index(&self, coordinate: &Self::Coordinate) -> Option<usize> {
         let index = self.axis.index(coordinate)?;
@@ -36,8 +36,8 @@ impl<T: Value> Axis for CategoryNoFlow<T> {
     fn bin(&self, index: usize) -> Option<Self::BinRange> {
         let bin = self.axis.bin(index)?;
         match bin {
-            SingleValuedBinRange::Overflow => None,
-            SingleValuedBinRange::Bin { value: _ } => Some(bin),
+            SingleValueBinInterval::Overflow => None,
+            SingleValueBinInterval::Bin { value: _ } => Some(bin),
         }
     }
 }
