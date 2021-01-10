@@ -6,5 +6,5 @@ use std::{
 pub mod arrayhistogram;
 pub mod fill;
 
-#[allow(clippy::module_inception)] // shut up clippy
+#[allow(clippy::module_inception)]
 pub mod histogram;
