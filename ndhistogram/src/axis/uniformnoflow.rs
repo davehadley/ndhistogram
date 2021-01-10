@@ -8,10 +8,7 @@ pub struct UniformNoFlow<T> {
     axis: Uniform<T>,
 }
 
-impl<T: Float> UniformNoFlow<T>
-where
-    T: PartialEq + PartialOrd + Debug,
-{
+impl<T: Float> UniformNoFlow<T> {
     pub fn new(num: usize, low: T, high: T) -> Self {
         UniformNoFlow {
             axis: Uniform::new(num, low, high),

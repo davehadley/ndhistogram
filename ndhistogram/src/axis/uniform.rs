@@ -18,14 +18,14 @@ pub struct Uniform<T = f64> {
 
 impl<T> Uniform<T>
 where
-    T: PartialOrd + Debug,
+    T: PartialOrd,
 {
     pub fn new(num: usize, low: T, high: T) -> Uniform<T> {
         if num == 0 {
             panic!("Invalid axis num bins ({})", num);
         }
         if low >= high {
-            panic!("Invalid axis range bins (low::{:?}, high:{:?})", low, high);
+            panic!("Invalid axis range bins (low >= high)");
         }
         Uniform { num, low, high }
     }
@@ -40,6 +40,7 @@ impl<T> Uniform<T> {
     }
 }
 
+// TODO: relax float retriction or add implementation for Integers
 impl<T: Float> Axis for Uniform<T> {
     type Coordinate = T;
     type BinRange = ContinuousBinRange<T>;
@@ -75,17 +76,9 @@ impl<T: Float> Axis for Uniform<T> {
     fn indices(&self) -> Box<dyn Iterator<Item = usize>> {
         Box::new(0..self.numbins())
     }
-
-    // fn items<'a>(&'a self) -> Box<dyn Iterator<Item = (usize, Option<Self::BinRange>)> + 'a> {
-    //     Box::new(self.indices().map(move |it| (it, self.bin(it))))
-    // }
-
-    // fn bins<'a>(&'a self) -> Box<dyn Iterator<Item = Option<Self::BinRange>> + 'a> {
-    //     Box::new(self.indices().map(move |it| self.bin(it)))
-    // }
 }
 
-impl<T: Float + Display> Display for Uniform<T> {
+impl<T: Display> Display for Uniform<T> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
