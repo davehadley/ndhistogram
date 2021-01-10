@@ -16,7 +16,7 @@ type Iter<'a, BinRange> = Box<dyn Iterator<Item = (usize, BinRange)> + 'a>;
 type Indices = Box<dyn Iterator<Item = usize>>;
 type Bins<'a, BinRange> = Box<dyn Iterator<Item = BinRange> + 'a>;
 
-pub trait Axis: Clone {
+pub trait Axis {
     type Coordinate;
     type BinRange;
 

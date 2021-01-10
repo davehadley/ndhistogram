@@ -10,11 +10,12 @@ mod axes;
 pub mod axis;
 mod histogram;
 
-pub use histogram::vechistogram::VecHistogram;
+pub use axes::Axes;
 pub use histogram::fill::Fill;
 pub use histogram::fill::FillWeight;
 pub use histogram::histogram::Histogram;
 pub use histogram::histogram::Item;
+pub use histogram::vechistogram::VecHistogram;
 
 #[macro_use]
 mod macros;
