@@ -1,7 +1,3 @@
-use std::fmt::Debug;
-use std::fmt::Display;
-use std::ops::Range;
-
 mod bininterval;
 pub use bininterval::bininterval::BinInterval;
 pub use bininterval::singlevaluebininterval::SingleValueBinInterval;

@@ -1,5 +1,5 @@
-pub mod fill;
-pub mod vechistogram;
+pub(crate) mod fill;
+pub(crate) mod vechistogram;
 
 #[allow(clippy::module_inception)]
-pub mod histogram;
+pub(crate) mod histogram;

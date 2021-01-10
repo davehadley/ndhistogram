@@ -1,9 +1,4 @@
-use std::{
-    iter::Map,
-    ops::{AddAssign, Index},
-};
-
-use crate::{axes::Axes, axis::Axis};
+use crate::axes::Axes;
 
 use super::histogram::{Histogram, Item, Iter, IterMut, ValuesMut};
 

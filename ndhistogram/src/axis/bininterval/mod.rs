@@ -1,3 +1,3 @@
 #[allow(clippy::module_inception)]
-pub mod bininterval;
-pub mod singlevaluebininterval;
+pub(crate) mod bininterval;
+pub(crate) mod singlevaluebininterval;

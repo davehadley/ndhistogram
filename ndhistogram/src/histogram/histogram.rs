@@ -4,11 +4,12 @@ use super::fill::{Fill, FillWeight};
 
 // TODO: Using generic associated types would give a cleaner interface and avoid boxing the iterators
 // https://github.com/rust-lang/rfcs/blob/master/text/1598-generic_associated_types.md
-pub type Values<'a, V> = Box<dyn Iterator<Item = &'a V> + 'a>;
-pub type Iter<'a, A, V> = Box<dyn Iterator<Item = Item<<A as Axis>::BinInterval, &'a V>> + 'a>;
+pub(crate) type Values<'a, V> = Box<dyn Iterator<Item = &'a V> + 'a>;
+pub(crate) type Iter<'a, A, V> =
+    Box<dyn Iterator<Item = Item<<A as Axis>::BinInterval, &'a V>> + 'a>;
 
-pub type ValuesMut<'a, V> = Box<dyn Iterator<Item = &'a mut V> + 'a>;
-pub type IterMut<'a, A, V> =
+pub(crate) type ValuesMut<'a, V> = Box<dyn Iterator<Item = &'a mut V> + 'a>;
+pub(crate) type IterMut<'a, A, V> =
     Box<dyn Iterator<Item = Item<<A as Axis>::BinInterval, &'a mut V>> + 'a>;
 
 pub trait Histogram<A: Axes, V> {

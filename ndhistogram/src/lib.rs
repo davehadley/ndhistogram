@@ -1,6 +1,8 @@
 #![cfg_attr(
     debug_assertions,
-    warn(missing_debug_implementations, rust_2018_idioms)
+    warn(missing_debug_implementations, rust_2018_idioms, unreachable_pub),
+    deny(unsafe_code, macro_use_extern_crate),
+    //warn(missing_docs, missing_crate_level_docs, missing_doc_code_examples, missing_docs),
 )]
 
 // TODO: add warning for missing_docs before publishing

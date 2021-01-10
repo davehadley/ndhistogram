@@ -1,7 +1,7 @@
 use std::{
     convert::TryFrom,
     fmt::Display,
-    ops::{Range, RangeBounds, RangeFrom, RangeTo},
+    ops::{Range, RangeFrom, RangeTo},
 };
 #[derive(Debug, PartialEq, Clone)]
 pub enum BinInterval<T> {
