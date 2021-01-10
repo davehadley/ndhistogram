@@ -34,9 +34,8 @@ source install-hook.sh
 - [x] Fix Histogram traits.
 - [x] Fix Fill traits.
 - [x] Make Histogram "Item" an associated type. --> hard to do without GAT
-- [ ] Move Axes to Axis module?
+- [x] Move Axes to Axis module? --> decided not to do this
 - [ ] Move unit tests out to tests directory.
-- [ ] Make Axes a struct to permit future optimisations.
 - [x] Remove grow.
 - [ ] Mega refactor
 - [ ] Add tests for integer histogram 
@@ -61,7 +60,7 @@ source install-hook.sh
 - [ ] Reinstate grow
 - [ ] Test each axis method.
 - [ ] Test each histogram 1D method.
-
+- [ ] Make Axes a struct to permit future optimisations.
 
 # Niggles
 
