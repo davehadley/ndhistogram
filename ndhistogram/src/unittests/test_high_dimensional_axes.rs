@@ -7,9 +7,9 @@ use crate::axis::{Axis, Category, Uniform};
 
 #[test]
 fn test_axes_2d() {
-    let X = Uniform::new(3, 0.0, 3.0);
-    let Y = Category::new(vec!["A", "B"]);
-    let axes3d = (X.clone(), Y.clone());
+    let xaxis = Uniform::new(3, 0.0, 3.0);
+    let yaxis = Category::new(vec!["A", "B"]);
+    let axes3d = (xaxis.clone(), yaxis.clone());
     let mut rng = StdRng::seed_from_u64(12);
     let ntests = 10000;
     (0..ntests)
@@ -24,8 +24,8 @@ fn test_axes_2d() {
                 coord,
                 axes3d.bin(axes3d.index(&coord).unwrap()).unwrap(),
                 (
-                    X.bin(X.index(&coord.0).unwrap()).unwrap(),
-                    Y.bin(Y.index(&coord.1).unwrap()).unwrap(),
+                    xaxis.bin(xaxis.index(&coord.0).unwrap()).unwrap(),
+                    yaxis.bin(yaxis.index(&coord.1).unwrap()).unwrap(),
                 ),
             )
         })

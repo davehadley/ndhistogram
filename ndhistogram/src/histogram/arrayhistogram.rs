@@ -139,7 +139,7 @@ where
                 None
             })
             .flatten()
-            .for_each(|(oldindex, newindex)| newvalues[*newindex] = self.values[*newindex].clone()); // TODO: unncessary clone
+            .for_each(|(oldindex, newindex)| newvalues[*newindex] = self.values[*oldindex].clone()); // TODO: unncessary clone
         self.values = newvalues;
         Ok(())
     }
