@@ -1,9 +1,9 @@
 use rand::{thread_rng, Rng};
 use rand_distr::{Distribution, Normal};
 
-use crate::{
+use ndhistogram::{
     axis::{Axis, Category},
-    {ArrayHistogram, Fill, FillWeight, Histogram, Item},
+    ndhistogram, ArrayHistogram, Histogram, Item,
 };
 
 #[test]

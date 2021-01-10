@@ -1,7 +1,6 @@
 use float_cmp::approx_eq;
+use ndhistogram::axis::{binrange::ContinuousBinRange, Axis, Uniform};
 
-use crate::axis::binrange::ContinuousBinRange;
-use crate::axis::{Axis, Uniform};
 use std::{convert::TryFrom, ops::Range};
 
 #[test]

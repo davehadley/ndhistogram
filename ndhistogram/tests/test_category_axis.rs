@@ -1,6 +1,6 @@
-use crate::axis::binrange::SingleValuedBinRange;
-use crate::axis::{Axis, Category};
 use std::{convert::TryFrom, ops::Range};
+
+use ndhistogram::axis::{binrange::SingleValuedBinRange, Axis, Category};
 
 #[test]
 fn test_category_numbins() {

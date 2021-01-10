@@ -1,8 +1,8 @@
 use std::collections::HashMap;
 
-use crate::{
+use ndhistogram::{
     axis::{Axis, Uniform},
-    {Fill, FillWeight, Histogram},
+    ndhistogram, Histogram,
 };
 
 #[test]

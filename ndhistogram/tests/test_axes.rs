@@ -1,10 +1,4 @@
-use float_cmp::approx_eq;
-
-use crate::axis::{
-    binrange::{ContinuousBinRange, SingleValuedBinRange},
-    Axis, Category, CategoryNoFlow, Uniform,
-};
-use std::ops::Range;
+use ndhistogram::axis::{binrange::SingleValuedBinRange, Axis, Category, CategoryNoFlow, Uniform};
 
 #[test]
 fn test_axes_2d_numbins() {

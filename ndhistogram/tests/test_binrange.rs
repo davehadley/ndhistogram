@@ -3,7 +3,7 @@ use std::{
     ops::{Range, RangeFrom, RangeTo},
 };
 
-use crate::axis::binrange::ContinuousBinRange;
+use ndhistogram::axis::binrange::ContinuousBinRange;
 
 #[test]
 fn test_binrange_equality() {

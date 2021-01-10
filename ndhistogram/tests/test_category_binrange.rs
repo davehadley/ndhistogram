@@ -3,7 +3,7 @@ use std::{
     ops::{Range, RangeFrom, RangeTo},
 };
 
-use crate::axis::binrange::SingleValuedBinRange;
+use ndhistogram::axis::binrange::SingleValuedBinRange;
 
 #[test]
 fn test_categorybinrange_equality() {

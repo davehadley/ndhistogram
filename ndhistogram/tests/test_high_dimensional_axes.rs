@@ -1,9 +1,8 @@
+use ndhistogram::axis::{Axis, Category, Uniform};
 use rand::{
     prelude::{StdRng, ThreadRng},
     thread_rng, Rng, SeedableRng,
 };
-
-use crate::axis::{Axis, Category, Uniform};
 
 #[test]
 fn test_axes_2d() {
@@ -33,38 +32,6 @@ fn test_axes_2d() {
             "\nFailed on test:{}/{}.\n3D histogram failed to give expected result for:\n(x,y,z)={:?}", 
             nthtest, ntests, coord));
 }
-
-// #[test]
-// fn test_axes_3d() {
-//     let X = Uniform::new(2, 0.0, 2.0);
-//     let Y = Uniform::new(3, 0.0, 3.0);
-//     let Z = Category::new(vec!["A", "B"]);
-//     let axes3d = (X.clone(), Y.clone(), Z.clone());
-//     let mut rng = StdRng::seed_from_u64(123);
-//     let ntests = 10000;
-//     (0..ntests)
-//         .map(|_| {
-//             (
-//                 rng.gen_range(-1.0..3.0),
-//                 rng.gen_range(-1.0..4.0),
-//                 if rng.gen() { "A" } else { "B" },
-//             )
-//         })
-//         .map(|coord| {
-//             (
-//                 coord,
-//                 axes3d.bin(axes3d.index(&coord).unwrap()).unwrap(),
-//                 (
-//                     X.bin(X.index(&coord.0).unwrap()).unwrap(),
-//                     Y.bin(Y.index(&coord.1).unwrap()).unwrap(),
-//                     Z.bin(Z.index(&coord.2).unwrap()).unwrap(),
-//                 ),
-//             )
-//         })
-//         .enumerate().for_each(|(nthtest, (coord, actual, expected))| assert_eq!(actual, expected,
-//             "\nFailed on test:{}/{}.\n3D histogram failed to give expected result for:\n(x,y,z)={:?}",
-//             nthtest, ntests, coord));
-// }
 
 macro_rules! make_nd_axes {
     () => {(,)};

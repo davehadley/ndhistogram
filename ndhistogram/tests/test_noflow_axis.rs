@@ -1,4 +1,4 @@
-use crate::axis::{binrange::ContinuousBinRange, Axis, UniformNoFlow};
+use ndhistogram::axis::{binrange::ContinuousBinRange, Axis, UniformNoFlow};
 
 #[test]
 fn test_uniformnoflow_axis_numbins() {

@@ -18,6 +18,3 @@ pub use histogram::histogram::Item;
 
 #[macro_use]
 mod macros;
-
-#[cfg(test)]
-mod unittests;
