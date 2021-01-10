@@ -3,7 +3,7 @@ use std::{
     ops::{AddAssign, Index},
 };
 
-use super::{Fill, FillWeight, Grow, Histogram, Item, Iter, IterMut, Value, Values, ValuesMut};
+use super::{Fill, FillWeight, Histogram, Item, Iter, IterMut, Value, Values, ValuesMut};
 use crate::{axes::Axes, axis::Axis};
 
 #[derive(Debug, Clone)]
@@ -83,34 +83,5 @@ impl<'a, A: Axes, V: Value + 'a> IntoIterator for &'a mut ArrayHistogram<A, V> {
 
     fn into_iter(self) -> Self::IntoIter {
         self.iter_mut()
-    }
-}
-
-impl<A: Axes, V: Value + Default> Grow<<A as Axis>::Coordinate> for ArrayHistogram<A, V>
-where
-    A: Grow<<A as Axis>::Coordinate>,
-    A::BinRange: PartialEq,
-{
-    #[allow(clippy::while_let_on_iterator)]
-    fn grow(&mut self, newcoordinate: &<A as Axis>::Coordinate) -> Result<(), ()> {
-        let oldindices: Vec<_> = self.axes().iter().collect();
-        self.axes.grow(newcoordinate)?;
-        let newindices: Vec<_> = self.axes().iter().collect();
-        let mut newvalues = vec![V::default(); self.axes.numbins()];
-        let iternew = newindices.iter();
-        let mut iterold = oldindices.iter();
-        iternew
-            .map(|(newindex, newrange)| {
-                while let Some((oldindex, oldrange)) = iterold.next() {
-                    if oldrange == newrange {
-                        return Some((oldindex, newindex));
-                    };
-                }
-                None
-            })
-            .flatten()
-            .for_each(|(oldindex, newindex)| newvalues[*newindex] = self.values[*oldindex].clone()); // TODO: unncessary clone
-        self.values = newvalues;
-        Ok(())
     }
 }

@@ -98,10 +98,6 @@ where
     }
 }
 
-pub trait Grow<Coordinate> {
-    fn grow(&mut self, newcoordinate: &Coordinate) -> Result<(), ()>;
-}
-
 mod arrayhistogram;
 pub use arrayhistogram::ArrayHistogram;
 use num::One;

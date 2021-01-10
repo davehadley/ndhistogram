@@ -1,7 +1,5 @@
 use ndarray::Array3;
 
-use crate::histogram::Grow;
-
 use super::axis::Axis;
 
 // impl<X: Axis, Y: Axis> Axis for (X, Y) {
@@ -147,27 +145,4 @@ impl_axes! {
     D18: 18,
     D19: 19,
     D20: 20,
-}
-
-impl<X: Axis + Grow<<X as Axis>::Coordinate>> Grow<<Self as Axis>::Coordinate> for (X,) {
-    fn grow(&mut self, newcoordinate: &<Self as Axis>::Coordinate) -> Result<(), ()> {
-        self.0.grow(newcoordinate)
-    }
-}
-
-impl<X: Axis + Grow<<X as Axis>::Coordinate>, Y: Axis + Grow<<Y as Axis>::Coordinate>>
-    Grow<<Self as Axis>::Coordinate> for (X, Y)
-{
-    fn grow(&mut self, newcoordinate: &<Self as Axis>::Coordinate) -> Result<(), ()> {
-        self.0.grow(&newcoordinate.0)?;
-        self.1.grow(&newcoordinate.1)?;
-        Ok(())
-    }
-}
-
-fn blha() {
-    use ndarray::Array3;
-    let mut temperature = Array3::<f64>::zeros((3, 4, 5));
-    // Increase the temperature in this location
-    temperature[[2, 2, 2]] += 0.5;
 }
