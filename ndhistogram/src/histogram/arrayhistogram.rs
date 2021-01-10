@@ -3,18 +3,19 @@ use std::{
     ops::{AddAssign, Index},
 };
 
-use crate::{axes::Axes, axis::Axis};
+use crate::{axes::Axes, axis::Axis, AxesTuple};
 
 use super::histogram::{Histogram, Item, Iter, IterMut, ValuesMut};
 
 #[derive(Debug, Clone)]
 pub struct ArrayHistogram<A, V> {
-    axes: A,
+    axes: AxesTuple<A>,
     values: Vec<V>,
 }
 
-impl<A: Axes, V: Default + Clone> ArrayHistogram<A, V> {
+impl<A, V: Default + Clone> ArrayHistogram<A, V> {
     pub fn new(axes: A) -> ArrayHistogram<A, V> {
+        let axes = AxesTuple::from(axes);
         let size = axes.numbins();
         ArrayHistogram {
             axes,
