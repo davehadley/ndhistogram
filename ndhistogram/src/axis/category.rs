@@ -1,8 +1,8 @@
 use std::hash::Hash;
 use std::{collections::HashMap, fmt::Display};
 
-use super::bininterval::SingleValueBinInterval;
 use super::Axis;
+use super::SingleValueBinInterval;
 
 // Type-bound alias
 pub trait Value: Eq + Hash + Clone {}

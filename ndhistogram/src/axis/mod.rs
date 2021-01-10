@@ -2,7 +2,9 @@ use std::fmt::Debug;
 use std::fmt::Display;
 use std::ops::Range;
 
-pub mod bininterval;
+mod bininterval;
+pub use bininterval::bininterval::BinInterval;
+pub use bininterval::singlevaluebininterval::SingleValueBinInterval;
 mod uniform;
 pub use uniform::Uniform;
 mod uniformnoflow;

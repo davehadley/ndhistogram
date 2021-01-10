@@ -1,4 +1,4 @@
-use super::{bininterval::SingleValueBinInterval, category::Value, Axis, Category};
+use super::{category::Value, Axis, Category, SingleValueBinInterval};
 use std::fmt::{Debug, Display};
 
 #[derive(Clone, PartialEq, Debug)]

@@ -3,7 +3,7 @@ use std::{
     ops::{Range, RangeFrom, RangeTo},
 };
 
-use ndhistogram::axis::bininterval::BinInterval;
+use ndhistogram::axis::BinInterval;
 
 #[test]
 fn test_binrange_equality() {

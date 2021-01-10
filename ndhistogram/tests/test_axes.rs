@@ -1,6 +1,4 @@
-use ndhistogram::axis::{
-    bininterval::SingleValueBinInterval, Axis, Category, CategoryNoFlow, Uniform,
-};
+use ndhistogram::axis::{Axis, Category, CategoryNoFlow, SingleValueBinInterval, Uniform};
 
 #[test]
 fn test_axes_2d_numbins() {

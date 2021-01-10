@@ -1,4 +1,4 @@
-use ndhistogram::axis::{bininterval::BinInterval, Axis, UniformNoFlow};
+use ndhistogram::axis::{Axis, BinInterval, UniformNoFlow};
 
 #[test]
 fn test_uniformnoflow_axis_numbins() {

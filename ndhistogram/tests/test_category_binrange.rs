@@ -1,4 +1,4 @@
-use ndhistogram::axis::bininterval::SingleValueBinInterval;
+use ndhistogram::axis::SingleValueBinInterval;
 
 #[test]
 fn test_categorybinrange_equality() {

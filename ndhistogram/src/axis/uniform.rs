@@ -7,7 +7,7 @@ use std::{
     ops::{RangeBounds, RangeFrom, RangeTo, Sub},
 };
 
-use super::{bininterval::BinInterval, Axis};
+use super::{Axis, BinInterval};
 
 #[derive(Clone, PartialEq, Debug)]
 pub struct Uniform<T = f64> {

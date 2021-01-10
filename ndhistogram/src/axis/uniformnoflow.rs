@@ -1,6 +1,6 @@
 use num::Float;
 
-use super::{bininterval::BinInterval, Axis, Uniform};
+use super::{Axis, BinInterval, Uniform};
 use std::fmt::{Debug, Display};
 
 #[derive(Clone, PartialEq, Debug)]

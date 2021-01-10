@@ -1,6 +1,3 @@
 #[allow(clippy::module_inception)]
-mod bininterval;
-pub use bininterval::BinInterval;
-
-mod singlevaluebininterval;
-pub use singlevaluebininterval::SingleValueBinInterval;
+pub mod bininterval;
+pub mod singlevaluebininterval;

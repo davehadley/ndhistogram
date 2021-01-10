@@ -1,4 +1,4 @@
-use ndhistogram::axis::{bininterval::SingleValueBinInterval, Axis, Category};
+use ndhistogram::axis::{Axis, Category, SingleValueBinInterval};
 
 #[test]
 fn test_category_numbins() {

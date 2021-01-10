@@ -1,4 +1,4 @@
-use ndhistogram::axis::{bininterval::BinInterval, Axis, Uniform};
+use ndhistogram::axis::{Axis, BinInterval, Uniform};
 
 use std::{convert::TryFrom, ops::Range};
 
