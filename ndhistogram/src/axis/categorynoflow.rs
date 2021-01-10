@@ -19,7 +19,7 @@ impl<T: Value> CategoryNoFlow<T> {
 
 impl<T: Value> Axis for CategoryNoFlow<T> {
     type Coordinate = T;
-    type BinRange = SingleValueBinInterval<T>;
+    type BinInterval = SingleValueBinInterval<T>;
 
     fn index(&self, coordinate: &Self::Coordinate) -> Option<usize> {
         let index = self.axis.index(coordinate)?;
@@ -33,7 +33,7 @@ impl<T: Value> Axis for CategoryNoFlow<T> {
         self.axis.numbins() - 1
     }
 
-    fn bin(&self, index: usize) -> Option<Self::BinRange> {
+    fn bin(&self, index: usize) -> Option<Self::BinInterval> {
         let bin = self.axis.bin(index)?;
         match bin {
             SingleValueBinInterval::Overflow => None,
@@ -43,7 +43,7 @@ impl<T: Value> Axis for CategoryNoFlow<T> {
 }
 
 impl<'a, T: Value> IntoIterator for &'a CategoryNoFlow<T> {
-    type Item = (usize, <Category<T> as Axis>::BinRange);
+    type Item = (usize, <Category<T> as Axis>::BinInterval);
     type IntoIter = Box<dyn Iterator<Item = Self::Item> + 'a>;
 
     fn into_iter(self) -> Self::IntoIter {

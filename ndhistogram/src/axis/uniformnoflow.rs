@@ -18,7 +18,7 @@ impl<T: Float> UniformNoFlow<T> {
 
 impl<T: Float> Axis for UniformNoFlow<T> {
     type Coordinate = T;
-    type BinRange = BinInterval<T>;
+    type BinInterval = BinInterval<T>;
 
     fn index(&self, coordinate: &Self::Coordinate) -> Option<usize> {
         let index = self.axis.index(coordinate)?;
@@ -32,7 +32,7 @@ impl<T: Float> Axis for UniformNoFlow<T> {
         self.axis.numbins() - 2
     }
 
-    fn bin(&self, index: usize) -> Option<Self::BinRange> {
+    fn bin(&self, index: usize) -> Option<Self::BinInterval> {
         let bin = self.axis.bin(index + 1)?;
         match bin {
             BinInterval::Underflow { end: _ } => None,
@@ -43,7 +43,7 @@ impl<T: Float> Axis for UniformNoFlow<T> {
 }
 
 impl<'a, T: Float> IntoIterator for &'a UniformNoFlow<T> {
-    type Item = (usize, <Uniform<T> as Axis>::BinRange);
+    type Item = (usize, <Uniform<T> as Axis>::BinInterval);
     type IntoIter = Box<dyn Iterator<Item = Self::Item> + 'a>;
 
     fn into_iter(self) -> Self::IntoIter {

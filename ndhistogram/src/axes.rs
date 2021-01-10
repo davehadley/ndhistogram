@@ -13,7 +13,7 @@ macro_rules! impl_axes {
 
         impl<X: Axis> Axis for (X,) {
             type Coordinate = X::Coordinate;
-            type BinRange = X::BinRange;
+            type BinInterval = X::BinInterval;
 
             fn index(&self, coordinate: &Self::Coordinate) -> Option<usize> {
                 self.0.index(coordinate)
@@ -23,7 +23,7 @@ macro_rules! impl_axes {
                 self.0.numbins()
             }
 
-            fn bin(&self, index: usize) -> Option<Self::BinRange> {
+            fn bin(&self, index: usize) -> Option<Self::BinInterval> {
                 self.0.bin(index)
             }
         }
@@ -36,7 +36,7 @@ macro_rules! impl_axes {
 
         impl<$($nth_type_parameter: Axis),*> Axis for ($($nth_type_parameter),*) {
             type Coordinate = ($($nth_type_parameter::Coordinate),*);
-            type BinRange = ($($nth_type_parameter::BinRange),*);
+            type BinInterval = ($($nth_type_parameter::BinInterval),*);
 
             fn index(&self, coordinate: &Self::Coordinate) -> Option<usize> {
                 let numbins: Vec<_> = [$(self.$nth_index.numbins()),*].iter().scan(1, |acc, nbin| {*acc *= *nbin; Some(*acc)}).collect();
@@ -55,7 +55,7 @@ macro_rules! impl_axes {
                 $(self.$nth_index.numbins()*)* 1
             }
 
-            fn bin(&self, index: usize) -> Option<Self::BinRange> {
+            fn bin(&self, index: usize) -> Option<Self::BinInterval> {
                 let numbins = [$(self.$nth_index.numbins()),*];
                 let product = numbins.iter().scan(1, |acc, it| Some(*acc * *it));
                 let mut index = index;

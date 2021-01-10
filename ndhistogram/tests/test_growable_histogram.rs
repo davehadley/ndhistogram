@@ -8,9 +8,9 @@
 //     // check every bin value
 //     let actual: Vec<_> = hist.iter().collect();
 //     let expected = vec![
-//         Item::new(0, SingleValuedBinRange::new("A"), &0),
-//         Item::new(1, SingleValuedBinRange::new("B"), &0),
-//         Item::new(2, SingleValuedBinRange::new("C"), &1),
+//         Item::new(0, SingleValuedBinInterval::new("A"), &0),
+//         Item::new(1, SingleValuedBinInterval::new("B"), &0),
+//         Item::new(2, SingleValuedBinInterval::new("C"), &1),
 //     ];
 //     assert_eq!(expected, actual);
 // }

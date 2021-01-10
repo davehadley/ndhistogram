@@ -41,7 +41,7 @@ impl<A: Axes, V> Histogram<A, V> for VecHistogram<A, V> {
         Box::new(self.values.iter())
     }
 
-    fn iter<'a>(&'a self) -> Box<dyn Iterator<Item = Item<A::BinRange, &'a V>> + 'a> {
+    fn iter<'a>(&'a self) -> Box<dyn Iterator<Item = Item<A::BinInterval, &'a V>> + 'a> {
         Box::new(self.axes().iter().map(move |(index, binrange)| Item {
             index,
             bin: binrange,
@@ -68,7 +68,7 @@ impl<A: Axes, V> Histogram<A, V> for VecHistogram<A, V> {
 }
 
 impl<'a, A: Axes, V> IntoIterator for &'a VecHistogram<A, V> {
-    type Item = Item<A::BinRange, &'a V>;
+    type Item = Item<A::BinInterval, &'a V>;
 
     type IntoIter = Iter<'a, A, V>;
 
@@ -78,7 +78,7 @@ impl<'a, A: Axes, V> IntoIterator for &'a VecHistogram<A, V> {
 }
 
 impl<'a, A: Axes, V: 'a> IntoIterator for &'a mut VecHistogram<A, V> {
-    type Item = Item<A::BinRange, &'a mut V>;
+    type Item = Item<A::BinInterval, &'a mut V>;
 
     type IntoIter = IterMut<'a, A, V>;
 

@@ -43,7 +43,7 @@ impl<T> Uniform<T> {
 // TODO: relax float retriction or add implementation for Integers
 impl<T: Float> Axis for Uniform<T> {
     type Coordinate = T;
-    type BinRange = BinInterval<T>;
+    type BinInterval = BinInterval<T>;
 
     fn index(&self, coordinate: &Self::Coordinate) -> Option<usize> {
         let frac = (*coordinate - self.low) / (self.high - self.low);
@@ -60,17 +60,17 @@ impl<T: Float> Axis for Uniform<T> {
         self.num + 2
     }
 
-    fn bin(&self, index: usize) -> std::option::Option<<Self as Axis>::BinRange> {
+    fn bin(&self, index: usize) -> std::option::Option<<Self as Axis>::BinInterval> {
         if index == 0 {
-            return Some(Self::BinRange::underflow(self.low));
+            return Some(Self::BinInterval::underflow(self.low));
         } else if index == (self.num + 1) {
-            return Some(Self::BinRange::overflow(self.high));
+            return Some(Self::BinInterval::overflow(self.high));
         } else if index > (self.num + 1) {
             return None;
         }
         let start = (T::from(index - 1)?) * (self.high - self.low) / (T::from(self.num)?);
         let end = (T::from(index)?) * (self.high - self.low) / (T::from(self.num)?);
-        Some(Self::BinRange::new(start, end))
+        Some(Self::BinInterval::new(start, end))
     }
 
     fn indices(&self) -> Box<dyn Iterator<Item = usize>> {
@@ -92,7 +92,7 @@ impl<T: Display> Display for Uniform<T> {
 }
 
 impl<'a, T: Float> IntoIterator for &'a Uniform<T> {
-    type Item = (usize, <Uniform<T> as Axis>::BinRange);
+    type Item = (usize, <Uniform<T> as Axis>::BinInterval);
     type IntoIter = Box<dyn Iterator<Item = Self::Item> + 'a>;
 
     fn into_iter(self) -> Self::IntoIter {

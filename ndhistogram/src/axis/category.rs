@@ -62,7 +62,7 @@ impl<T: Value> Category<T> {
 impl<T: Value> Axis for Category<T> {
     type Coordinate = T;
 
-    type BinRange = SingleValueBinInterval<T>;
+    type BinInterval = SingleValueBinInterval<T>;
 
     fn index(&self, coordinate: &Self::Coordinate) -> Option<usize> {
         self.get_index(&coordinate)
@@ -77,13 +77,13 @@ impl<T: Value> Axis for Category<T> {
         }
     }
 
-    fn bin(&self, index: usize) -> Option<Self::BinRange> {
+    fn bin(&self, index: usize) -> Option<Self::BinInterval> {
         let value = self.get_value(index);
         match value {
-            Some(value) => Some(Self::BinRange::new(value.clone())),
+            Some(value) => Some(Self::BinInterval::new(value.clone())),
             None => {
                 if index == self.len() && !self.isgrow {
-                    Some(Self::BinRange::overflow())
+                    Some(Self::BinInterval::overflow())
                 } else {
                     None
                 }
@@ -105,7 +105,7 @@ impl<T: Display + Value> Display for Category<T> {
 }
 
 impl<'a, T: Value> IntoIterator for &'a Category<T> {
-    type Item = (usize, <Category<T> as Axis>::BinRange);
+    type Item = (usize, <Category<T> as Axis>::BinInterval);
     type IntoIter = Box<dyn Iterator<Item = Self::Item> + 'a>;
 
     fn into_iter(self) -> Self::IntoIter {
