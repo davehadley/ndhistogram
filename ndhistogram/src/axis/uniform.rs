@@ -1,4 +1,3 @@
-use num::{Float, FromPrimitive, Num, NumCast};
 use std::{
     fmt::{Debug, Display},
     iter::Map,
@@ -6,6 +5,8 @@ use std::{
     ops::Range,
     ops::{RangeBounds, RangeFrom, RangeTo, Sub},
 };
+
+use num_traits::Float;
 
 use super::{Axis, BinInterval};
 

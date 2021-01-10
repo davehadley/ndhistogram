@@ -1,6 +1,6 @@
 use std::ops::AddAssign;
 
-use num::One;
+use num_traits::One;
 
 pub trait Fill {
     fn fill(&mut self);

@@ -1,4 +1,4 @@
-use num::Float;
+use num_traits::Float;
 
 use super::{Axis, BinInterval, Uniform};
 use std::fmt::{Debug, Display};
