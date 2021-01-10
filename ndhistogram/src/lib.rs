@@ -9,6 +9,7 @@
 //!     - Unweighted and weighted filling of histograms.
 //!
 
+#![doc(issue_tracker_base_url = "https://github.com/davehadley/rust-hist/issues")]
 #![cfg_attr(
     debug_assertions,
     warn(
