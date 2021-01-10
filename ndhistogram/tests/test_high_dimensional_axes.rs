@@ -1,8 +1,5 @@
 use ndhistogram::axis::{Axis, Category, Uniform};
-use rand::{
-    prelude::{StdRng, ThreadRng},
-    thread_rng, Rng, SeedableRng,
-};
+use rand::{prelude::StdRng, Rng, SeedableRng};
 
 #[test]
 fn test_axes_2d() {

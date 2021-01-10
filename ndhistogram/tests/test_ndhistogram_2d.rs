@@ -1,5 +1,3 @@
-use std::collections::HashMap;
-
 use ndhistogram::{
     axis::{Axis, Uniform},
     ndhistogram, Histogram,

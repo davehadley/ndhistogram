@@ -1,8 +1,3 @@
-use std::{
-    convert::TryInto,
-    ops::{Range, RangeFrom, RangeTo},
-};
-
 use ndhistogram::axis::binrange::SingleValuedBinRange;
 
 #[test]

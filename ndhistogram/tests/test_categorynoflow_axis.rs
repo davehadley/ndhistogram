@@ -1,5 +1,3 @@
-use std::{convert::TryFrom, ops::Range};
-
 use ndhistogram::axis::{binrange::SingleValuedBinRange, Axis, CategoryNoFlow};
 
 #[test]

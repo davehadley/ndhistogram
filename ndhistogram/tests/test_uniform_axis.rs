@@ -1,4 +1,3 @@
-use float_cmp::approx_eq;
 use ndhistogram::axis::{binrange::ContinuousBinRange, Axis, Uniform};
 
 use std::{convert::TryFrom, ops::Range};

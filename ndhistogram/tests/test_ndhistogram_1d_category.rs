@@ -1,6 +1,3 @@
-use rand::{thread_rng, Rng};
-use rand_distr::{Distribution, Normal};
-
 use ndhistogram::{
     axis::{Axis, Category},
     ndhistogram, ArrayHistogram, Histogram, Item,

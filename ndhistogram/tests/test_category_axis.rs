@@ -1,5 +1,3 @@
-use std::{convert::TryFrom, ops::Range};
-
 use ndhistogram::axis::{binrange::SingleValuedBinRange, Axis, Category};
 
 #[test]
@@ -100,11 +98,6 @@ fn test_iter_axis() {
 
 fn string_category_ab() -> (Vec<String>, Category<String>) {
     let cats: Vec<String> = vec![String::from("A"), String::from("B")];
-    (cats.clone(), Category::new(cats))
-}
-
-fn string_category_abc() -> (Vec<String>, Category<String>) {
-    let cats: Vec<String> = vec![String::from("A"), String::from("B"), String::from("C")];
     (cats.clone(), Category::new(cats))
 }
 
