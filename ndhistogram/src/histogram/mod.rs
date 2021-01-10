@@ -5,23 +5,14 @@ use std::{
 
 use crate::{axes::Axes, axis::Axis};
 
-pub trait AddOne {
-    fn add_one(&mut self);
-}
-impl<T: One + AddAssign> AddOne for T {
-    fn add_one(&mut self) {
-        *self += Self::one();
-    }
-}
-
 // TODO: Replace with trait alias when stable
 // https://github.com/rust-lang/rfcs/blob/master/text/1733-trait-alias.md
 pub trait Value<Weight = Self>
 where
-    Self: AddOne + AddAssign<Weight> + Clone,
+    Self: Clone,
 {
 }
-impl<T: AddOne + AddAssign + Clone> Value for T {}
+impl<T: Clone> Value for T {}
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct Item<T, V> {
@@ -56,24 +47,7 @@ pub trait Histogram<A: Axes, V>: Clone {
 
     fn values(&self) -> Values<'_, V>;
     fn iter(&self) -> Iter<'_, A, V>;
-}
 
-pub trait Fill<A: Axes> {
-    fn fill(&mut self, coordinate: &A::Coordinate);
-}
-
-pub trait FillWeight<A: Axes, W> {
-    fn fill_weight(&mut self, coordinate: &A::Coordinate, weight: W);
-}
-
-pub trait Grow<Coordinate> {
-    fn grow(&mut self, newcoordinate: &Coordinate) -> Result<(), ()>;
-}
-
-//TODO: merge with histogram, I'm not sure that it makes sense for this to separate...
-// although it makes development easier as iter_mut can be hard to implement...
-// or it should be called something different like "DirectAccessHistogram"
-pub trait MutableHistogram<A: Axes, V>: Histogram<A, V> {
     fn value_at_index_mut(&mut self, index: usize) -> Option<&mut V>;
     fn value_mut(&mut self, coordinate: &A::Coordinate) -> Option<&mut V> {
         let index = self.axes().index(coordinate)?;
@@ -82,6 +56,50 @@ pub trait MutableHistogram<A: Axes, V>: Histogram<A, V> {
 
     fn values_mut(&mut self) -> ValuesMut<'_, V>;
     fn iter_mut(&mut self) -> IterMut<'_, A, V>;
+
+    fn fill(&mut self, coordinate: &A::Coordinate)
+    where
+        V: Fill,
+    {
+        if let Some(value) = self.value_mut(coordinate) {
+            value.fill()
+        }
+    }
+    fn fill_weight<W>(&mut self, coordinate: &A::Coordinate, weight: W)
+    where
+        V: FillWeight<W>,
+    {
+        if let Some(value) = self.value_mut(coordinate) {
+            value.fill_weight(weight)
+        }
+    }
+}
+
+pub trait Fill {
+    fn fill(&mut self);
+}
+
+impl<T: One + AddAssign> Fill for T {
+    fn fill(&mut self) {
+        *self += Self::one();
+    }
+}
+
+pub trait FillWeight<W> {
+    fn fill_weight(&mut self, weight: W);
+}
+
+impl<W> FillWeight<W> for W
+where
+    Self: AddAssign<W>,
+{
+    fn fill_weight(&mut self, weight: W) {
+        *self += weight;
+    }
+}
+
+pub trait Grow<Coordinate> {
+    fn grow(&mut self, newcoordinate: &Coordinate) -> Result<(), ()>;
 }
 
 mod arrayhistogram;

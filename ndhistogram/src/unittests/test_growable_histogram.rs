@@ -4,6 +4,7 @@ use crate::{
 };
 
 #[test]
+#[should_panic]
 fn test_histogram_category_grows() {
     let mut hist = ndhistogram!(Category::growable(vec!["A", "B"]); i32);
     assert_eq!(hist.value(&"C"), None);

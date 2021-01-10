@@ -1,6 +1,6 @@
 extern crate ndhistogram;
-use ndhistogram::ndhistogram;
-use ndhistogram::{axis::Uniform, histogram::Fill};
+use ndhistogram::axis::Uniform;
+use ndhistogram::{histogram::Histogram, ndhistogram};
 
 fn main() {
     let mut hist = ndhistogram!(Uniform::new(10, 0.0, 1.0), Uniform::new(10, 1.0, 2.0));

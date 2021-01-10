@@ -3,10 +3,7 @@ use std::{
     ops::{AddAssign, Index},
 };
 
-use super::{
-    Fill, FillWeight, Grow, Histogram, Item, Iter, IterMut, MutableHistogram, Value, Values,
-    ValuesMut,
-};
+use super::{Fill, FillWeight, Grow, Histogram, Item, Iter, IterMut, Value, Values, ValuesMut};
 use crate::{axes::Axes, axis::Axis};
 
 #[derive(Debug, Clone)]
@@ -50,34 +47,7 @@ impl<A: Axes, V: Value> Histogram<A, V> for ArrayHistogram<A, V> {
             value: self.value_at_index(index).unwrap(),
         }))
     }
-}
 
-impl<A: Axes, V: Value> Fill<A> for ArrayHistogram<A, V>
-where
-    Self: Grow<A::Coordinate>,
-{
-    fn fill(&mut self, coordinate: &A::Coordinate) {
-        match self.axes.index(coordinate) {
-            Some(index) => {
-                self.values[index].add_one();
-            }
-            None => {
-                let _ = self.grow(coordinate).map(|_| self.fill(coordinate));
-            }
-        }
-    }
-}
-
-impl<A: Axes, V: Value<W>, W> FillWeight<A, W> for ArrayHistogram<A, V> {
-    fn fill_weight(&mut self, coordinate: &A::Coordinate, weight: W) {
-        let index = self.axes.index(coordinate);
-        if let Some(index) = index {
-            self.values[index] += weight;
-        }
-    }
-}
-
-impl<A: Axes, V: Value> MutableHistogram<A, V> for ArrayHistogram<A, V> {
     fn value_at_index_mut(&mut self, index: usize) -> Option<&mut V> {
         self.values.get_mut(index)
     }
