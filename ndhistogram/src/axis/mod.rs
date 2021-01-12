@@ -1,7 +1,7 @@
 //! Axis for ND histograms
 //!
-//! This module contains implementations of [Axis] that are used to represent the axes of
-//! an N-dimensional [Histogram].
+//! This module contains implementations of [Axis](Axis) that are used to represent the axes of
+//! an N-dimensional [Histogram](crate::Histogram).
 //!
 mod bininterval;
 pub use bininterval::bininterval::BinInterval;
@@ -19,10 +19,10 @@ type Iter<'a, BinInterval> = Box<dyn Iterator<Item = (usize, BinInterval)> + 'a>
 type Indices = Box<dyn Iterator<Item = usize>>;
 type Bins<'a, BinInterval> = Box<dyn Iterator<Item = BinInterval> + 'a>;
 
-/// An binned axis coresponding to one dimension of an N-dimensional [Histogram].1
+/// An binned axis coresponding to one dimension of an N-dimensional [Histogram](crate::Histogram).1
 ///
 /// An Axis is composed of a map from some coordinate space to linear bin number, and the inverse map.
-/// For examples see [Uniform], [UniformNoFlow], [Category] and [CategoryNoFlow].
+/// For examples see [Uniform](crate::axis::Uniform), [UniformNoFlow](crate::axis::UniformNoFlow), [Category](crate::axis::Category) and [CategoryNoFlow](crate::axis::CategoryNoFlow).
 /// Most use cases should be covered by the builtin Axis implementations.
 /// However, you may implement the Axis trait if you have specialist needs.
 ///

@@ -1,6 +1,9 @@
-/// Responsible for creating Histograms.
+/// Creates a [Histogram](crate::Histogram).
 ///
 /// This macro is the recommended method for constructing new Histograms.
+/// The arguments are a command separated list of [Axis](crate::axis::Axis).
+/// Optionally, the type of the [Histogram](crate::Histogram) bin values may specified after a semi-colon after
+/// the list of [Axis](crate::axis::Axis). If the bin value type is not specified, the default is f64.
 ///
 /// # Example
 ///

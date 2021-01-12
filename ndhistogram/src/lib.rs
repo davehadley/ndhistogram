@@ -1,12 +1,10 @@
-//! N-dimensional histograms
-//!
-//! Multi-dimensional histogramming for Rust applications.
+//! Multi-dimensional histogramming for Rust.
 //!
 //! Current features include:
-//!     - Histograms with any number of dimensions from 1 up to 21 dimensions.
-//!     - Continuous (eg represented by a floating point number) or discrete axes (eg a category represented by a string value).
-//!     - Flexible bin values including any primitive number type, or a user-defined struct.  
-//!     - Unweighted and weighted filling of histograms.
+//! - Histograms with any number of dimensions from 1 up to 21 dimensions.
+//! - Continuous (eg represented by a floating point number) or discrete axes (eg a category represented by a string value or enum).
+//! - Flexible bin values including any primitive number type, or a user-defined struct.
+//! - Unweighted and weighted filling of histograms.
 //!
 
 #![doc(issue_tracker_base_url = "https://github.com/davehadley/rust-hist/issues")]

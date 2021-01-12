@@ -2,7 +2,7 @@ use std::fmt::{Display, Formatter};
 
 /// A bin interval that contains only a single value.
 ///
-/// Similar to [BinInterval], except each interval only covers a single value.
+/// Similar to [BinInterval](crate::axis::BinInterval), except each interval only covers a single value.
 /// The only exception is the Overflow bin which may be used to mean "all other bin values".
 #[derive(Debug, Clone, PartialEq)]
 pub enum SingleValueBinInterval<T> {

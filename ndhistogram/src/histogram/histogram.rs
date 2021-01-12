@@ -17,7 +17,7 @@ pub(crate) type IterMut<'a, A, V> =
 /// Implementations of this trait should handle storing the histogram bin values
 /// and provide methods to fill and read those values.
 ///
-/// The most commonly used implementation is [VecHistogram].
+/// The most commonly used implementation is [VecHistogram](crate::VecHistogram).
 /// See [ndhistogram] for examples of its use.
 pub trait Histogram<A: Axes, V> {
     /// The histogram [Axes] that map coordinates to bin numbers.

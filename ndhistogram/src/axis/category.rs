@@ -11,7 +11,7 @@ impl<T: Eq + Hash + Clone> Value for T {}
 /// An axis to represent a set of discrete values or categories with an overflow bin.
 ///
 /// This axis also includes an overflow bin, to include "other" values.
-/// See [CategoryNoFlow] for a variant that includes no overflow bin.
+/// See [CategoryNoFlow](crate::axis::CategoryNoFlow) for a variant that includes no overflow bin.
 ///
 /// # Example
 ///
