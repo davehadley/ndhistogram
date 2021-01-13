@@ -10,7 +10,6 @@ jobs:
   test:
     name: Publish
     runs-on: ubuntu-latest
-    working-directory: ./ndhistogram
     steps:
     - uses: actions/checkout@v2
     - uses: actions-rs/toolchain@v1
@@ -18,7 +17,6 @@ jobs:
         profile: minimal
         toolchain: stable
         override: true
-    - uses: actions-rs/cargo@v1
-      with:
-        command: publish
-        args: --locked --token ${{ secrets.CRATES_TOKEN }}
+    - name: cargo publish
+      working-directory: ./ndhistogram
+      run: cargo publish --locked --token ${{ secrets.CRATES_TOKEN }}
