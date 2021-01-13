@@ -49,7 +49,7 @@ fn test_variable_get_index() {
 #[test]
 fn test_variable_get_bin() {
     let ax = Variable::new(vec![0, 1, 4, 8]);
-    let actual: Vec<_> = (0..5).map(|index| ax.bin(index)).collect();
+    let actual: Vec<_> = (0..6).map(|index| ax.bin(index)).collect();
     let expected = vec![
         Some(BinInterval::underflow(0)),
         Some(BinInterval::new(0, 1)),

@@ -7,7 +7,7 @@ pub struct Variable<T = f64> {
 
 impl<T> Variable<T>
 where
-    T: PartialOrd,
+    T: PartialOrd + Copy,
 {
     pub fn new<I: IntoIterator<Item = T>>(bin_edges: I) -> Self {
         let mut bin_edges: Vec<T> = bin_edges.into_iter().collect();
@@ -20,18 +20,24 @@ where
 
     /// Low edge of axis (excluding underflow bin).
     pub fn low(&self) -> &T {
-        &self.bin_edges.first().unwrap()
+        &self
+            .bin_edges
+            .first()
+            .expect("Variable binedges unexpectedly empty")
     }
 
     /// High edge of axis (excluding overflow bin).
     pub fn high(&self) -> &T {
-        &self.bin_edges.last().unwrap()
+        &self
+            .bin_edges
+            .last()
+            .expect("Variable binedges unexpectedly empty")
     }
 }
 
 impl<T> Axis for Variable<T>
 where
-    T: PartialOrd,
+    T: PartialOrd + Copy,
 {
     type Coordinate = T;
     type BinInterval = BinInterval<T>;
@@ -52,6 +58,17 @@ where
     }
 
     fn bin(&self, index: usize) -> Option<Self::BinInterval> {
-        todo!()
+        if index == 0 {
+            Some(Self::BinInterval::underflow(*self.low()))
+        } else if index == self.bin_edges.len() {
+            Some(Self::BinInterval::overflow(*self.high()))
+        } else if index < self.bin_edges.len() {
+            Some(Self::BinInterval::new(
+                self.bin_edges[index - 1],
+                self.bin_edges[index],
+            ))
+        } else {
+            None
+        }
     }
 }
