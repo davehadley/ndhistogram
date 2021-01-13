@@ -4,6 +4,24 @@ use num_traits::Float;
 
 use super::{Axis, BinInterval};
 
+/// An axis with equal sized bins.
+///
+/// An axis with N equally spaced, equal sized, bins between (low, high].
+/// Below (above) this range is an underflow (overflow) bin.
+/// Hence this axis has N+2 bins.
+///
+/// # Example
+/// Create a 1D histogram with uniform 10 uniform bins between -5.0 and 5.0, plus overflow and underflow bins.
+/// ```rust
+///    use ndhistogram::{ndhistogram, Histogram};
+///    use ndhistogram::axis::{Axis, Uniform, BinInterval};
+///    let hist = ndhistogram!(Uniform::new(10, -5.0, 5.0));
+///    let axis = &hist.axes().0;
+///    assert_eq!(axis.bin(0), Some(BinInterval::underflow(-5.0)));
+///    assert_eq!(axis.bin(1), Some(BinInterval::new(-5.0, -4.0)));
+///    assert_eq!(axis.bin(11), Some(BinInterval::overflow(5.0)));
+///
+/// ```
 #[derive(Clone, PartialEq, Debug)]
 pub struct Uniform<T = f64> {
     num: usize,
@@ -15,6 +33,7 @@ impl<T> Uniform<T>
 where
     T: PartialOrd,
 {
+    /// Factory method to create an axis with num uniformly spaced bins in the range [low, high). Under/overflow bins cover values outside this range.
     pub fn new(num: usize, low: T, high: T) -> Uniform<T> {
         if num == 0 {
             panic!("Invalid axis num bins ({})", num);
@@ -27,9 +46,12 @@ where
 }
 
 impl<T> Uniform<T> {
+    /// Low edge of axis (excluding underflow bin).
     pub fn low(&self) -> &T {
         &self.low
     }
+
+    /// High edge of axis (excluding overflow bin).
     pub fn high(&self) -> &T {
         &self.high
     }
@@ -63,8 +85,9 @@ impl<T: Float> Axis for Uniform<T> {
         } else if index > (self.num + 1) {
             return None;
         }
-        let start = (T::from(index - 1)?) * (self.high - self.low) / (T::from(self.num)?);
-        let end = (T::from(index)?) * (self.high - self.low) / (T::from(self.num)?);
+        let start =
+            self.low + (T::from(index - 1)?) * (self.high - self.low) / (T::from(self.num)?);
+        let end = self.low + (T::from(index)?) * (self.high - self.low) / (T::from(self.num)?);
         Some(Self::BinInterval::new(start, end))
     }
 

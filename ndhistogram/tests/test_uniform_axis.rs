@@ -114,3 +114,11 @@ fn test_iter_axis() {
     let actual: Vec<_> = ax.into_iter().collect();
     assert_eq!(expected, actual);
 }
+
+#[test]
+fn test_negative_axis() {
+    let axis = Uniform::new(10, -5.0, 5.0);
+    assert_eq!(axis.bin(0), Some(BinInterval::underflow(-5.0)));
+    assert_eq!(axis.bin(1), Some(BinInterval::new(-5.0, -4.0)));
+    assert_eq!(axis.bin(11), Some(BinInterval::overflow(5.0)));
+}

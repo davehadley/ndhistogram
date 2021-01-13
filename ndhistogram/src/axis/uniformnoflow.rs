@@ -3,12 +3,30 @@ use num_traits::Float;
 use super::{Axis, BinInterval, Uniform};
 use std::fmt::{Debug, Display};
 
+/// An axis with equal sized bins and no under/overflow bins.
+///
+/// An axis with N equally spaced, equal sized, bins between (low, high].
+/// Similar to [Uniform] but this axis has no over/underflow bins.
+/// Hence it has N+2 bins.
+///
+/// # Example
+/// Create a 1D histogram with uniform 10 uniform bins between -5.0 and 5.0.
+/// ```rust
+///    use ndhistogram::{ndhistogram, Histogram};
+///    use ndhistogram::axis::{Axis, UniformNoFlow, BinInterval};
+///    let hist = ndhistogram!(UniformNoFlow::new(10, -5.0, 5.0));
+///    let axis = &hist.axes().0;
+///    assert_eq!(axis.bin(0), Some(BinInterval::new(-5.0, -4.0)));
+///    assert_eq!(axis.bin(10), None);
+///
+/// ```
 #[derive(Clone, PartialEq, Debug)]
 pub struct UniformNoFlow<T> {
     axis: Uniform<T>,
 }
 
 impl<T: Float> UniformNoFlow<T> {
+    /// Factory method to create an axis with num uniformly spaced bins in the range [low, high) with no under/overflow bins.
     pub fn new(num: usize, low: T, high: T) -> Self {
         UniformNoFlow {
             axis: Uniform::new(num, low, high),

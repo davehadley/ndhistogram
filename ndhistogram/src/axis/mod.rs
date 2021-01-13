@@ -61,22 +61,32 @@ type Bins<'a, BinInterval> = Box<dyn Iterator<Item = BinInterval> + 'a>;
 /// ```
 ///
 pub trait Axis {
+    /// The type representing a location on this axis.
     type Coordinate;
+    /// The type of an interval representing the set of Coordinates that correspond to a histogram bin
     type BinInterval;
 
+    /// Map from coordinate to bin number.
+    /// Returns an option as not all valid coordinates are necessarily contained within a bin.
     fn index(&self, coordinate: &Self::Coordinate) -> Option<usize>;
+    /// The number of bins in this axis, including underflow and overflow.
     fn numbins(&self) -> usize;
 
+    /// Map from bin number to axis to the interval covering the range of coordinates that this bin contains.
+    /// Returns an option in case an index >= [Axis::numbins] is given.
     fn bin(&self, index: usize) -> Option<Self::BinInterval>;
 
+    /// An iterator over bin numbers
     fn indices(&self) -> Indices {
         Box::new(0..self.numbins())
     }
 
+    /// An iterator over bin numbers and bin intervals
     fn iter(&self) -> Iter<'_, Self::BinInterval> {
         Box::new(self.indices().map(move |it| (it, self.bin(it).unwrap())))
     }
 
+    /// An iterator over bin intervals.
     fn bins(&self) -> Bins<'_, Self::BinInterval> {
         Box::new(self.indices().map(move |it| self.bin(it).unwrap()))
     }

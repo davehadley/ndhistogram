@@ -4,6 +4,9 @@ use crate::axes::Axes;
 
 use super::histogram::{Histogram, Item, Iter, IterMut, ValuesMut};
 
+/// A Histogram that stores its values in a [Vec].
+///
+/// See [ndhistogram] for examples of its use.
 #[derive(Debug, Clone)]
 pub struct VecHistogram<A, V> {
     axes: A,
@@ -11,6 +14,7 @@ pub struct VecHistogram<A, V> {
 }
 
 impl<A: Axes, V: Default + Clone> VecHistogram<A, V> {
+    ///
     pub fn new(axes: A) -> VecHistogram<A, V> {
         let size = axes.numbins();
         VecHistogram {
