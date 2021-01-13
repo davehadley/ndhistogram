@@ -18,9 +18,8 @@ jobs:
         profile: minimal
         toolchain: stable
         override: true
-    - uses: actions-rs/cargo@v1
-      with:
-        command: check -- -D warnings
+    - name: cargo check
+      run: RUSTFLAGS="-D warnings" cargo check
 
   test:
     name: Test Suite
