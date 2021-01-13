@@ -1,13 +1,6 @@
-# ndhistogram : N-dimensional histograms for Rust
+# ndhistogram : multi-dimensional histogramming for Rust
 
-# Development Instructions
-
-Report bugs/issues or submit pull requests to <https://github.com/davehadley/rustplayground>.
-
-Before committing any code, please install pre-commit hooks with:
-```
-source install-hook.sh
-```
+A histogramming library for Rust.
 
 ## License
 
