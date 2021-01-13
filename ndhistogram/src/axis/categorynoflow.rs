@@ -1,6 +1,20 @@
 use super::{category::Value, Axis, Category, SingleValueBinInterval};
 use std::fmt::{Debug, Display};
 
+/// An axis to represent a finite set of discrete values or categories without an overflow bin.
+///
+/// Similar to [Category], however, no overflow bin is included.
+///
+/// # Example
+///
+/// ```rust
+/// use ndhistogram::axis::{Axis, CategoryNoFlow, SingleValueBinInterval};
+/// let colors = CategoryNoFlow::new(vec!["red", "blue", "pink", "yellow", "black"]);
+/// assert_eq!(colors.index(&"red"), Some(0));
+/// assert_eq!(colors.index(&"green"), None);
+/// assert_eq!(colors.bin(1), Some(SingleValueBinInterval::new("blue")));
+/// assert_eq!(colors.bin(5), None);
+/// ```
 #[derive(Clone, PartialEq, Debug)]
 pub struct CategoryNoFlow<T>
 where
@@ -10,6 +24,10 @@ where
 }
 
 impl<T: Value> CategoryNoFlow<T> {
+    /// Factory method to create a category axis without an overflow bin.
+    ///
+    /// Takes a set of values that represent each category.
+    /// All other values will not be included in this axis.
     pub fn new<I: IntoIterator<Item = T>>(values: I) -> Self {
         Self {
             axis: Category::new(values),

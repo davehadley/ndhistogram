@@ -14,7 +14,9 @@ macro_rules! count_idents {
 
 macro_rules! impl_axes {
     () => {
+        /// Axes provided an interface for a set of ND dimensional set of histograms.
         pub trait Axes: Axis {
+            /// Returns the number of axes within this set.
             fn num_dim(&self) -> usize;
         }
     };

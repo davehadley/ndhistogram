@@ -8,6 +8,21 @@ use super::SingleValueBinInterval;
 pub trait Value: Eq + Hash + Clone {}
 impl<T: Eq + Hash + Clone> Value for T {}
 
+/// An axis to represent a set of discrete values or categories with an overflow bin.
+///
+/// This axis also includes an overflow bin, to include "other" values.
+/// See [CategoryNoFlow] for a variant that includes no overflow bin.
+///
+/// # Example
+///
+/// ```rust
+/// use ndhistogram::axis::{Axis, Category, SingleValueBinInterval};
+/// let colors = Category::new(vec!["red", "blue", "pink", "yellow", "black"]);
+/// assert_eq!(colors.index(&"red"), Some(0));
+/// assert_eq!(colors.index(&"green"), Some(5));
+/// assert_eq!(colors.bin(1), Some(SingleValueBinInterval::new("blue")));
+/// assert_eq!(colors.bin(5), Some(SingleValueBinInterval::overflow()));
+/// ```
 #[derive(Debug, Clone, Default, PartialEq)]
 pub struct Category<T>
 where
@@ -15,8 +30,6 @@ where
 {
     map_t_to_index: HashMap<T, usize>,
     map_index_to_t: HashMap<usize, T>,
-    // TODO: use const generics when stable https://rust-lang.github.io/rfcs/2000-const-generics.html
-    isgrow: bool,
 }
 
 impl<T: Value> Category<T> {
@@ -39,23 +52,22 @@ impl<T: Value> Category<T> {
         self.map_index_to_t.len()
     }
 
-    fn constructor<I: IntoIterator<Item = T>>(values: I, grow: bool) -> Self {
+    fn constructor<I: IntoIterator<Item = T>>(values: I) -> Self {
         let mut cat = Self {
             map_t_to_index: HashMap::new(),
             map_index_to_t: HashMap::new(),
-            isgrow: grow,
         };
         // TODO: is it faster to directly construct the hashmap rather than repeatedly insert?
         values.into_iter().for_each(|it| cat.insert(it));
         cat
     }
 
+    /// Factory method to create a category axis without an overflow bin.
+    ///
+    /// Takes an iterator over a set of values that represent each category.
+    /// All other values will be mapped to the overflow bin.
     pub fn new<I: IntoIterator<Item = T>>(values: I) -> Self {
-        Self::constructor(values, false)
-    }
-
-    pub fn growable<I: IntoIterator<Item = T>>(values: I) -> Self {
-        Self::constructor(values, true)
+        Self::constructor(values)
     }
 }
 
@@ -65,16 +77,11 @@ impl<T: Value> Axis for Category<T> {
     type BinInterval = SingleValueBinInterval<T>;
 
     fn index(&self, coordinate: &Self::Coordinate) -> Option<usize> {
-        self.get_index(&coordinate)
-            .or_else(|| if self.isgrow { None } else { Some(self.len()) })
+        self.get_index(&coordinate).or_else(|| Some(self.len()))
     }
 
     fn numbins(&self) -> usize {
-        if self.isgrow {
-            self.len()
-        } else {
-            self.len() + 1
-        }
+        self.len() + 1
     }
 
     fn bin(&self, index: usize) -> Option<Self::BinInterval> {
@@ -82,7 +89,7 @@ impl<T: Value> Axis for Category<T> {
         match value {
             Some(value) => Some(Self::BinInterval::new(value.clone())),
             None => {
-                if index == self.len() && !self.isgrow {
+                if index == self.len() {
                     Some(Self::BinInterval::overflow())
                 } else {
                     None
