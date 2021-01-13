@@ -4,8 +4,10 @@
 [![Crate](https://img.shields.io/crates/v/ndhistogram.svg)](https://crates.io/crates/ndhistogram)
 [![License](https://img.shields.io/crates/l/ndhistogram)](https://crates.io/crates/ndhistogram)
 [![Downloads](https://img.shields.io/crates/d/ndhistogram)](https://crates.io/crates/ndhistogram)
+
 A histogramming library for Rust.
-This library aims to provide a similar feature set to C++ [boost-histogram](https://www.boost.org/doc/libs/1_75_0/libs/histogram).
+
+This library aims to provide a similar feature set to C++ [boost-histogram](https://www.boost.org/doc/libs/1_75_0/libs/histogram) but with an idomatic pure-Rust implementation.
 
 ## Usage
 
