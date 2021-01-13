@@ -1,8 +1,14 @@
 # ndhistogram : N-dimensional histograms for Rust
 
+# Usage
+
+For usage instructions see:
+- [crates.io package](https://crates.io/crates/ndhistogram)
+- [documentation](https://docs.rs/ndhistogram)
+
 # Development Instructions
 
-Report bugs/issues or submit pull requests to <https://github.com/davehadley/rustplayground>.
+Report bugs/issues or submit pull requests to <https://github.com/davehadley/ndhistogram/issues>.
 
 Before committing any code, please install pre-commit hooks with:
 ```

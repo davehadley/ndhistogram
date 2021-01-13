@@ -1,13 +1,14 @@
 [package]
 name = "ndhistogram"
-version = "0.1.0"
+version = "0.2.0"
 authors = [ "David Hadley <davehadley@users.noreply.github.com>",]
 edition = "2018"
 license = "MIT OR Apache-2.0"
-description = "Multi-dimensional histogram"
+description = "multi-dimensional histogramming for Rust"
 homepage = "https://github.com/davehadley/rust-hist"
 repository = "https://github.com/davehadley/rust-hist"
 readme = "README.md"
+documentation = "https://docs.rs/ndhistogram"
 
 [dependencies]
 num-traits = "0.2.14"
