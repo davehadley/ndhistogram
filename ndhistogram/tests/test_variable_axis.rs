@@ -17,11 +17,23 @@ fn test_variable_noedges_panics() {
 #[test]
 #[should_panic]
 fn test_variable_oneedges_panics() {
-    Variable::<f64>::new(vec![1.0]);
+    Variable::new(vec![1.0]);
 }
 
 #[test]
 #[should_panic]
 fn test_variable_nan_edges_panics() {
-    Variable::<f64>::new(vec![1.0, NAN, 2.0]);
+    Variable::new(vec![1.0, NAN, 2.0]);
+}
+
+#[test]
+fn test_variable_low() {
+    let ax = Variable::new(vec![0, 1, 4, 8]);
+    assert_eq!(ax.low(), &0)
+}
+
+#[test]
+fn test_variable_high() {
+    let ax = Variable::new(vec![0, 1, 4, 8]);
+    assert_eq!(ax.high(), &8)
 }
