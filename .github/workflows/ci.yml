@@ -37,10 +37,8 @@ jobs:
         command: test
     - name: publish dry-run
       working-directory: ./ndhistogram
-      uses: actions-rs/cargo@v1
-      with:
-        command: publish
-        args: --dry-run
+      run:
+        command: publish --dry-run
 
   fmt:
     name: Lints
