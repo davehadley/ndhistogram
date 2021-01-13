@@ -39,6 +39,7 @@ jobs:
       with:
         command: publish
         args: --dry-run
+      working-directory: ./ndhistogram
 
   fmt:
     name: Lints
