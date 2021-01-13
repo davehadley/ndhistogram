@@ -12,3 +12,4 @@
 - [ ] Implement grow for Uniform
 - [ ] Re-binnable axis.
 - [ ] Growable/Extendable axis.
+- [ ] Spell check documentation.
