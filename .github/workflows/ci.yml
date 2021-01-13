@@ -37,8 +37,7 @@ jobs:
         command: test
     - name: publish dry-run
       working-directory: ./ndhistogram
-      run:
-        command: publish --dry-run
+      run: cargo publish --dry-run
 
   fmt:
     name: Lints
