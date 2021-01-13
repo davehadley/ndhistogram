@@ -16,6 +16,8 @@ mod categorynoflow;
 pub use categorynoflow::CategoryNoFlow;
 mod variable;
 pub use variable::Variable;
+mod variablenoflow;
+pub use variablenoflow::VariableNoFlow;
 
 type Iter<'a, BinInterval> = Box<dyn Iterator<Item = (usize, BinInterval)> + 'a>;
 type Indices = Box<dyn Iterator<Item = usize>>;

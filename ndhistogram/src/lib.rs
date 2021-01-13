@@ -72,6 +72,7 @@
 //! ### Axis Implementations
 //!
 //! - [Uniform](crate::axis::Uniform)/[UniformNoFlow](crate::axis::UniformNoFlow): equally sized bins in a some range with optional underflow/overflow bins.
+//! - [Variable](crate::axis::Variable)/[VariableNoFlow](crate::axis::VariableNoFlow): variable sized bins with optional underflow/overflow bins.
 //! - [Category](crate::axis::Category)/[CategoryNoFlow](crate::axis::CategoryNoFlow): a finite set of discrete values with optional overflow bin.
 //!
 //! User defined axes types are possible by implementing the [Axis](crate::axis::Axis) trait.
