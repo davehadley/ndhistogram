@@ -1,5 +1,7 @@
 # ndhistogram : multi-dimensional histogramming for Rust
 
+A histogramming library for Rust.
+
 ## License
 
 Licensed under either of
