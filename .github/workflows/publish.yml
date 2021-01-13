@@ -19,4 +19,5 @@ jobs:
         override: true
     - uses: actions-rs/cargo@v1
       with:
-        command: publish --token ${{ secrets.CRATES_TOKEN }}
+        command: publish
+        args: --token ${{ secrets.CRATES_TOKEN }}

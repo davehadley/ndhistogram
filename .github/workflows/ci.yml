@@ -37,7 +37,8 @@ jobs:
         command: test
     - uses: actions-rs/cargo@v1
       with:
-        command: publish --dry-run
+        command: publish
+        args: --dry-run
 
   fmt:
     name: Rustfmt
