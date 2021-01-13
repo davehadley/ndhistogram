@@ -19,6 +19,7 @@ ndhistogram = "0.2.0"
 ```
 
 To get started see the [quick start guide](https://docs.rs/ndhistogram).
+Please report any bugs in the [issues tracker](https://github.com/davehadley/ndhistogram/issues).
 
 ## License
 
