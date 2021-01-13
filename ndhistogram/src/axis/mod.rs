@@ -1,3 +1,8 @@
+//! Axis for ND histograms
+//!
+//! This module contains implementations of [Axis] that are used to represent the axes of
+//! an N-dimensional [Histogram].
+//!
 mod bininterval;
 pub use bininterval::bininterval::BinInterval;
 pub use bininterval::singlevaluebininterval::SingleValueBinInterval;
