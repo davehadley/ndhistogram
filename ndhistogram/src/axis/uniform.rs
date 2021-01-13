@@ -11,7 +11,7 @@ use super::{Axis, BinInterval};
 /// Hence this axis has N+2 bins.
 ///
 /// # Example
-/// Create a 1D histogram with uniform 10 uniform bins between -5.0 and 5.0, plus overflow and underflow bins.
+/// Create a 1D histogram with 10 uniform bins between -5.0 and 5.0, plus overflow and underflow bins.
 /// ```rust
 ///    use ndhistogram::{ndhistogram, Histogram};
 ///    use ndhistogram::axis::{Axis, Uniform, BinInterval};
@@ -22,7 +22,7 @@ use super::{Axis, BinInterval};
 ///    assert_eq!(axis.bin(11), Some(BinInterval::overflow(5.0)));
 ///
 /// ```
-#[derive(Clone, PartialEq, Debug)]
+#[derive(Clone, PartialEq, Debug, Eq)]
 pub struct Uniform<T = f64> {
     num: usize,
     low: T,

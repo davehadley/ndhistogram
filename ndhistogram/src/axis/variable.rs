@@ -2,6 +2,28 @@ use std::fmt::Display;
 
 use super::{Axis, BinInterval};
 
+/// An axis with variable sized bins.
+///
+/// An axis with variable sized bins.
+/// Constructed with a list of bin edges.
+/// Beyond the lowest (highest) bin edges is an underflow (overflow) bin.
+/// Hence this axis has num edges + 1 bins.
+///
+/// # Example
+/// Create a 1D histogram with 10 uniform bins between -5.0 and 5.0, plus overflow and underflow bins.
+/// ```rust
+///    use ndhistogram::{ndhistogram, Histogram};
+///    use ndhistogram::axis::{Axis, Variable, BinInterval};
+///    let mut hist = ndhistogram!(Variable::new(vec![0.0, 1.0, 3.0, 7.0]); i32);
+///    hist.fill(&0.0);
+///    hist.fill(&1.0);
+///    hist.fill(&2.0);
+///    assert_eq!(
+///        hist.values().copied().collect::<Vec<_>>(),
+///        vec![0, 1, 2, 0, 0],
+///    );
+///
+/// ```
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Variable<T = f64> {
     bin_edges: Vec<T>,
@@ -11,6 +33,12 @@ impl<T> Variable<T>
 where
     T: PartialOrd + Copy,
 {
+    /// Factory method to create an axis with [Variable] binning given a set of bin edges.
+    ///
+    /// # Panics
+    ///
+    /// Panics if errors less than 2 edges are provided or if it fails to sort the
+    /// bin edges (for example if a NAN value is given).
     pub fn new<I: IntoIterator<Item = T>>(bin_edges: I) -> Self {
         let mut bin_edges: Vec<T> = bin_edges.into_iter().collect();
         if bin_edges.len() < 2 {
