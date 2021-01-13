@@ -29,12 +29,22 @@ where
     }
 }
 
-impl<T> Axis for Variable<T> {
+impl<T> Axis for Variable<T>
+where
+    T: PartialOrd,
+{
     type Coordinate = T;
     type BinInterval = BinInterval<T>;
 
     fn index(&self, coordinate: &Self::Coordinate) -> Option<usize> {
-        todo!()
+        match self.bin_edges.binary_search_by(|probe| {
+            probe
+                .partial_cmp(&coordinate)
+                .expect("incomparable values. NAN bin edges?")
+        }) {
+            Ok(index) => Some(index + 1),
+            Err(index) => Some(index),
+        }
     }
 
     fn numbins(&self) -> usize {
