@@ -45,3 +45,18 @@ fn test_variable_get_index() {
     let expected = vec![0, 1, 2, 2, 2, 3, 3, 3, 3, 4, 4];
     assert_eq!(actual, expected);
 }
+
+#[test]
+fn test_variable_get_bin() {
+    let ax = Variable::new(vec![0, 1, 4, 8]);
+    let actual: Vec<_> = (0..5).map(|index| ax.bin(index)).collect();
+    let expected = vec![
+        Some(BinInterval::underflow(0)),
+        Some(BinInterval::new(0, 1)),
+        Some(BinInterval::new(1, 4)),
+        Some(BinInterval::new(4, 8)),
+        Some(BinInterval::overflow(8)),
+        None,
+    ];
+    assert_eq!(actual, expected);
+}
