@@ -35,11 +35,12 @@ jobs:
     - uses: actions-rs/cargo@v1
       with:
         command: test
-    - uses: actions-rs/cargo@v1
+    - name: publish dry-run
+      working-directory: ./ndhistogram
+      uses: actions-rs/cargo@v1
       with:
         command: publish
         args: --dry-run
-      working-directory: ./ndhistogram
 
   fmt:
     name: Lints
