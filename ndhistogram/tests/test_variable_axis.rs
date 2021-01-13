@@ -60,3 +60,51 @@ fn test_variable_get_bin() {
     ];
     assert_eq!(actual, expected);
 }
+
+#[test]
+fn test_variable_clone() {
+    let ax = Variable::new(vec![0, 1, 4, 8]);
+    assert_eq!(ax.clone(), ax)
+}
+
+#[test]
+fn test_variable_debug_display() {
+    let ax = Variable::new(vec![0, 1, 4, 8]);
+    println!("{:?}", ax);
+}
+
+#[test]
+fn test_variable_display() {
+    let ax = Variable::new(vec![0, 1, 4, 8]);
+    println!("{}", ax);
+}
+
+#[test]
+fn test_variable_iterate_indices() {
+    let ax = Variable::new(vec![0, 1, 4, 8]);
+    let actual: Vec<_> = ax.indices().collect();
+    let expected = vec![0, 1, 2, 3, 4];
+    assert_eq!(actual, expected)
+}
+
+#[test]
+fn test_variable_iterate_bins() {
+    let ax = Variable::new(vec![0, 1, 4, 8]);
+    let actual: Vec<_> = ax.bins().collect();
+    let expected = vec![
+        BinInterval::underflow(0),
+        BinInterval::new(0, 1),
+        BinInterval::new(1, 4),
+        BinInterval::new(4, 8),
+        BinInterval::overflow(8),
+    ];
+    assert_eq!(actual, expected)
+}
+
+#[test]
+fn test_variable_iterate_items() {
+    let ax = Variable::new(vec![0, 1, 4, 8]);
+    let actual: Vec<_> = ax.into_iter().collect();
+    let expected: Vec<_> = ax.indices().zip(ax.bins()).collect();
+    assert_eq!(actual, expected)
+}

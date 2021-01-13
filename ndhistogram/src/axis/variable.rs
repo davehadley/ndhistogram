@@ -1,6 +1,8 @@
+use std::fmt::Display;
+
 use super::{Axis, BinInterval};
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Variable<T = f64> {
     bin_edges: Vec<T>,
 }
@@ -70,5 +72,30 @@ where
         } else {
             None
         }
+    }
+}
+
+impl<T: Display + PartialOrd + Copy> Display for Variable<T> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "Axis{{# bins={}, range=[{}, {}), class={}}}",
+            self.bin_edges.len() - 1,
+            self.low(),
+            self.high(),
+            stringify!(Variable)
+        )
+    }
+}
+
+impl<'a, T> IntoIterator for &'a Variable<T>
+where
+    Variable<T>: Axis,
+{
+    type Item = (usize, <Variable<T> as Axis>::BinInterval);
+    type IntoIter = Box<dyn Iterator<Item = Self::Item> + 'a>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.iter()
     }
 }
