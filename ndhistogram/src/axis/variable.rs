@@ -10,7 +10,7 @@ use super::{Axis, BinInterval};
 /// Hence this axis has num edges + 1 bins.
 ///
 /// # Example
-/// Create a 1D histogram with 10 uniform bins between -5.0 and 5.0, plus overflow and underflow bins.
+/// Create a 1D histogram with 3 variable width bin 0.0 and 7.0, plus overflow and underflow bins.
 /// ```rust
 ///    use ndhistogram::{ndhistogram, Histogram};
 ///    use ndhistogram::axis::{Axis, Variable, BinInterval};

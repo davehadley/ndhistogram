@@ -18,9 +18,8 @@ jobs:
         profile: minimal
         toolchain: stable
         override: true
-    - uses: actions-rs/cargo@v1
-      with:
-        command: check
+    - name: cargo check
+      run: RUSTFLAGS="-D warnings" cargo check
 
   test:
     name: Test Suite
@@ -35,9 +34,12 @@ jobs:
     - uses: actions-rs/cargo@v1
       with:
         command: test
+    - name: publish dry-run
+      working-directory: ./ndhistogram
+      run: cargo publish --locked --dry-run
 
   fmt:
-    name: Rustfmt
+    name: Lints
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -51,19 +53,10 @@ jobs:
       with:
         command: fmt
         args: --all -- --check
-
-  clippy:
-    name: Clippy
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - uses: actions-rs/toolchain@v1
-      with:
-        profile: minimal
-        toolchain: stable
-        override: true
     - run: rustup component add clippy
     - uses: actions-rs/cargo@v1
       with:
         command: clippy
         args: -- -D warnings
+
+

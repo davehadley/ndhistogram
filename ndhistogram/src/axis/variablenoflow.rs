@@ -1,35 +1,37 @@
-use num_traits::Float;
-
-use super::{Axis, BinInterval, Uniform};
+use super::{Axis, BinInterval, Variable};
 use std::fmt::{Debug, Display};
 
-/// An axis with equal sized bins and no under/overflow bins.
+/// An axis with variable sized bins and no overflow bins.
 ///
-/// An axis with N equally spaced, equal sized, bins between (low, high].
-/// Similar to [Uniform] but this axis has no over/underflow bins.
-/// Hence it has N+2 bins.
+/// An axis with variable sized bins constructed with a list of bin edges.
+/// This axis has (num edges - 1) bins.
 ///
 /// # Example
-/// Create a 1D histogram with uniform 10 uniform bins between -5.0 and 5.0.
+/// Create a 1D histogram with 3 variable width bin 0.0 and 7.0, plus overflow and underflow bins.
 /// ```rust
 ///    use ndhistogram::{ndhistogram, Histogram};
-///    use ndhistogram::axis::{Axis, UniformNoFlow, BinInterval};
-///    let hist = ndhistogram!(UniformNoFlow::new(10, -5.0, 5.0));
-///    let axis = &hist.axes().0;
-///    assert_eq!(axis.bin(0), Some(BinInterval::new(-5.0, -4.0)));
-///    assert_eq!(axis.bin(10), None);
+///    use ndhistogram::axis::{Axis, VariableNoFlow};
+///    let mut hist = ndhistogram!(VariableNoFlow::new(vec![0.0, 1.0, 3.0, 7.0]); i32);
+///    hist.fill(&-1.0); // will be ignore as there is no underflow bin
+///    hist.fill(&1.0);
+///    hist.fill(&2.0);
+///    assert_eq!(
+///        hist.values().copied().collect::<Vec<_>>(),
+///        vec![0, 2, 0],
+///    );
 ///
 /// ```
-#[derive(Clone, PartialEq, Debug)]
-pub struct UniformNoFlow<T> {
-    axis: Uniform<T>,
+#[derive(Clone, PartialEq, Eq, Debug)]
+pub struct VariableNoFlow<T> {
+    axis: Variable<T>,
 }
 
-impl<T: Float> UniformNoFlow<T> {
-    /// Factory method to create an axis with num uniformly spaced bins in the range [low, high) with no under/overflow bins.
-    pub fn new(num: usize, low: T, high: T) -> Self {
-        UniformNoFlow {
-            axis: Uniform::new(num, low, high),
+impl<T: PartialOrd + Copy> VariableNoFlow<T> {
+    /// Factory method to create an variable binning from a set of bin edges with no under/overflow bins.
+    /// See the documentation for [Variable::new].
+    pub fn new<I: IntoIterator<Item = T>>(bin_edges: I) -> Self {
+        VariableNoFlow {
+            axis: Variable::new(bin_edges),
         }
     }
 
@@ -44,7 +46,7 @@ impl<T: Float> UniformNoFlow<T> {
     }
 }
 
-impl<T: Float> Axis for UniformNoFlow<T> {
+impl<T: PartialOrd + Copy> Axis for VariableNoFlow<T> {
     type Coordinate = T;
     type BinInterval = BinInterval<T>;
 
@@ -70,8 +72,8 @@ impl<T: Float> Axis for UniformNoFlow<T> {
     }
 }
 
-impl<'a, T: Float> IntoIterator for &'a UniformNoFlow<T> {
-    type Item = (usize, <Uniform<T> as Axis>::BinInterval);
+impl<'a, T: PartialOrd + Copy> IntoIterator for &'a VariableNoFlow<T> {
+    type Item = (usize, <VariableNoFlow<T> as Axis>::BinInterval);
     type IntoIter = Box<dyn Iterator<Item = Self::Item> + 'a>;
 
     fn into_iter(self) -> Self::IntoIter {
@@ -79,7 +81,10 @@ impl<'a, T: Float> IntoIterator for &'a UniformNoFlow<T> {
     }
 }
 
-impl<T: Float + Display> Display for UniformNoFlow<T> {
+impl<T: PartialOrd + Copy + Display> Display for VariableNoFlow<T>
+where
+    Self: Axis,
+{
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
@@ -87,7 +92,7 @@ impl<T: Float + Display> Display for UniformNoFlow<T> {
             self.numbins(),
             self.axis.low(),
             self.axis.high(),
-            stringify!(UniformNoFlow)
+            stringify!(VariableNoFlow)
         )
     }
 }
