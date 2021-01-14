@@ -1,4 +1,4 @@
-use std::fmt::Display;
+use std::{fmt::Display, ops::Add};
 
 use crate::axes::Axes;
 
@@ -91,5 +91,28 @@ impl<'a, A: Axes, V: 'a> IntoIterator for &'a mut VecHistogram<A, V> {
 impl<A: Axes, V> Display for VecHistogram<A, V> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "VecHistogram{}D", self.axes().num_dim())
+    }
+}
+
+impl<A: Axes + PartialEq + Clone, V> Add<&VecHistogram<A, V>> for &VecHistogram<A, V>
+where
+    for<'a> &'a V: Add<Output = V>,
+{
+    type Output = Result<VecHistogram<A, V>, ()>;
+
+    fn add(self, rhs: &VecHistogram<A, V>) -> Self::Output {
+        if self.axes() != rhs.axes() {
+            return Err(());
+        }
+        let values = self
+            .values
+            .iter()
+            .zip(rhs.values.iter())
+            .map(|(l, r)| l + r)
+            .collect();
+        Ok(VecHistogram {
+            axes: self.axes().clone(),
+            values,
+        })
     }
 }

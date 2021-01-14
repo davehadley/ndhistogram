@@ -80,7 +80,7 @@ pub trait Histogram<A: Axes, V> {
 }
 
 /// Struct to be returned when iterating over [Histogram]s bins.
-#[derive(Debug, PartialEq, Clone)]
+#[derive(Debug, PartialEq, Eq, Clone)]
 pub struct Item<T, V> {
     /// Bin number
     pub index: usize,
