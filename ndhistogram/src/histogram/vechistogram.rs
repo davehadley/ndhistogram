@@ -1,4 +1,7 @@
-use std::{fmt::Display, ops::Add};
+use std::{
+    fmt::Display,
+    ops::{Add, Div, Mul, Sub},
+};
 
 use crate::axes::Axes;
 
@@ -94,13 +97,15 @@ impl<A: Axes, V> Display for VecHistogram<A, V> {
     }
 }
 
-impl<A: Axes + PartialEq + Clone, V> Add<&VecHistogram<A, V>> for &VecHistogram<A, V>
+macro_rules! impl_binary_op {
+    ($Trait:tt, $method:tt, $mathsymbol:tt) => {
+        impl<A: Axes + PartialEq + Clone, V> $Trait<&VecHistogram<A, V>> for &VecHistogram<A, V>
 where
-    for<'a> &'a V: Add<Output = V>,
+    for<'a> &'a V: $Trait<Output = V>,
 {
     type Output = Result<VecHistogram<A, V>, ()>;
 
-    fn add(self, rhs: &VecHistogram<A, V>) -> Self::Output {
+    fn $method(self, rhs: &VecHistogram<A, V>) -> Self::Output {
         if self.axes() != rhs.axes() {
             return Err(());
         }
@@ -108,7 +113,7 @@ where
             .values
             .iter()
             .zip(rhs.values.iter())
-            .map(|(l, r)| l + r)
+            .map(|(l, r)| l $mathsymbol r)
             .collect();
         Ok(VecHistogram {
             axes: self.axes().clone(),
@@ -116,3 +121,10 @@ where
         })
     }
 }
+    };
+}
+
+impl_binary_op! {Add, add, +}
+impl_binary_op! {Sub, sub, -}
+impl_binary_op! {Mul, mul, *}
+impl_binary_op! {Div, div, /}
