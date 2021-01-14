@@ -109,3 +109,62 @@ impl_binary_op! {test_ndhistogram_1d_elementwise_add, test_ndhistogram_3d_elemen
 impl_binary_op! {test_ndhistogram_1d_elementwise_mul, test_ndhistogram_3d_elementwise_mul, test_ndhistogram_binning_mismatch_mul, *}
 impl_binary_op! {test_ndhistogram_1d_elementwise_sub, test_ndhistogram_3d_elementwise_sub, test_ndhistogram_binning_mismatch_sub, -}
 impl_binary_op! {test_ndhistogram_1d_elementwise_div, test_ndhistogram_3d_elementwise_div, test_ndhistogram_binning_mismatch_div, /}
+
+macro_rules! impl_binary_op_with_scalar {
+    ($fnname1d:tt, $fnname3d:tt, $mathsymbol:tt) => {
+
+        #[test]
+        fn $fnname1d() {
+            let left = generate_normal_hist_1d(1);
+            let right = 2.0;
+            let hadd = (&left $mathsymbol &right);
+            let actual: Vec<_> = hadd
+                .iter()
+                .map(|it| (it.index, it.bin, *it.value))
+                .filter(|(_,_, v)| !v.is_nan())
+                .collect();
+            let expected: Vec<_> = left
+                .iter()
+                .map(|l| (l.index, l.bin, l.value $mathsymbol right))
+                .filter(|(_,_, v)| !v.is_nan())
+                .collect();
+            assert_eq!(actual, expected)
+        }
+
+    }
+}
+
+impl_binary_op_with_scalar! {test_ndhistogram_1d_scalar_add, test_ndhistogram_3d_scalar_add, +}
+impl_binary_op_with_scalar! {test_ndhistogram_1d_scalar_mul, test_ndhistogram_3d_scalar_mul, *}
+impl_binary_op_with_scalar! {test_ndhistogram_1d_scalar_sub, test_ndhistogram_3d_scalar_sub, -}
+impl_binary_op_with_scalar! {test_ndhistogram_1d_scalar_div, test_ndhistogram_3d_scalar_div, /}
+
+#[test]
+fn test_ndhistogram_1d_equality() {
+    let left = generate_normal_hist_1d(1);
+    let right = left.clone();
+    assert_eq!(left, right)
+}
+
+#[test]
+fn test_ndhistogram_1d_inequality() {
+    let left = generate_normal_hist_1d(1);
+    let mut right = left.clone();
+    right.fill(&1.0);
+    assert_ne!(left, right)
+}
+
+#[test]
+fn test_ndhistogram_3d_equality() {
+    let left = generate_normal_hist_3d(1);
+    let right = left.clone();
+    assert_eq!(left, right)
+}
+
+#[test]
+fn test_ndhistogram_3d_inequality() {
+    let left = generate_normal_hist_3d(1);
+    let mut right = left.clone();
+    right.fill(&(1.0, 2.0, 3.0));
+    assert_ne!(left, right)
+}

@@ -10,7 +10,7 @@ use super::histogram::{Histogram, Item, Iter, IterMut, ValuesMut};
 /// A Histogram that stores its values in a [Vec].
 ///
 /// See [ndhistogram] for examples of its use.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct VecHistogram<A, V> {
     axes: A,
     values: Vec<V>,
@@ -128,3 +128,31 @@ impl_binary_op! {Add, add, +}
 impl_binary_op! {Sub, sub, -}
 impl_binary_op! {Mul, mul, *}
 impl_binary_op! {Div, div, /}
+
+macro_rules! impl_binary_op_with_scalar {
+    ($Trait:tt, $method:tt, $mathsymbol:tt) => {
+        impl<A: Axes + PartialEq + Clone, V> $Trait<&V> for &VecHistogram<A, V>
+where
+    for<'a> &'a V: $Trait<Output = V>,
+{
+    type Output = VecHistogram<A, V>;
+
+    fn $method(self, rhs: &V) -> Self::Output {
+        let values = self
+            .values
+            .iter()
+            .map(|l| l $mathsymbol rhs)
+            .collect();
+        VecHistogram {
+            axes: self.axes().clone(),
+            values,
+        }
+    }
+}
+    };
+}
+
+impl_binary_op_with_scalar! {Add, add, +}
+impl_binary_op_with_scalar! {Sub, sub, -}
+impl_binary_op_with_scalar! {Mul, mul, *}
+impl_binary_op_with_scalar! {Div, div, /}

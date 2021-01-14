@@ -8,7 +8,7 @@
 - [ ] "Profile" histograms
 - [ ] ndarray-like slicing
 - [ ] Pretty display for histogram
-- [ ] Histogram +, -, /, *, ==, operations 
+- [x] Histogram +, -, /, *, ==, operations 
 - [ ] Implement grow for Uniform
 - [ ] Re-binnable axis.
 - [ ] Growable/Extendable axis.
