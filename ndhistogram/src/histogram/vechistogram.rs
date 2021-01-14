@@ -1,4 +1,7 @@
-use std::fmt::Display;
+use std::{
+    fmt::Display,
+    ops::{Add, Div, Mul, Sub},
+};
 
 use crate::axes::Axes;
 
@@ -7,7 +10,7 @@ use super::histogram::{Histogram, Item, Iter, IterMut, ValuesMut};
 /// A Histogram that stores its values in a [Vec].
 ///
 /// See [ndhistogram] for examples of its use.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct VecHistogram<A, V> {
     axes: A,
     values: Vec<V>,
@@ -93,3 +96,63 @@ impl<A: Axes, V> Display for VecHistogram<A, V> {
         write!(f, "VecHistogram{}D", self.axes().num_dim())
     }
 }
+
+macro_rules! impl_binary_op {
+    ($Trait:tt, $method:tt, $mathsymbol:tt) => {
+        impl<A: Axes + PartialEq + Clone, V> $Trait<&VecHistogram<A, V>> for &VecHistogram<A, V>
+where
+    for<'a> &'a V: $Trait<Output = V>,
+{
+    type Output = Result<VecHistogram<A, V>, ()>;
+
+    fn $method(self, rhs: &VecHistogram<A, V>) -> Self::Output {
+        if self.axes() != rhs.axes() {
+            return Err(());
+        }
+        let values = self
+            .values
+            .iter()
+            .zip(rhs.values.iter())
+            .map(|(l, r)| l $mathsymbol r)
+            .collect();
+        Ok(VecHistogram {
+            axes: self.axes().clone(),
+            values,
+        })
+    }
+}
+    };
+}
+
+impl_binary_op! {Add, add, +}
+impl_binary_op! {Sub, sub, -}
+impl_binary_op! {Mul, mul, *}
+impl_binary_op! {Div, div, /}
+
+macro_rules! impl_binary_op_with_scalar {
+    ($Trait:tt, $method:tt, $mathsymbol:tt) => {
+        impl<A: Axes + PartialEq + Clone, V> $Trait<&V> for &VecHistogram<A, V>
+where
+    for<'a> &'a V: $Trait<Output = V>,
+{
+    type Output = VecHistogram<A, V>;
+
+    fn $method(self, rhs: &V) -> Self::Output {
+        let values = self
+            .values
+            .iter()
+            .map(|l| l $mathsymbol rhs)
+            .collect();
+        VecHistogram {
+            axes: self.axes().clone(),
+            values,
+        }
+    }
+}
+    };
+}
+
+impl_binary_op_with_scalar! {Add, add, +}
+impl_binary_op_with_scalar! {Sub, sub, -}
+impl_binary_op_with_scalar! {Mul, mul, *}
+impl_binary_op_with_scalar! {Div, div, /}
