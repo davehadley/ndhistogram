@@ -1,4 +1,4 @@
-use ndhistogram::{axis::Uniform, ndhistogram, Histogram, Item, VecHistogram};
+use ndhistogram::{axis::Uniform, ndhistogram, Histogram};
 
 use num_traits::Float;
 use rand::{prelude::StdRng, SeedableRng};
@@ -8,7 +8,7 @@ pub fn generate_nomal<T: Float>(mu: T, sigma: T, seed: u64) -> impl Iterator<Ite
 where
     StandardNormal: Distribution<T>,
 {
-    let mut rng = StdRng::seed_from_u64(seed);
+    let rng = StdRng::seed_from_u64(seed);
     Normal::new(mu, sigma).unwrap().sample_iter(rng)
 }
 
@@ -33,4 +33,12 @@ fn test_ndhistogram_add_1d_elementwise() {
         .map(|(l, r)| (l.index, l.bin, l.value + r.value))
         .collect();
     assert_eq!(actual, expected)
+}
+
+#[test]
+fn test_ndhistogram_add_1d_elementwise_fails_with_different_binning() {
+    let left = ndhistogram!(Uniform::new(10, -5.0, 5.0));
+    let right = ndhistogram!(Uniform::new(10, -5.0, 6.0));
+    let hadd = &left + &right;
+    assert!(hadd.is_err())
 }
