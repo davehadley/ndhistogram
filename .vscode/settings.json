@@ -1,4 +1,0 @@
-{
-    "debug.allowBreakpointsEverywhere": true,
-    "rust-analyzer.inlayHints.enable": false
-}
