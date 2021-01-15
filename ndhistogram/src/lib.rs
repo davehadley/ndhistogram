@@ -104,6 +104,8 @@ mod axes;
 pub mod axis;
 mod histogram;
 
+pub mod value;
+
 pub use axes::Axes;
 pub use histogram::fill::Fill;
 pub use histogram::fill::FillWeight;

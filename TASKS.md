@@ -4,7 +4,7 @@
 - [ ] Uniform with transform binning
 - [ ] Integer binning
 - [ ] Dynamic histogram (i.e. axes only know at runtime)
-- [ ] "SumW2" histogram values
+- [x] "SumW2" histogram values
 - [ ] "Profile" histograms
 - [ ] ndarray-like slicing
 - [ ] Pretty display for histogram
