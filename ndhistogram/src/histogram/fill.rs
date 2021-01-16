@@ -47,7 +47,7 @@ where
 /// data is neccessaray to fill a [Histogram](crate::Histogram) bin value.
 /// For example, see [WeightedMean](crate::value::WeightedMean).
 pub trait FillWith<D> {
-    /// Fill this value with some weight.
+    /// Fill this value with some data.
     /// For a simple number type means adding the weight.
     fn fill_with(&mut self, data: D);
 }
