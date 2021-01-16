@@ -1,14 +1,9 @@
-use ndhistogram::{
-    axis::Uniform,
-    ndhistogram,
-    value::{Sum, Variance},
-    Histogram,
-};
+use ndhistogram::{axis::Uniform, ndhistogram, value::Sum, Histogram};
 #[test]
 fn test_sum_value_fill() {
-    let mut hist = ndhistogram!(Uniform::new(1, 0.0, 1.0); Sum);
+    let mut hist = ndhistogram!(Uniform::new(1, 0.0, 1.0); Sum<i32>);
     hist.fill(&0.0);
-    assert_eq!(hist.value(&0.0), Some(&Sum::new(1.0)))
+    assert_eq!(hist.value(&0.0).unwrap().get(), 1)
 }
 
 fn assert_float_eq(left: f64, right: f64) {

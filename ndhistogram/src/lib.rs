@@ -109,6 +109,7 @@ pub mod value;
 pub use axes::Axes;
 pub use histogram::fill::Fill;
 pub use histogram::fill::FillWeight;
+pub use histogram::fill::FillWith;
 pub use histogram::histogram::Histogram;
 pub use histogram::histogram::Item;
 pub use histogram::vechistogram::VecHistogram;

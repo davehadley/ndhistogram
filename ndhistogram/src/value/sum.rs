@@ -2,33 +2,40 @@ use num_traits::Float;
 
 use crate::Fill;
 
-use super::Variance;
-
+/// ndhistogram bin value type for filling unweighted values.
+/// Analogous to [WeightedSum]. Methods returning variance and standard
+/// deviation assume Poisson statistics.
 #[derive(Default, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
 pub struct Sum<T = f64> {
     sum: T,
 }
 
 impl<T: Copy> Sum<T> {
-    pub fn new(sum: T) -> Self {
-        Self { sum }
+    /// Factory method to create an unfilled (or zero valued) Sum.
+    pub fn new() -> Self
+    where
+        Self: Default,
+    {
+        Self::default()
     }
 
+    /// Get the current value.
     pub fn get(&self) -> T {
         self.sum
     }
-}
 
-impl<T: Copy> Variance<T> for Sum<T> {
-    fn variance(&self) -> T {
+    /// Estimate of the variance of value assuming Poisson statistics.
+    pub fn variance(&self) -> T {
         self.sum
     }
 
-    fn standard_deviation(&self) -> T
+    /// Square root of the variance.
+    pub fn standard_deviation<O: Float>(&self) -> O
     where
-        T: Float,
+        T: Into<O>,
+        O: Float,
     {
-        self.variance().sqrt()
+        self.variance().into().sqrt()
     }
 }
 
