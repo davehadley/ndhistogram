@@ -102,7 +102,7 @@ where
 
     /// The square of the standard error of the mean.
     pub fn variance_of_mean(&self) -> O {
-        self.variance_of_samples() / O::from(self.sumw)
+        self.variance_of_samples() * O::from(self.sumw2) / (O::from(self.sumw) * O::from(self.sumw))
     }
 
     /// Compute the standard error of the mean.

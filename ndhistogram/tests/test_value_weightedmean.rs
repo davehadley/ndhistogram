@@ -88,3 +88,43 @@ fn test_weightedmean_int_value_stderr() {
         ((2.0f64 / 3.0) / 3.0).sqrt(),
     );
 }
+
+fn simple_filled_float_weightedmean_hist_with_weights(
+) -> VecHistogram<(Uniform,), WeightedMean<f64, f64, f64, u32>> {
+    let mut hist = ndhistogram!(Uniform::new(1, 0.0, 1.0); WeightedMean<f64, f64, f64, u32>);
+    //let mut hist = VecHistogram::<_, WeightedMean<f64, f64, f64, u32>>::new((Uniform::new(1, 0.0, 1.0),));
+    hist.fill_with(&0.0, Weighted::new(1.0, 1.0));
+    hist.fill_with(&0.0, Weighted::new(2.0, 2.0));
+    hist.fill_with(&0.0, Weighted::new(3.0, 3.0));
+    hist
+}
+
+#[test]
+fn test_weightedmean_value_weightedmean_with_weights() {
+    let hist = simple_filled_float_weightedmean_hist_with_weights();
+    assert_float_eq(hist.value(&0.0).unwrap().get(), 14. / 6.0)
+}
+
+#[test]
+fn test_weightedmean_value_numsamples_with_weights() {
+    let hist = simple_filled_float_weightedmean_hist_with_weights();
+    let binvalue = hist.value(&0.0).unwrap();
+    assert_eq!(binvalue.num_samples(), 3);
+}
+#[test]
+fn test_weightedmean_value_stddev_samples_with_weights() {
+    let hist = simple_filled_float_weightedmean_hist_with_weights();
+    let binvalue = hist.value(&0.0).unwrap();
+    let expected = 0.5555555555555555;
+    assert_float_eq(binvalue.variance_of_samples(), expected);
+    assert_float_eq(binvalue.standard_deviation_of_samples(), expected.sqrt());
+}
+
+#[test]
+fn test_weightedmean_value_stderr_with_weights() {
+    let hist = simple_filled_float_weightedmean_hist_with_weights();
+    let binvalue = hist.value(&0.0).unwrap();
+    let expected = 0.21604938271604893;
+    assert_float_eq(binvalue.variance_of_mean(), expected);
+    assert_float_eq(binvalue.standard_error_of_mean(), expected.sqrt());
+}
