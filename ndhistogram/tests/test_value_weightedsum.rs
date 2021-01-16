@@ -1,9 +1,4 @@
-use ndhistogram::{
-    axis::Uniform,
-    ndhistogram,
-    value::{Variance, WeightedSum},
-    Histogram,
-};
+use ndhistogram::{axis::Uniform, ndhistogram, value::WeightedSum, Histogram};
 #[test]
 fn test_weightedsum_value_fill() {
     let mut hist = ndhistogram!(Uniform::new(1, 0.0, 1.0); WeightedSum);

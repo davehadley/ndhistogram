@@ -7,8 +7,6 @@ use num_traits::{abs, Float, Num, NumOps, One, Signed};
 
 use crate::{Fill, FillWith};
 
-use super::Variance;
-
 #[derive(Default, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
 pub struct Mean<T = f64, C = u32, O = f64> {
     sumw: T,

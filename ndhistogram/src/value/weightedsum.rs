@@ -4,8 +4,6 @@ use num_traits::Float;
 
 use crate::{Fill, FillWeight};
 
-use super::Variance;
-
 #[derive(Default, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
 pub struct WeightedSum<T = f64> {
     sumw: T,
@@ -20,11 +18,17 @@ impl<T: Copy> WeightedSum<T> {
     pub fn get(&self) -> T {
         self.sumw
     }
-}
 
-impl<T: Copy> Variance<T> for WeightedSum<T> {
-    fn variance(&self) -> T {
+    pub fn variance(&self) -> T {
         self.sumw2
+    }
+
+    pub fn standard_deviation<O: Float>(&self) -> O
+    where
+        T: Into<O>,
+        O: Float,
+    {
+        self.variance().into().sqrt()
     }
 }
 

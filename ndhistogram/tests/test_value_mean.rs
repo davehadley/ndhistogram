@@ -1,11 +1,6 @@
 use std::cmp::max;
 
-use ndhistogram::{
-    axis::Uniform,
-    ndhistogram,
-    value::{Mean, Variance},
-    Histogram, VecHistogram,
-};
+use ndhistogram::{axis::Uniform, ndhistogram, value::Mean, Histogram, VecHistogram};
 
 fn assert_float_eq(left: f64, right: f64) {
     assert!(

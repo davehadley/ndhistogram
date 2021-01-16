@@ -2,8 +2,6 @@ use num_traits::Float;
 
 use crate::Fill;
 
-use super::Variance;
-
 #[derive(Default, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
 pub struct Sum<T = f64> {
     sum: T,
@@ -17,11 +15,17 @@ impl<T: Copy> Sum<T> {
     pub fn get(&self) -> T {
         self.sum
     }
-}
 
-impl<T: Copy> Variance<T> for Sum<T> {
-    fn variance(&self) -> T {
+    pub fn variance(&self) -> T {
         self.sum
+    }
+
+    pub fn standard_deviation<O: Float>(&self) -> O
+    where
+        T: Into<O>,
+        O: Float,
+    {
+        self.variance().into().sqrt()
     }
 }
 
