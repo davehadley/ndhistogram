@@ -5,7 +5,6 @@
 [![Crate](https://img.shields.io/crates/v/ndhistogram.svg)](https://crates.io/crates/ndhistogram)
 [![License](https://img.shields.io/crates/l/ndhistogram)](https://crates.io/crates/ndhistogram)
 [![Recent Activity](https://img.shields.io/github/last-commit/davehadley/ndhistogram)](https://github.com/davehadley/ndhistogram)
-[![Downloads](https://img.shields.io/crates/d/ndhistogram)](https://crates.io/crates/ndhistogram)
 
 A histogramming library for Rust.
 
@@ -17,7 +16,7 @@ Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-ndhistogram = "0.2.0"
+ndhistogram = "0.3.0"
 ```
 
 To get started see the [quick start guide](https://docs.rs/ndhistogram).
