@@ -3,7 +3,7 @@ use std::{
     ops::{AddAssign, Div, Mul},
 };
 
-use num_traits::{abs, Float, NumOps, One, Signed};
+use num_traits::{Float, NumOps, One, Signed};
 
 use crate::FillWith;
 
