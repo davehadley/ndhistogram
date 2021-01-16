@@ -5,7 +5,7 @@
 - [ ] Integer binning
 - [ ] Dynamic histogram (i.e. axes only know at runtime)
 - [x] "SumW2" histogram values
-- [ ] "Profile" histograms
+- [x] "Profile" histograms
 - [ ] ndarray-like slicing
 - [ ] Pretty display for histogram
 - [x] Histogram +, -, /, *, ==, operations 

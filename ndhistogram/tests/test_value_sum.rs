@@ -3,7 +3,7 @@ use ndhistogram::{axis::Uniform, ndhistogram, value::Sum, Histogram};
 fn test_sum_value_fill() {
     let mut hist = ndhistogram!(Uniform::new(1, 0.0, 1.0); Sum);
     hist.fill(&0.0);
-    assert_eq!(hist.value(&0.0), Some(&Sum::new(1.0)))
+    assert_eq!(hist.value(&0.0).unwrap().get(), 1.0)
 }
 
 fn assert_float_eq(left: f64, right: f64) {

@@ -4,6 +4,12 @@ use num_traits::Float;
 
 use crate::{Fill, FillWeight};
 
+/// ndhistogram bin value type that calculates a weight sum.
+/// It also provides methods to keep track of the sum of weights squared.
+/// This is used to provide estimates of the statistical error on the weighted
+/// sum. This performs a similar function to `Sumw2` that
+/// [ROOT](https://root.cern.ch/doc/master/classTH1.html) users may be familiar
+/// with.
 #[derive(Default, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
 pub struct WeightedSum<T = f64> {
     sumw: T,
@@ -11,18 +17,26 @@ pub struct WeightedSum<T = f64> {
 }
 
 impl<T: Copy> WeightedSum<T> {
-    pub fn new(sumw: T, sumw2: T) -> Self {
-        Self { sumw, sumw2 }
+    /// Factory method to create an unfilled (or zero-valued) WeightedSum.
+    pub fn new() -> Self
+    where
+        Self: Default,
+    {
+        Self::default()
     }
 
+    /// Get the current value of the weighted sum.
     pub fn get(&self) -> T {
         self.sumw
     }
 
+    /// Estimate of the variance of the weighted sum value is the sum of the
+    /// weights squared.
     pub fn variance(&self) -> T {
         self.sumw2
     }
 
+    /// Square root of the variance.
     pub fn standard_deviation<O: Float>(&self) -> O
     where
         T: Into<O>,

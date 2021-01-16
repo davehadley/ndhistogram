@@ -1,5 +1,3 @@
-use std::cmp::max;
-
 use ndhistogram::{axis::Uniform, ndhistogram, value::Mean, Histogram, VecHistogram};
 
 fn assert_float_eq(left: f64, right: f64) {
@@ -20,7 +18,6 @@ fn simple_filled_float_mean_hist() -> VecHistogram<(Uniform,), Mean> {
 #[test]
 fn test_mean_value_mean() {
     let hist = simple_filled_float_mean_hist();
-    let binvalue = hist.value(&0.0).unwrap();
     assert_float_eq(hist.value(&0.0).unwrap().get(), 2.0)
 }
 
@@ -52,8 +49,8 @@ fn test_mean_value_stderr() {
     );
 }
 
-fn simple_filled_int_mean_hist() -> VecHistogram<(Uniform,), Mean<i32, i32>> {
-    let mut hist = ndhistogram!(Uniform::new(1, 0.0, 1.0); Mean<i32, i32>);
+fn simple_filled_int_mean_hist() -> VecHistogram<(Uniform,), Mean<i32>> {
+    let mut hist = ndhistogram!(Uniform::new(1, 0.0, 1.0); Mean<i32>);
     hist.fill_with(&0.0, 1);
     hist.fill_with(&0.0, 2);
     hist.fill_with(&0.0, 3);
@@ -62,7 +59,6 @@ fn simple_filled_int_mean_hist() -> VecHistogram<(Uniform,), Mean<i32, i32>> {
 #[test]
 fn test_mean_value_mean_int() {
     let hist = simple_filled_float_mean_hist();
-    let binvalue = hist.value(&0.0).unwrap();
     assert_float_eq(hist.value(&0.0).unwrap().get(), 2.0)
 }
 #[test]
