@@ -11,5 +11,6 @@ mod test_ndhistogram_binary_ops;
 mod test_ndhistogram_macro;
 mod test_noflow_axis;
 mod test_uniform_axis;
+mod test_value_mean;
 mod test_variable_axis;
 mod test_variablenoflow_axis;

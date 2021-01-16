@@ -4,9 +4,10 @@ use num_traits::One;
 
 /// Fill a histogram bin value with unit weight.
 ///
-/// Values that may be stored in a [Histogram](crate::Histogram) should implement this trait to allow that histogram to be filled.
-/// A blanket implementation is provided for types that implement [One] and [AddAssign] traits.
-/// See also [FillWeight].
+/// Values that may be stored in a [Histogram](crate::Histogram) should
+/// implement this trait to allow that histogram to be filled.
+/// A blanket implementation is provided for types that implement [One]
+/// and [AddAssign] traits. See also [FillWeight].
 pub trait Fill {
     /// Fill this value with unit weight.
     /// For a simple number type this means simply increment by one.
@@ -21,8 +22,10 @@ impl<T: One + AddAssign> Fill for T {
 
 /// Fill a histogram bin value with a weight.
 ///
-/// Values that may be stored in a [Histogram](crate::Histogram) should implement this trait to allow that histogram to be filled with weights.
-/// A blanket implementation is provided for types that implement the [AddAssign] trait.
+/// Values that may be stored in a [Histogram](crate::Histogram) should
+/// implement this trait to allow that histogram to be filled with weights.
+/// A blanket implementation is provided for types that implement the
+/// [AddAssign] trait.
 pub trait FillWeight<W> {
     /// Fill this value with some weight.
     /// For a simple number type means adding the weight.
@@ -36,4 +39,15 @@ where
     fn fill_weight(&mut self, weight: W) {
         *self += weight;
     }
+}
+
+/// Fill a histogram bin value with some data.
+///
+/// Similar to [FillWeight], this trait is intended for cases where additional
+/// data is neccessaray to fill a [Histogram](crate::Histogram) bin value.
+/// For example, see [WeightedMean](crate::value::WeightedMean).
+pub trait FillWith<D> {
+    /// Fill this value with some weight.
+    /// For a simple number type means adding the weight.
+    fn fill_with(&mut self, data: D);
 }

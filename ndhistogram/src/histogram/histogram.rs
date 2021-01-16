@@ -1,4 +1,4 @@
-use crate::{axes::Axes, axis::Axis};
+use crate::{axes::Axes, axis::Axis, FillWith};
 
 use super::fill::{Fill, FillWeight};
 
@@ -75,6 +75,18 @@ pub trait Histogram<A: Axes, V> {
     {
         if let Some(value) = self.value_mut(coordinate) {
             value.fill_weight(weight)
+        }
+    }
+
+    /// Fill the histogram bin value at coordinate with some data.
+    /// If the [Axes] do not cover that coordinate, do nothing.
+    /// See [FillWith].
+    fn fill_with<D>(&mut self, coordinate: &A::Coordinate, data: D)
+    where
+        V: FillWith<D>,
+    {
+        if let Some(value) = self.value_mut(coordinate) {
+            value.fill_with(data)
         }
     }
 }
