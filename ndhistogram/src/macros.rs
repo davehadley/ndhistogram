@@ -28,6 +28,17 @@
 #[macro_export]
 macro_rules! ndhistogram {
 
+    // ($( $x:expr ),+ $(,)*; $type:ident<$($generics:tt),+> $(;)*) => {
+    //     {
+    //         let axes = (
+    //         $(
+    //             $x,
+    //         )*
+    //     );
+    //         $crate::VecHistogram::<_, $type<$($generics),+>>::new(axes)
+    //     }
+    // };
+
     ($( $x:expr ),+ $(,)*; $type:ty $(;)*) => {
         {
             let axes = (

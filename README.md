@@ -1,5 +1,12 @@
 # ndhistogram : N-dimensional histograms for Rust
 
+[![Main Build status](https://img.shields.io/github/workflow/status/davehadley/ndhistogram/ci/main?label=main)](https://github.com/davehadley/ndhistogram)
+[![Develop status](https://img.shields.io/github/workflow/status/davehadley/ndhistogram/ci/main?label=develop)](https://github.com/davehadley/ndhistogram)
+[![Crate](https://img.shields.io/crates/v/ndhistogram.svg)](https://crates.io/crates/ndhistogram)
+[![License](https://img.shields.io/crates/l/ndhistogram)](https://crates.io/crates/ndhistogram)
+[![Last commit](https://img.shields.io/github/last-commit/davehadley/ndhistogram/develop)](https://github.com/davehadley/ndhistogram)
+[![Last release](https://img.shields.io/github/release-date/davehadley/ndhistogram)](https://crates.io/crates/ndhistogram)
+
 # Usage
 
 For usage instructions see:

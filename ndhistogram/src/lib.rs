@@ -5,7 +5,7 @@
 //! - Continuous (eg represented by a floating point number) and discrete axis (eg a category represented by a string value or enum) types.
 //! - Flexible bin values including any primitive number type, or a user-defined struct.
 //! - Unweighted and weighted filling of histograms.
-//! - User definable axis types.
+//! - Flexible, user-definable axis types.
 //!
 //! ## Quick-start
 //!
@@ -17,7 +17,7 @@
 //! // fill this histogram with a single value
 //! hist.fill(&1.0);
 //! // fill this histogram with weights
-//! hist.fill_weight(&2.0, 4.0);
+//! hist.fill_with(&2.0, 4.0);
 //! // read the histogram values
 //! let x1 = hist.value(&1.0);
 //! let also_x1 = hist.value_at_index(7);
@@ -45,9 +45,9 @@
 //!
 //! // The Histogram bin value type is configurable
 //! let mut hist = ndhistogram!(Uniform::new(10, -5.0, 5.0); i32);
-//! hist.fill_weight(&1.0, 2);
+//! hist.fill_with(&1.0, 2);
 //! let value: Option<&i32> = hist.value(&1.0);
-//! // and user defined value types are possible by implementing Fill and FillWeight traits
+//! // and user defined value types are possible by implementing Fill and FillWith traits
 //!
 //! ```
 //!
@@ -56,7 +56,7 @@
 //! A [Histogram](crate::Histogram) is composed of two components:
 //! - An [Axis](crate::axis::Axis) for 1D histograms or set of [Axes] for higher dimensional histograms.
 //! The [Axes] and [Axis](crate::axis::Axis) map from coodinate space (eg \[x,y,z\]) to an integer bin number.
-//! - The histogram bin value storage. Bin values may be any type that implements [Fill] or [FillWeight] (including integer and floating number types).
+//! - The histogram bin value storage. Bin values may be any type that implements [Fill], [FillWith] or [FillWithWeight] (including any integer and floating number type).
 //!
 //! ### Histogram Implementations
 //!
@@ -82,10 +82,17 @@
 //! Histograms may be filled with values of the following types.
 //!
 //! - Primitve floating point and integer number types.
-//! - All types that implement [AddAssign](std::ops::AddAssign) are [FillWeight].
+//! - All types that implement [AddAssign](std::ops::AddAssign) are [FillWith].
 //! - All types that implement [AddAssign](std::ops::AddAssign) and [One](num_traits::One) are [Fill].
 //!
-//! User defined bin value types are possible by implementing the [Fill] and [FillWeight] traits.
+//! This crate defines the following bin value types:
+//!
+//! - [Sum](crate::value::Sum) : a simple bin count that counts the number of times it has been filled.
+//! - [WeightedSum](crate::value::WeightedSum) : as Sum but with weighted fills.
+//! - [Mean](crate::value::Mean) : computes the mean of the values it is filled with.
+//! - [WeightedMean](crate::value::WeightedMean) : as Mean but with weighted fills.
+//!
+//! User defined bin value types are possible by implementing the [Fill], [FillWith] or [FillWithWeighted] traits.
 
 #![doc(issue_tracker_base_url = "https://github.com/davehadley/rust-hist/issues")]
 #![cfg_attr(
@@ -104,9 +111,12 @@ mod axes;
 pub mod axis;
 mod histogram;
 
+pub mod value;
+
 pub use axes::Axes;
 pub use histogram::fill::Fill;
-pub use histogram::fill::FillWeight;
+pub use histogram::fill::FillWith;
+pub use histogram::fill::FillWithWeighted;
 pub use histogram::histogram::Histogram;
 pub use histogram::histogram::Item;
 pub use histogram::vechistogram::VecHistogram;

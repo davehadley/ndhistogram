@@ -23,7 +23,7 @@ fn test_histogram_category_1d_unfilled_is_empty() {
 #[test]
 fn test_histogram_category_1d_weighted_fill_once() {
     let mut hist = ndhistogram!(Category::new(vec!["A", "B"]); i32);
-    hist.fill_weight(&"A", 2);
+    hist.fill_with(&"A", 2);
     let actual = *hist.value(&"A").unwrap();
     let expected = 2;
     assert_eq!(expected, actual);
@@ -34,8 +34,8 @@ fn test_histogram_category_1d_weighted_fill_once() {
 fn test_histogram_category_1d_multifill() {
     let mut hist = ndhistogram!(Category::new(vec!["A", "B"]); i32);
     hist.fill(&"A");
-    hist.fill_weight(&"B", 2);
-    hist.fill_weight(&"C", 3);
+    hist.fill_with(&"B", 2);
+    hist.fill_with(&"C", 3);
     let actual: Vec<_> = hist.values().copied().collect();
     assert_eq!(actual, vec![1, 2, 3]);
 }
@@ -70,8 +70,8 @@ fn test_histogram_category_1d_value_at_coordinate() {
 fn make_simple_cat_histogram() -> VecHistogram<(Category<&'static str>,), i32> {
     let mut hist = ndhistogram!(Category::new(vec!["A", "B"]); i32);
     hist.fill(&"A");
-    hist.fill_weight(&"B", 2);
-    hist.fill_weight(&"C", 3);
+    hist.fill_with(&"B", 2);
+    hist.fill_with(&"C", 3);
     hist
 }
 

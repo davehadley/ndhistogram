@@ -1,9 +1,11 @@
 # ndhistogram : multi-dimensional histogramming for Rust
 
-[![Build status](https://img.shields.io/github/workflow/status/davehadley/ndhistogram/ci)](https://github.com/davehadley/ndhistogram)
+[![Main Build status](https://img.shields.io/github/workflow/status/davehadley/ndhistogram/ci/main?label=main)](https://github.com/davehadley/ndhistogram)
+[![Develop status](https://img.shields.io/github/workflow/status/davehadley/ndhistogram/ci/main?label=develop)](https://github.com/davehadley/ndhistogram)
 [![Crate](https://img.shields.io/crates/v/ndhistogram.svg)](https://crates.io/crates/ndhistogram)
 [![License](https://img.shields.io/crates/l/ndhistogram)](https://crates.io/crates/ndhistogram)
-[![Downloads](https://img.shields.io/crates/d/ndhistogram)](https://crates.io/crates/ndhistogram)
+[![Last commit](https://img.shields.io/github/last-commit/davehadley/ndhistogram/develop)](https://github.com/davehadley/ndhistogram)
+[![Last release](https://img.shields.io/github/release-date/davehadley/ndhistogram)](https://crates.io/crates/ndhistogram)
 
 A histogramming library for Rust.
 
@@ -15,7 +17,7 @@ Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-ndhistogram = "0.2.0"
+ndhistogram = "0.3.0"
 ```
 
 To get started see the [quick start guide](https://docs.rs/ndhistogram).

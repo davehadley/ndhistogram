@@ -1,6 +1,6 @@
-use crate::{axes::Axes, axis::Axis};
+use crate::{axes::Axes, axis::Axis, FillWith};
 
-use super::fill::{Fill, FillWeight};
+use super::fill::{Fill, FillWithWeighted};
 
 // TODO: Using generic associated types would give a cleaner interface and avoid boxing the iterators
 // https://github.com/rust-lang/rfcs/blob/master/text/1598-generic_associated_types.md
@@ -66,21 +66,33 @@ pub trait Histogram<A: Axes, V> {
         }
     }
 
-    /// Fill the histogram bin value at coordinate with a weight.
-    /// If the [Axes] do no cover that coordinate, do nothing.
-    /// See [FillWeight].
-    fn fill_weight<W>(&mut self, coordinate: &A::Coordinate, weight: W)
+    /// Fill the histogram bin value at coordinate with some data.
+    /// If the [Axes] do not cover that coordinate, do nothing.
+    /// See [FillWith].
+    fn fill_with<D>(&mut self, coordinate: &A::Coordinate, data: D)
     where
-        V: FillWeight<W>,
+        V: FillWith<D>,
     {
         if let Some(value) = self.value_mut(coordinate) {
-            value.fill_weight(weight)
+            value.fill_with(data)
+        }
+    }
+
+    /// Fill the histogram bin value at coordinate with some data.
+    /// If the [Axes] do not cover that coordinate, do nothing.
+    /// See [FillWith].
+    fn fill_with_weighted<D, W>(&mut self, coordinate: &A::Coordinate, data: D, weight: W)
+    where
+        V: FillWithWeighted<D, W>,
+    {
+        if let Some(value) = self.value_mut(coordinate) {
+            value.fill_with_weighted(data, weight)
         }
     }
 }
 
 /// Struct to be returned when iterating over [Histogram]s bins.
-#[derive(Debug, PartialEq, Clone)]
+#[derive(Debug, PartialEq, Eq, Clone)]
 pub struct Item<T, V> {
     /// Bin number
     pub index: usize,
