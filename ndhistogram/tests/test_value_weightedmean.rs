@@ -10,8 +10,8 @@ fn assert_float_eq(left: f64, right: f64) {
 }
 
 fn simple_filled_float_weightedmean_hist(
-) -> VecHistogram<(Uniform,), WeightedMean<f64, f64, f64, f64>> {
-    let mut hist = ndhistogram!(Uniform::new(1, 0.0, 1.0); WeightedMean<f64, f64, f64, f64>);
+) -> VecHistogram<(Uniform,), WeightedMean<f64, f64, f64, u32>> {
+    let mut hist = ndhistogram!(Uniform::new(1, 0.0, 1.0); WeightedMean<f64, f64, f64, u32>);
     //let mut hist = VecHistogram::<_, WeightedMean<f64, f64, f64, u32>>::new((Uniform::new(1, 0.0, 1.0),));
     hist.fill_with(&0.0, Weighted::new(1.0, 1.0));
     hist.fill_with(&0.0, Weighted::new(2.0, 1.0));
@@ -29,7 +29,7 @@ fn test_weightedmean_value_weightedmean() {
 fn test_weightedmean_value_numsamples() {
     let hist = simple_filled_float_weightedmean_hist();
     let binvalue = hist.value(&0.0).unwrap();
-    assert_eq!(binvalue.num_samples(), 3.0);
+    assert_eq!(binvalue.num_samples(), 3);
 }
 #[test]
 fn test_weightedmean_value_stddev_samples() {

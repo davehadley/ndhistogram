@@ -37,7 +37,7 @@ use super::Weighted;
 /// assert_eq!(mean.get(), 2.0); // should be the mean of [1,2,3]
 /// ```
 #[derive(Default, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
-pub struct WeightedMean<T = f64, W = f64, O = f64, C = f64> {
+pub struct WeightedMean<T = f64, W = f64, O = f64, C = u32> {
     sumwt: T,
     sumwt2: T,
     sumw: W,
