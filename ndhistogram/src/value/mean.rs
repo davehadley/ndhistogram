@@ -1,6 +1,6 @@
-use std::ops::AddAssign;
+use std::ops::{AddAssign, Mul};
 
-use num_traits::{Float, NumOps};
+use num_traits::{abs, Float, Num, NumOps, Signed};
 
 use crate::{Fill, FillWith};
 
@@ -8,11 +8,12 @@ use super::Variance;
 
 #[derive(Default, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
 pub struct Mean<T = f64, C = u32> {
-    sum: T,
+    sumw: T,
+    sumw2: T,
     count: C,
 }
 
-impl<C: Copy, T: Copy + NumOps + From<C>> Mean<T, C> {
+impl<C: Copy, T: Copy + Signed + NumOps + From<C>> Mean<T, C> {
     pub fn new<I>(values: I) -> Self
     where
         I: IntoIterator<Item = T>,
@@ -24,7 +25,11 @@ impl<C: Copy, T: Copy + NumOps + From<C>> Mean<T, C> {
     }
 
     pub fn get(&self) -> T {
-        self.sum / self.count.into()
+        self.mean()
+    }
+
+    pub fn mean(&self) -> T {
+        self.sumw / self.count.into()
     }
 
     pub fn num_samples(&self) -> C {
@@ -32,7 +37,10 @@ impl<C: Copy, T: Copy + NumOps + From<C>> Mean<T, C> {
     }
 
     pub fn variance_of_samples(&self) -> T {
-        todo!()
+        let mean = self.mean();
+        let mean2 = mean * mean;
+        let avgsum2 = self.sumw2 / self.count.into();
+        abs(avgsum2 - mean2)
     }
 
     pub fn standard_deviation_of_samples(&self) -> T
@@ -56,7 +64,7 @@ impl<C: Copy, T: Copy + NumOps + From<C>> Mean<T, C> {
 
 impl<T: Copy> Variance<T> for Mean<T> {
     fn variance(&self) -> T {
-        self.sum
+        self.sumw
     }
 
     fn standard_deviation(&self) -> T
@@ -69,10 +77,11 @@ impl<T: Copy> Variance<T> for Mean<T> {
 
 impl<T> FillWith<T> for Mean<T>
 where
-    T: Copy + AddAssign,
+    T: Copy + AddAssign + Mul<Output = T>,
 {
     fn fill_with(&mut self, data: T) {
-        self.sum += data;
+        self.sumw += data;
+        self.sumw2 += data * data;
         self.count += 1;
     }
 }

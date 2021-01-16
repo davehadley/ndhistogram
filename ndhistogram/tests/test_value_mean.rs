@@ -1,3 +1,5 @@
+use std::cmp::max;
+
 use ndhistogram::{
     axis::Uniform,
     ndhistogram,
@@ -6,7 +8,10 @@ use ndhistogram::{
 };
 
 fn assert_float_eq(left: f64, right: f64) {
-    assert!((left - right).abs() < f64::EPSILON)
+    assert!(
+        (left - right).abs() < (1e-6 * (left + right)),
+        format!("left={} does not equal right={}", left, right)
+    )
 }
 
 fn simple_filled_mean_hist() -> VecHistogram<(Uniform,), Mean> {
