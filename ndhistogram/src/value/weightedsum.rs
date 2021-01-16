@@ -26,13 +26,6 @@ impl<T: Copy> Variance<T> for WeightedSum<T> {
     fn variance(&self) -> T {
         self.sumw2
     }
-
-    fn standard_deviation(&self) -> T
-    where
-        T: Float,
-    {
-        self.variance().sqrt()
-    }
 }
 
 impl<T: Copy + Fill> Fill for WeightedSum<T> {

@@ -23,13 +23,6 @@ impl<T: Copy> Variance<T> for Sum<T> {
     fn variance(&self) -> T {
         self.sum
     }
-
-    fn standard_deviation(&self) -> T
-    where
-        T: Float,
-    {
-        self.variance().sqrt()
-    }
 }
 
 impl<T: Copy + Fill> Fill for Sum<T> {
