@@ -2,7 +2,7 @@ use std::ops::Mul;
 
 use num_traits::Float;
 
-use crate::{Fill, FillWeight};
+use crate::{Fill, FillWith};
 
 /// ndhistogram bin value type that calculates a weight sum.
 /// It also provides methods to keep track of the sum of weights squared.
@@ -53,13 +53,13 @@ impl<T: Copy + Fill> Fill for WeightedSum<T> {
     }
 }
 
-impl<T, W> FillWeight<W> for WeightedSum<T>
+impl<T, W> FillWith<W> for WeightedSum<T>
 where
-    T: FillWeight<W> + Copy,
+    T: FillWith<W> + Copy,
     W: Mul<Output = W> + Copy,
 {
-    fn fill_weight(&mut self, weight: W) {
-        self.sumw.fill_weight(weight);
-        self.sumw2.fill_weight(weight * weight);
+    fn fill_with(&mut self, weight: W) {
+        self.sumw.fill_with(weight);
+        self.sumw2.fill_with(weight * weight);
     }
 }

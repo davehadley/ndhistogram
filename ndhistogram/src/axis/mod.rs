@@ -64,7 +64,7 @@ type Bins<'a, BinInterval> = Box<dyn Iterator<Item = BinInterval> + 'a>;
 ///
 /// let mut hist = ndhistogram!(ParityAxis{}; i32);
 /// hist.fill(&1);
-/// hist.fill_weight(&2, 4);
+/// hist.fill_with(&2, 4);
 /// assert_eq!(hist.value(&1), Some(&1));
 /// assert_eq!(hist.value(&2), Some(&4));
 /// ```

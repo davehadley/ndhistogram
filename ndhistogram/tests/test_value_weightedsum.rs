@@ -15,16 +15,16 @@ fn test_weightedsum_value_fill() {
 }
 
 #[test]
-fn test_weightedsum_value_fill_weight() {
+fn test_weightedsum_value_fill_with() {
     let mut hist = ndhistogram!(Uniform::new(1, 0.0, 1.0); WeightedSum);
-    hist.fill_weight(&0.0, 2.0);
+    hist.fill_with(&0.0, 2.0);
     assert_float_eq(hist.value(&0.0).unwrap().get(), 2.0)
 }
 
 #[test]
 fn test_weightedsum_value_error() {
     let mut hist = ndhistogram!(Uniform::new(1, 0.0, 1.0); WeightedSum);
-    hist.fill_weight(&0.0, 2.0);
+    hist.fill_with(&0.0, 2.0);
     let binvalue = hist.value(&0.0).unwrap();
     assert_float_eq(binvalue.get(), 2.0);
     assert_float_eq(binvalue.variance(), 4.0);

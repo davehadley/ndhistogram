@@ -5,9 +5,7 @@ use std::{
 
 use num_traits::{Float, NumOps, One, Signed};
 
-use crate::FillWith;
-
-use super::Weighted;
+use crate::FillWithWeighted;
 
 /// ndhistogram bin value computes the mean of the data samples provided when
 /// filling.
@@ -59,11 +57,13 @@ where
     /// be responsible for creating and filling values.
     pub fn new<I>(values: I) -> Self
     where
-        I: IntoIterator<Item = T>,
-        Self: FillWith<T> + Default,
+        I: IntoIterator<Item = (T, W)>,
+        Self: FillWithWeighted<T, W> + Default,
     {
         let mut r = Self::default();
-        values.into_iter().for_each(|it| r.fill_with(it));
+        values
+            .into_iter()
+            .for_each(|it| r.fill_with_weighted(it.0, it.1));
         r
     }
 
@@ -114,17 +114,17 @@ where
     }
 }
 
-impl<T, W, O, C> FillWith<Weighted<T, W>> for WeightedMean<T, W, O, C>
+impl<T, W, O, C> FillWithWeighted<T, W> for WeightedMean<T, W, O, C>
 where
     T: Copy + AddAssign + Mul<W, Output = T> + Mul<T, Output = T>,
     W: Copy + AddAssign + Mul<W, Output = W>,
     C: AddAssign + One,
 {
-    fn fill_with(&mut self, data: Weighted<T, W>) {
-        self.sumwt += data.value * data.weight;
-        self.sumwt2 += data.value * data.value * data.weight;
-        self.sumw += data.weight;
-        self.sumw2 += data.weight * data.weight;
+    fn fill_with_weighted(&mut self, value: T, weight: W) {
+        self.sumwt += value * weight;
+        self.sumwt2 += value * value * weight;
+        self.sumw += weight;
+        self.sumw2 += weight * weight;
         self.count += C::one();
     }
 }
