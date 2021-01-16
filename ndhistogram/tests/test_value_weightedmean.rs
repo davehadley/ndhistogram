@@ -10,9 +10,8 @@ fn assert_float_eq(left: f64, right: f64) {
 }
 
 fn simple_filled_float_weightedmean_hist_with_unit_weights(
-) -> VecHistogram<(Uniform,), WeightedMean<f64, f64, f64, u32>> {
-    let mut hist = ndhistogram!(Uniform::new(1, 0.0, 1.0); WeightedMean<f64, f64, f64, u32>);
-    //let mut hist = VecHistogram::<_, WeightedMean<f64, f64, f64, u32>>::new((Uniform::new(1, 0.0, 1.0),));
+) -> VecHistogram<(Uniform,), WeightedMean<f64, f64>> {
+    let mut hist = ndhistogram!(Uniform::new(1, 0.0, 1.0); WeightedMean<f64, f64>);
     hist.fill_with(&0.0, Weighted::new(1.0, 1.0));
     hist.fill_with(&0.0, Weighted::new(2.0, 1.0));
     hist.fill_with(&0.0, Weighted::new(3.0, 1.0));
@@ -54,8 +53,8 @@ fn test_weightedmean_value_stderr() {
 }
 
 fn simple_filled_int_weightedmean_hist_with_unit_weights(
-) -> VecHistogram<(Uniform,), WeightedMean<i32, i32, f64, u32>> {
-    let mut hist = ndhistogram!(Uniform::new(1, 0.0, 1.0); WeightedMean<i32, i32, f64, u32>);
+) -> VecHistogram<(Uniform,), WeightedMean<i32, i32>> {
+    let mut hist = ndhistogram!(Uniform::new(1, 0.0, 1.0); WeightedMean<i32, i32>);
     //let mut hist = VecHistogram::<_, WeightedMean<f64, f64, f64, u32>>::new((Uniform::new(1, 0.0, 1.0),));
     hist.fill_with(&0.0, Weighted::new(1, 1));
     hist.fill_with(&0.0, Weighted::new(2, 1));
