@@ -55,7 +55,6 @@ fn test_weightedmean_value_stderr() {
 fn simple_filled_int_weightedmean_hist_with_unit_weights(
 ) -> VecHistogram<(Uniform,), WeightedMean<i32, i32>> {
     let mut hist = ndhistogram!(Uniform::new(1, 0.0, 1.0); WeightedMean<i32, i32>);
-    //let mut hist = VecHistogram::<_, WeightedMean<f64, f64, f64, u32>>::new((Uniform::new(1, 0.0, 1.0),));
     hist.fill_with(&0.0, Weighted::new(1, 1));
     hist.fill_with(&0.0, Weighted::new(2, 1));
     hist.fill_with(&0.0, Weighted::new(3, 1));
