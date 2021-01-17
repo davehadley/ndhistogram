@@ -7,7 +7,7 @@
 - [x] "SumW2" histogram values
 - [x] "Profile" histograms
 - [ ] ndarray-like slicing
-- [ ] Pretty display for histogram
+- [x] Pretty display for histogram
 - [x] Histogram +, -, /, *, ==, operations 
 - [ ] Implement grow for Uniform
 - [ ] Re-binnable axis.
