@@ -35,8 +35,8 @@ macro_rules! impl_axes {
                 self.0.index(coordinate)
             }
 
-            fn numbins(&self) -> usize {
-                self.0.numbins()
+            fn num_bins(&self) -> usize {
+                self.0.num_bins()
             }
 
             fn bin(&self, index: usize) -> Option<Self::BinInterval> {
@@ -57,10 +57,10 @@ macro_rules! impl_axes {
             type BinInterval = ($($nth_type_parameter::BinInterval),*);
 
             fn index(&self, coordinate: &Self::Coordinate) -> Option<usize> {
-                let numbins: Vec<_> = [$(self.$nth_index.numbins()),*].iter().scan(1, |acc, nbin| {*acc *= *nbin; Some(*acc)}).collect();
+                let num_bins: Vec<_> = [$(self.$nth_index.num_bins()),*].iter().scan(1, |acc, nbin| {*acc *= *nbin; Some(*acc)}).collect();
                 let indices = [$(self.$nth_index.index(&coordinate.$nth_index)?),*];
 
-                let index = numbins.iter()
+                let index = num_bins.iter()
                     .rev()
                     .skip(1)
                     .zip(indices.iter().rev())
@@ -68,14 +68,14 @@ macro_rules! impl_axes {
                 Some(index)
             }
 
-            fn numbins(&self) -> usize {
-                //let arr = [self.$index.numbins(), $(self.$nth_index.numbins()),*];
-                $(self.$nth_index.numbins()*)* 1
+            fn num_bins(&self) -> usize {
+                //let arr = [self.$index.num_bins(), $(self.$nth_index.num_bins()),*];
+                $(self.$nth_index.num_bins()*)* 1
             }
 
             fn bin(&self, index: usize) -> Option<Self::BinInterval> {
-                let numbins = [$(self.$nth_index.numbins()),*];
-                let product = numbins.iter().scan(1, |acc, it| Some(*acc * *it));
+                let num_bins = [$(self.$nth_index.num_bins()),*];
+                let product = num_bins.iter().scan(1, |acc, it| Some(*acc * *it));
                 let mut index = index;
                 let index: Vec<_> = product.map(|nb| {
                     let v = index % nb;

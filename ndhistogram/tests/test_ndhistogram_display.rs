@@ -4,14 +4,14 @@ use ndhistogram::{axis::Uniform, ndhistogram, Histogram};
 fn test_histogram_display_blank() {
     let hist = ndhistogram!(Uniform::new(4, 0.0, 2.0));
     let actual = format!("{}", hist);
-    let expected = "1D histogram
-underflow  |
-[0.0, 0.5) |
-[0.5, 1.0) |
-[1.0, 1.5) |
-[1.5, 2.0) |
-overflow   |
-";
+    println!("{}", actual);
+    let expected = "VecHistogram1D(6 bins, sum=0)
+    (-inf, 0.00) | 
+    [0.00, 0.50) | 
+    [0.50, 1.00) | 
+    [1.00, 1.50) | 
+    [1.50, 2.00) | 
+     [2.00, inf) | ";
     assert_eq!(actual, expected);
 }
 
@@ -29,13 +29,13 @@ fn test_histogram_display_filled_positive() {
     .iter()
     .for_each(|(x, w)| hist.fill_with(x, w));
     let actual = format!("{}", hist);
-    let expected = "1D histogram
-underflow  |#
-[0.0, 0.5) |
-[0.5, 1.0) |##
-[1.0, 1.5) |###
-[1.5, 2.0) |##################################################
-overflow   |#########################
-";
+    println!("{}", actual);
+    let expected = "VecHistogram1D(6 bins, sum=162.9)
+    (-inf, 0.00) | #
+    [0.00, 0.50) | 
+    [0.50, 1.00) | ##
+    [1.00, 1.50) | ###
+    [1.50, 2.00) | ##################################################
+     [2.00, inf) | #########################";
     assert_eq!(actual, expected);
 }

@@ -23,7 +23,7 @@
 /// use ndhistogram::{ndhistogram, Histogram};
 ///
 /// let hist2D = ndhistogram!(Uniform::new(10, -5.0, 5.0), Uniform::new(10, -5.0, 5.0));
-/// println!("{}", hist2D);
+/// println!("{:?}", hist2D);
 /// ```
 #[macro_export]
 macro_rules! ndhistogram {

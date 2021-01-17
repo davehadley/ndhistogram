@@ -41,14 +41,14 @@ impl<T: Value> Axis for CategoryNoFlow<T> {
 
     fn index(&self, coordinate: &Self::Coordinate) -> Option<usize> {
         let index = self.axis.index(coordinate)?;
-        if index == self.axis.numbins() - 1 {
+        if index == self.axis.num_bins() - 1 {
             return None;
         }
         Some(index)
     }
 
-    fn numbins(&self) -> usize {
-        self.axis.numbins() - 1
+    fn num_bins(&self) -> usize {
+        self.axis.num_bins() - 1
     }
 
     fn bin(&self, index: usize) -> Option<Self::BinInterval> {
