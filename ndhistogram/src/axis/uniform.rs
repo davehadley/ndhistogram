@@ -73,7 +73,7 @@ impl<T: Float> Axis for Uniform<T> {
         Some((idx.to_usize().unwrap()) + 1)
     }
 
-    fn numbins(&self) -> usize {
+    fn num_bins(&self) -> usize {
         self.num + 2
     }
 
@@ -92,7 +92,7 @@ impl<T: Float> Axis for Uniform<T> {
     }
 
     fn indices(&self) -> Box<dyn Iterator<Item = usize>> {
-        Box::new(0..self.numbins())
+        Box::new(0..self.num_bins())
     }
 }
 

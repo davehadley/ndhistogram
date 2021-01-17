@@ -1,10 +1,10 @@
 use ndhistogram::axis::{Axis, Category, CategoryNoFlow, SingleValueBinInterval, Uniform};
 
 #[test]
-fn test_axes_2d_numbins() {
+fn test_axes_2d_num_bins() {
     let x = Uniform::new(5, 0.0, 1.0);
     let y = Uniform::new(4, 0.0, 1.0);
-    assert_eq!((x, y).numbins(), (5 + 2) * (4 + 2))
+    assert_eq!((x, y).num_bins(), (5 + 2) * (4 + 2))
 }
 
 #[test]
@@ -60,11 +60,11 @@ fn test_axes_2d_bin() {
 }
 
 #[test]
-fn test_axes_3d_numbins() {
+fn test_axes_3d_num_bins() {
     let x = Uniform::new(5, 0.0, 1.0);
     let y = Uniform::new(4, 0.0, 1.0);
     let z = Uniform::new(3, 0.0, 1.0);
-    assert_eq!((x, y, z).numbins(), (5 + 2) * (4 + 2) * (3 + 2))
+    assert_eq!((x, y, z).num_bins(), (5 + 2) * (4 + 2) * (3 + 2))
 }
 
 #[test]

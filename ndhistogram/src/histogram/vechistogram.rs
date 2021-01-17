@@ -1,5 +1,8 @@
 use std::{
-    fmt::Display,
+    cmp::Ordering,
+    f64::INFINITY,
+    fmt::{Display, Error, LowerExp},
+    iter::repeat,
     ops::{Add, Div, Mul, Sub},
 };
 
@@ -19,7 +22,7 @@ pub struct VecHistogram<A, V> {
 impl<A: Axes, V: Default + Clone> VecHistogram<A, V> {
     ///
     pub fn new(axes: A) -> VecHistogram<A, V> {
-        let size = axes.numbins();
+        let size = axes.num_bins();
         VecHistogram {
             axes,
             values: vec![V::default(); size],
@@ -91,9 +94,56 @@ impl<'a, A: Axes, V: 'a> IntoIterator for &'a mut VecHistogram<A, V> {
     }
 }
 
-impl<A: Axes, V> Display for VecHistogram<A, V> {
+impl<A: Axes, V> Display for VecHistogram<A, V>
+where
+    V: Clone + Into<f64>,
+    A::BinInterval: Display,
+{
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "VecHistogram{}D", self.axes().num_dim())
+        let precision = f.precision().unwrap_or(2);
+
+        let sum = self
+            .values()
+            .map(|it| {
+                let x: f64 = it.clone().into();
+                x
+            })
+            .fold(0.0, |it, value| it + value);
+        write!(
+            f,
+            "VecHistogram{}D({} bins, sum={})",
+            self.axes().num_dim(),
+            self.axes().num_bins(),
+            sum
+        )?;
+        let values: Vec<_> = self
+            .iter()
+            .take(50)
+            .map(|item| {
+                (item.bin, {
+                    let x: f64 = item.value.clone().into();
+                    x
+                })
+            })
+            .collect();
+        let scale = values
+            .iter()
+            .max_by(|l, r| l.1.partial_cmp(&r.1).unwrap_or(Ordering::Less))
+            .map(|it| it.1)
+            .unwrap_or(INFINITY);
+        values
+            .into_iter()
+            .map(|(bin, value)| (bin, 50.0 * (value / scale)))
+            .map(|(bin, value)| {
+                (
+                    format!("{:.precision$}", bin, precision = precision),
+                    repeat("#").take(value as usize).collect::<String>(),
+                )
+            })
+            .map(|(bin, value)| write!(f, "\n{:>16} | {}", bin, value))
+            .filter_map(Result::ok)
+            .count();
+        Ok(())
     }
 }
 

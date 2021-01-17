@@ -50,14 +50,14 @@ impl<T: Float> Axis for UniformNoFlow<T> {
 
     fn index(&self, coordinate: &Self::Coordinate) -> Option<usize> {
         let index = self.axis.index(coordinate)?;
-        if index == 0 || index + 1 == self.axis.numbins() {
+        if index == 0 || index + 1 == self.axis.num_bins() {
             return None;
         }
         Some(index - 1)
     }
 
-    fn numbins(&self) -> usize {
-        self.axis.numbins() - 2
+    fn num_bins(&self) -> usize {
+        self.axis.num_bins() - 2
     }
 
     fn bin(&self, index: usize) -> Option<Self::BinInterval> {
@@ -84,7 +84,7 @@ impl<T: Float + Display> Display for UniformNoFlow<T> {
         write!(
             f,
             "Axis{{# bins={}, range=[{}, {}), class={}}}",
-            self.numbins(),
+            self.num_bins(),
             self.axis.low(),
             self.axis.high(),
             stringify!(UniformNoFlow)

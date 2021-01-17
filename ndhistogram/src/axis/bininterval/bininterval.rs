@@ -1,6 +1,6 @@
 use std::{
     convert::TryFrom,
-    fmt::Display,
+    fmt::{Display, LowerExp, UpperExp},
     ops::{Range, RangeFrom, RangeTo},
 };
 
@@ -123,12 +123,38 @@ impl<T> TryFrom<BinInterval<T>> for RangeFrom<T> {
     }
 }
 
-impl<T: Display> Display for BinInterval<T> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            BinInterval::Underflow { end } => write!(f, "(-inf, {})", end),
-            BinInterval::Overflow { start } => write!(f, "[{}, inf)", start),
-            BinInterval::Bin { start, end } => write!(f, "[{}, {})", start, end),
+macro_rules! impl_display {
+    ($Trait:ident) => {
+        impl<T: $Trait> $Trait for BinInterval<T> {
+            fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                match self {
+                    BinInterval::Underflow { end } => {
+                        //write!(f, "(-inf, {})", end)?;
+                        write!(f, "(-inf, ")?;
+                        end.fmt(f)?;
+                        write!(f, ")")?;
+                    }
+                    BinInterval::Overflow { start } => {
+                        //write!(f, "[{}, inf)", start)?;
+                        write!(f, "[")?;
+                        start.fmt(f)?;
+                        write!(f, ", inf)")?;
+                    }
+                    BinInterval::Bin { start, end } => {
+                        //write!(f, "[{}, {})", start, end)?;
+                        write!(f, "[")?;
+                        start.fmt(f)?;
+                        write!(f, ", ")?;
+                        end.fmt(f)?;
+                        write!(f, ")")?;
+                    }
+                }
+                Ok(())
+            }
         }
-    }
+    };
 }
+
+impl_display! {Display}
+impl_display! {LowerExp}
+impl_display! {UpperExp}

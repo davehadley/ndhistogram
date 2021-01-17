@@ -53,7 +53,7 @@ type Bins<'a, BinInterval> = Box<dyn Iterator<Item = BinInterval> + 'a>;
 ///         if coordinate % 2 == 0 { Some(0) } else { Some(1) }
 ///     }
 ///
-///    fn numbins(&self) -> usize {
+///    fn num_bins(&self) -> usize {
 ///         2
 ///     }
 ///
@@ -79,15 +79,15 @@ pub trait Axis {
     /// Returns an option as not all valid coordinates are necessarily contained within a bin.
     fn index(&self, coordinate: &Self::Coordinate) -> Option<usize>;
     /// The number of bins in this axis, including underflow and overflow.
-    fn numbins(&self) -> usize;
+    fn num_bins(&self) -> usize;
 
     /// Map from bin number to axis to the interval covering the range of coordinates that this bin contains.
-    /// Returns an option in case an index >= [Axis::numbins] is given.
+    /// Returns an option in case an index >= [Axis::num_bins] is given.
     fn bin(&self, index: usize) -> Option<Self::BinInterval>;
 
     /// An iterator over bin numbers
     fn indices(&self) -> Indices {
-        Box::new(0..self.numbins())
+        Box::new(0..self.num_bins())
     }
 
     /// An iterator over bin numbers and bin intervals

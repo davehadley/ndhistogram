@@ -80,7 +80,7 @@ impl<T: Value> Axis for Category<T> {
         self.get_index(&coordinate).or_else(|| Some(self.len()))
     }
 
-    fn numbins(&self) -> usize {
+    fn num_bins(&self) -> usize {
         self.len() + 1
     }
 

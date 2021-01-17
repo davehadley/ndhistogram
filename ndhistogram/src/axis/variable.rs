@@ -83,7 +83,7 @@ where
         }
     }
 
-    fn numbins(&self) -> usize {
+    fn num_bins(&self) -> usize {
         self.bin_edges.len() + 1
     }
 
