@@ -93,7 +93,8 @@ impl<'a, A: Axes, V: 'a> IntoIterator for &'a mut VecHistogram<A, V> {
 
 impl<A: Axes, V> Display for VecHistogram<A, V> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "VecHistogram{}D", self.axes().num_dim())
+        todo!()
+        // write!(f, "VecHistogram{}D", self.axes().num_dim())
     }
 }
 
