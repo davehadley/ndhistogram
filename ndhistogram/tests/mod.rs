@@ -18,3 +18,4 @@ mod test_value_weightedmean;
 mod test_value_weightedsum;
 mod test_variable_axis;
 mod test_variablenoflow_axis;
+mod test_anyhistogram;

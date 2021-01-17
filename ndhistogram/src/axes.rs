@@ -1,5 +1,11 @@
 use super::axis::Axis;
 
+/// Axes provided an interface for a set of ND dimensional set of histograms.
+pub trait Axes: Axis {
+    /// Returns the number of axes within this set.
+    fn num_dim(&self) -> usize;
+}
+
 // Count idents in macro from: <https://danielkeep.github.io/tlborm/book/blk-counting.html>
 macro_rules! count_idents {
     ($($idents:ident),* $(,)*) => {
@@ -14,11 +20,6 @@ macro_rules! count_idents {
 
 macro_rules! impl_axes {
     () => {
-        /// Axes provided an interface for a set of ND dimensional set of histograms.
-        pub trait Axes: Axis {
-            /// Returns the number of axes within this set.
-            fn num_dim(&self) -> usize;
-        }
     };
     //( ($index:tt => $type_parameter:ident), ) => {
         ( $type_parameter:ident: $index:tt, ) => {
@@ -139,4 +140,93 @@ impl_axes! {
     D18: 18,
     D19: 19,
     D20: 20,
+}
+
+#[derive(Default)]
+pub struct AxesAnyD<C, I> {
+    axes: Vec<Box<dyn Axis<Coordinate = C, BinInterval = I>>>,
+    shape: Vec<usize>,
+    cumulative_shape_product: Vec<usize>,
+    num_bins: usize,
+}
+
+impl<C, I> AxesAnyD<C, I> {
+    pub fn new<
+        'a,
+        Iterator: IntoIterator<Item = Box<dyn Axis<Coordinate = C, BinInterval = I>>> + 'a,
+    >(
+        axes: Iterator,
+    ) -> Self {
+        let axes: Vec<_> = axes.into_iter().collect();
+        let shape: Vec<_> = axes.iter().map(|it| it.num_bins()).collect();
+        let num_bins = shape.iter().fold(1, |left, right| left * right);
+        let cumulative_shape_product: Vec<_> = shape
+            .iter()
+            .scan(1, |acc, nbin| {
+                *acc *= *nbin;
+                Some(*acc)
+            })
+            .collect();
+        Self {
+            axes,
+            shape,
+            cumulative_shape_product,
+            num_bins,
+        }
+    }
+}
+
+impl<C, I> Axes for AxesAnyD<C, I> {
+    fn num_dim(&self) -> usize {
+        self.axes.len()
+    }
+}
+
+impl<C, I> Axis for AxesAnyD<C, I> {
+    type Coordinate = Vec<C>;
+
+    type BinInterval = Vec<I>;
+
+    fn index(&self, coordinate: &Self::Coordinate) -> Option<usize> {
+        let indices: Vec<_> = self
+            .axes
+            .iter()
+            .zip(coordinate)
+            .map(|(ax, c)| ax.index(c))
+            .flatten()
+            .collect();
+        if indices.len() != coordinate.len() || indices.len() != self.axes.len() {
+            return None;
+        }
+        let index = self
+            .shape
+            .iter()
+            .rev()
+            .skip(1)
+            .zip(indices.iter().rev())
+            .fold(indices[0], |acc, (nbin, idx)| acc + nbin * idx);
+        Some(index)
+    }
+
+    fn num_bins(&self) -> usize {
+        self.num_bins
+    }
+
+    fn bin(&self, index: usize) -> Option<Self::BinInterval> {
+        let mut index = index;
+        let index: Vec<_> = self
+            .cumulative_shape_product
+            .iter()
+            .map(|nb| {
+                let v = index % nb;
+                index /= nb;
+                v
+            })
+            .collect();
+        self.axes
+            .iter()
+            .zip(index)
+            .map(|(ax, ind)| ax.bin(ind))
+            .collect()
+    }
 }

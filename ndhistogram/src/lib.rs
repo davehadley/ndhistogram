@@ -104,7 +104,7 @@
         unused_import_braces
     ),
     deny(unsafe_code, macro_use_extern_crate),
-    warn(missing_docs, missing_crate_level_docs, missing_doc_code_examples,)
+    //warn(missing_docs, missing_crate_level_docs, missing_doc_code_examples,)
 )]
 
 mod axes;
@@ -114,6 +114,7 @@ mod histogram;
 pub mod value;
 
 pub use axes::Axes;
+pub use axes::AxesAnyD;
 pub use histogram::fill::Fill;
 pub use histogram::fill::FillWith;
 pub use histogram::fill::FillWithWeighted;
