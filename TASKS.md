@@ -4,12 +4,9 @@
 - [ ] Uniform with transform binning
 - [ ] Integer binning
 - [ ] Dynamic histogram (i.e. axes only know at runtime)
-- [x] "SumW2" histogram values
-- [x] "Profile" histograms
 - [ ] ndarray-like slicing
-- [x] Pretty display for histogram
-- [x] Histogram +, -, /, *, ==, operations 
 - [ ] Implement grow for Uniform
 - [ ] Re-binnable axis.
 - [ ] Growable/Extendable axis.
 - [ ] Spell check documentation.
+- [ ] Sparse histograms
