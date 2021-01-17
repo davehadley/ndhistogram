@@ -1,7 +1,7 @@
 use std::{
     cmp::Ordering,
     f64::INFINITY,
-    fmt::{Display, Error, LowerExp},
+    fmt::Display,
     iter::repeat,
     ops::{Add, Div, Mul, Sub},
 };
