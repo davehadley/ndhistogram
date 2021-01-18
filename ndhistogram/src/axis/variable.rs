@@ -10,7 +10,7 @@ use super::{Axis, BinInterval};
 /// Hence this axis has num edges + 1 bins.
 ///
 /// # Example
-/// Create a 1D histogram with 3 variable width bin 0.0 and 7.0, plus overflow and underflow bins.
+/// Create a 1D histogram with 3 variable width bins between 0.0 and 7.0, plus overflow and underflow bins.
 /// ```rust
 ///    use ndhistogram::{ndhistogram, Histogram};
 ///    use ndhistogram::axis::{Axis, Variable, BinInterval};
@@ -53,7 +53,7 @@ where
         &self
             .bin_edges
             .first()
-            .expect("Variable binedges unexpectedly empty")
+            .expect("Variable bin_edges unexpectedly empty")
     }
 
     /// High edge of axis (excluding overflow bin).
@@ -61,7 +61,7 @@ where
         &self
             .bin_edges
             .last()
-            .expect("Variable binedges unexpectedly empty")
+            .expect("Variable bin_edges unexpectedly empty")
     }
 }
 

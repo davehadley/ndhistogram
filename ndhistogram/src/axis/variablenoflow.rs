@@ -7,12 +7,12 @@ use std::fmt::{Debug, Display};
 /// This axis has (num edges - 1) bins.
 ///
 /// # Example
-/// Create a 1D histogram with 3 variable width bin 0.0 and 7.0, plus overflow and underflow bins.
+/// Create a 1D histogram with 3 variable width bins between 0.0 and 7.0.
 /// ```rust
 ///    use ndhistogram::{ndhistogram, Histogram};
 ///    use ndhistogram::axis::{Axis, VariableNoFlow};
 ///    let mut hist = ndhistogram!(VariableNoFlow::new(vec![0.0, 1.0, 3.0, 7.0]); i32);
-///    hist.fill(&-1.0); // will be ignore as there is no underflow bin
+///    hist.fill(&-1.0); // will be ignored as there is no underflow bin
 ///    hist.fill(&1.0);
 ///    hist.fill(&2.0);
 ///    assert_eq!(

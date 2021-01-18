@@ -28,7 +28,7 @@ pub trait Histogram<A: Axes, V> {
     fn value_at_index(&self, index: usize) -> Option<&V>;
 
     /// Read a bin value given a coordinate.
-    /// Returns an Option as the given coordinate may not be mapeed to a bin.
+    /// Returns an Option as the given coordinate may not be mapped to a bin.
     fn value(&self, coordinate: &A::Coordinate) -> Option<&V> {
         let index = self.axes().index(coordinate)?;
         self.value_at_index(index)
@@ -51,11 +51,11 @@ pub trait Histogram<A: Axes, V> {
 
     /// Mutable iterator over bin values.
     fn values_mut(&mut self) -> ValuesMut<'_, V>;
-    /// Mutable iterator bin indices, bin interval and bin values.
+    /// Mutable iterator over bin indices, bin interval and bin values.
     fn iter_mut(&mut self) -> IterMut<'_, A, V>;
 
     /// Fill the histogram bin value at coordinate with unit weight.
-    /// If the [Axes] do no cover that coordinate, do nothing.
+    /// If the [Axes] do not cover that coordinate, do nothing.
     /// See [Fill].
     fn fill(&mut self, coordinate: &A::Coordinate)
     where
@@ -80,7 +80,7 @@ pub trait Histogram<A: Axes, V> {
 
     /// Fill the histogram bin value at coordinate with some data.
     /// If the [Axes] do not cover that coordinate, do nothing.
-    /// See [FillWith].
+    /// See [FillWithWeighted].
     fn fill_with_weighted<D, W>(&mut self, coordinate: &A::Coordinate, data: D, weight: W)
     where
         V: FillWithWeighted<D, W>,

@@ -23,17 +23,24 @@ type Iter<'a, BinInterval> = Box<dyn Iterator<Item = (usize, BinInterval)> + 'a>
 type Indices = Box<dyn Iterator<Item = usize>>;
 type Bins<'a, BinInterval> = Box<dyn Iterator<Item = BinInterval> + 'a>;
 
-/// An binned axis coresponding to one dimension of an N-dimensional [Histogram](crate::Histogram).1
+/// An binned axis corresponding to one dimension of an N-dimensional [Histogram](crate::Histogram).
 ///
 /// An Axis is composed of a map from some coordinate space to linear bin number, and the inverse map.
-/// For examples see [Uniform](crate::axis::Uniform), [UniformNoFlow](crate::axis::UniformNoFlow), [Category](crate::axis::Category) and [CategoryNoFlow](crate::axis::CategoryNoFlow).
+/// For examples see:
+/// - [Uniform](crate::axis::Uniform),
+/// - [UniformNoFlow](crate::axis::UniformNoFlow),
+/// - [Variable](crate::axis::Variable),
+/// - [VariableNoFlow](crate::axis::VariableNoFlow),
+/// - [Category](crate::axis::Category)
+/// - and [CategoryNoFlow](crate::axis::CategoryNoFlow).
 /// Most use cases should be covered by the builtin Axis implementations.
 /// However, you may implement the Axis trait if you have specialist needs.
 ///
 /// # Examples
 ///
 /// ## Parity Axis
-/// Imagine we wanted a
+/// Imagine we wanted an 2-bin axis where even values where mapped to one bin
+/// and odd values to another bin. We could implement this with the following:
 /// ```rust
 /// use ndhistogram::axis::Axis;
 /// use ndhistogram::{ndhistogram, Histogram};

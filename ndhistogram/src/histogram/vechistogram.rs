@@ -10,7 +10,7 @@ use crate::axes::Axes;
 
 use super::histogram::{Histogram, Item, Iter, IterMut, ValuesMut};
 
-/// A Histogram that stores its values in a [Vec].
+/// A [Histogram] that stores its values in a [Vec].
 ///
 /// See [ndhistogram] for examples of its use.
 #[derive(Debug, Clone, PartialEq, Eq)]

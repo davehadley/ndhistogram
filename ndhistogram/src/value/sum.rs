@@ -3,7 +3,7 @@ use num_traits::Float;
 use crate::Fill;
 
 /// ndhistogram bin value type for filling unweighted values.
-/// Analogous to [WeightedSum]. Methods returning variance and standard
+/// Analogous to [WeightedSum](crate::value::WeightedSum). Methods returning variance and standard
 /// deviation assume Poisson statistics.
 #[derive(Default, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
 pub struct Sum<T = f64> {

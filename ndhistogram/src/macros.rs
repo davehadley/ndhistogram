@@ -19,11 +19,25 @@
 ///
 /// ## Creating a 2D Histogram
 /// ```rust
-/// use ndhistogram::axis::Uniform;
+/// use ndhistogram::axis::{Uniform, Axis};
 /// use ndhistogram::{ndhistogram, Histogram};
 ///
 /// let hist2D = ndhistogram!(Uniform::new(10, -5.0, 5.0), Uniform::new(10, -5.0, 5.0));
-/// println!("{:?}", hist2D);
+/// // each axis has 10+2 bins due to under/overflow
+/// assert_eq!(hist2D.axes().num_bins(), 12*12)
+/// ```
+///
+/// ## Creating a Histogram with a specific bin value type
+///
+/// ```rust
+/// use ndhistogram::axis::Uniform;
+/// use ndhistogram::{ndhistogram, Histogram};
+/// use ndhistogram::value::Mean;
+///
+/// let mut hist = ndhistogram!(Uniform::new(10, -5.0, 5.0); Mean);
+/// hist.fill_with(&0.0, 1.0);
+/// hist.fill_with(&0.0, 3.0);
+/// assert_eq!(hist.value(&0.0).unwrap().get(), 2.0) // mean of [1.0, 3.0] is 2.0
 /// ```
 #[macro_export]
 macro_rules! ndhistogram {

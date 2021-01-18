@@ -57,7 +57,7 @@ impl<T> Uniform<T> {
     }
 }
 
-// TODO: relax float retriction or add implementation for Integers
+// TODO: relax float restriction or add implementation for Integers
 impl<T: Float> Axis for Uniform<T> {
     type Coordinate = T;
     type BinInterval = BinInterval<T>;
