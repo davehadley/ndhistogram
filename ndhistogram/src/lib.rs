@@ -10,7 +10,7 @@
 //! ## Quick-start
 //!
 //! ```rust
-//! use ndhistogram::{Histogram, axis::Axis, ndhistogram, axis::Uniform, axis::Category};
+//! use ndhistogram::{Histogram, axis::Axis, ndhistogram, axis::Uniform, axis::Category, value::Mean};
 //!
 //! // create a 1D histogram with 10 equally sized bins between -5 and 5
 //! let mut hist = ndhistogram!(Uniform::new(10, -5.0, 5.0));
@@ -36,6 +36,7 @@
 //! hist.fill(&(1.0, 2.0));
 //! // read back the histogram values
 //! let x1_y2 = hist.value(&(1.0, 2.0));
+//! // higher dimensions are possible with additional arguments to ndhistogram
 //!
 //! // Several axis types are available
 //! let mut hist = ndhistogram!(Category::new(vec!["Red", "Blue", "Green"]));
@@ -47,16 +48,23 @@
 //! let mut hist = ndhistogram!(Uniform::new(10, -5.0, 5.0); i32);
 //! hist.fill_with(&1.0, 2);
 //! let value: Option<&i32> = hist.value(&1.0);
-//! // and user defined value types are possible by implementing Fill and FillWith traits
+//!
+//! // and more complex value types beyond primitives are available
+//! let mut hist = ndhistogram!(Uniform::new(10, -5.0, 5.0); Mean);
+//! hist.fill_with(&1.0, 1.0);
+//! hist.fill_with(&1.0, 3.0);
+//! assert_eq!(hist.value(&1.0).unwrap().mean(), 2.0);
+//!
+//! // user defined value types are possible by implementing Fill, FillWith or FillWithWeighted traits
 //!
 //! ```
 //!
 //! ## Overview
 //!
 //! A [Histogram](crate::Histogram) is composed of two components:
-//! - An [Axis](crate::axis::Axis) for 1D histograms or set of [Axes] for higher dimensional histograms.
-//! The [Axes] and [Axis](crate::axis::Axis) map from coodinate space (eg \[x,y,z\]) to an integer bin number.
-//! - The histogram bin value storage. Bin values may be any type that implements [Fill], [FillWith] or [FillWithWeight] (including any integer and floating number type).
+//! - The [Axes] which is a set of [Axis](crate::axis::Axis) corresponding to each dimension of the histogram.
+//! The [Axes] and [Axis](crate::axis::Axis) define the binning of the histogram and are responsible for mapping from coordinate space (eg \[x,y,z\]) to an integer bin number.
+//! - The histogram bin value storage. Valid bin value types including any integer and floating number type as well as user defined types that implement [Fill], [FillWith] or [FillWithWeighted].
 //!
 //! ### Histogram Implementations
 //!
@@ -67,7 +75,7 @@
 //! this may not be practical for very high dimension histograms.
 //!
 //!
-//! Alternative implentations are possible by implementing the [Histogram] trait.
+//! Alternative implementations are possible by implementing the [Histogram] trait.
 //!
 //! ### Axis Implementations
 //!
@@ -79,11 +87,14 @@
 //!
 //! ### Histogram Bin Values
 //!
-//! Histograms may be filled with values of the following types.
+//! Histograms may be filled with values of the following types:
 //!
-//! - Primitve floating point and integer number types.
-//! - All types that implement [AddAssign](std::ops::AddAssign) are [FillWith].
-//! - All types that implement [AddAssign](std::ops::AddAssign) and [One](num_traits::One) are [Fill].
+//! - Primitive floating point and integer number types.
+//! - All types that implement [Fill]
+//! - All types that implement [FillWith]
+//! - All types that implement [FillWithWeighted]
+//! - All types that implement [AddAssign](std::ops::AddAssign) (as they are also [FillWith]).
+//! - All types that implement [AddAssign](std::ops::AddAssign) and [One](num_traits::One) ( as they are also [Fill]).
 //!
 //! This crate defines the following bin value types:
 //!
@@ -101,10 +112,15 @@
         missing_debug_implementations,
         rust_2018_idioms,
         unreachable_pub,
-        unused_import_braces
+        unused_import_braces,
     ),
     deny(unsafe_code, macro_use_extern_crate),
-    warn(missing_docs, missing_crate_level_docs, missing_doc_code_examples,)
+    warn(
+        missing_docs,
+        missing_crate_level_docs,
+        missing_doc_code_examples,
+        broken_intra_doc_links
+    )
 )]
 
 mod axes;

@@ -7,10 +7,10 @@ use num_traits::{abs, Float, NumOps, One, Signed};
 
 use crate::FillWith;
 
-/// ndhistogram bin value computes the mean of the data samples provided when
+/// This ndhistogram bin value computes the mean of the data samples provided when
 /// filling.
 ///
-/// Mean had 3 type parameters:
+/// Mean has 3 type parameters:
 /// - the type that is being averaged,
 /// - the type of the output when calculating the mean and its uncertainty,
 /// - the type that counts the number of fills.

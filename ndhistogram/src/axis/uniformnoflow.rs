@@ -7,10 +7,10 @@ use std::fmt::{Debug, Display};
 ///
 /// An axis with N equally spaced, equal sized, bins between (low, high].
 /// Similar to [Uniform] but this axis has no over/underflow bins.
-/// Hence it has N+2 bins.
+/// Hence it has N bins.
 ///
 /// # Example
-/// Create a 1D histogram with uniform 10 uniform bins between -5.0 and 5.0.
+/// Create a 1D histogram with 10 uniformly spaced bins between -5.0 and 5.0.
 /// ```rust
 ///    use ndhistogram::{ndhistogram, Histogram};
 ///    use ndhistogram::axis::{Axis, UniformNoFlow, BinInterval};
