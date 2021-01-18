@@ -1,5 +1,16 @@
 use super::axis::Axis;
 
+/// Axes provided an interface for a set of ND dimensional set of histograms.
+pub trait Axes: Axis {
+    /// Returns the number of axes within this set.
+    fn num_dim(&self) -> usize;
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct AxesTuple<T> {
+    axes: T
+}
+
 // Count idents in macro from: <https://danielkeep.github.io/tlborm/book/blk-counting.html>
 macro_rules! count_idents {
     ($($idents:ident),* $(,)*) => {
@@ -14,33 +25,35 @@ macro_rules! count_idents {
 
 macro_rules! impl_axes {
     () => {
-        /// Axes provided an interface for a set of ND dimensional set of histograms.
-        pub trait Axes: Axis {
-            /// Returns the number of axes within this set.
-            fn num_dim(&self) -> usize;
-        }
+        
     };
     //( ($index:tt => $type_parameter:ident), ) => {
         ( $type_parameter:ident: $index:tt, ) => {
 
-        impl<X: Axis> Axes for (X,) {
+        impl<X: Axis> Axes for AxesTuple<(X,)> {
             fn num_dim(&self) -> usize { 1 }
         }
 
-        impl<X: Axis> Axis for (X,) {
+        impl<X:Axis> From<(X,)> for AxesTuple<(X,)> {
+            fn from(item: (X,)) -> Self {
+                Self { axes: item }
+            }
+        } 
+
+        impl<X: Axis> Axis for AxesTuple<(X,)> {
             type Coordinate = X::Coordinate;
             type BinInterval = X::BinInterval;
 
             fn index(&self, coordinate: &Self::Coordinate) -> Option<usize> {
-                self.0.index(coordinate)
+                self.axes.0.index(coordinate)
             }
 
             fn num_bins(&self) -> usize {
-                self.0.num_bins()
+                self.axes.0.num_bins()
             }
 
             fn bin(&self, index: usize) -> Option<Self::BinInterval> {
-                self.0.bin(index)
+                self.axes.0.bin(index)
             }
         }
 
@@ -48,17 +61,23 @@ macro_rules! impl_axes {
     };
     //( $( ($nth_index:tt => $nth_type_parameter:ident), )+ ) => {
         ( $($nth_type_parameter:ident: $nth_index:tt, )+ ) => {
-        impl<$($nth_type_parameter: Axis),*> Axes for ($($nth_type_parameter),*) {
+        impl<$($nth_type_parameter: Axis),*> Axes for AxesTuple<($($nth_type_parameter),*)> {
             fn num_dim(&self) -> usize { count_idents!($($nth_type_parameter),*) }
         }
 
-        impl<$($nth_type_parameter: Axis),*> Axis for ($($nth_type_parameter),*) {
+        impl<$($nth_type_parameter: Axis),*> From<($($nth_type_parameter),*)> for AxesTuple<($($nth_type_parameter),*)> {
+            fn from(item: ($($nth_type_parameter),*)) -> Self {
+                Self { axes: item }
+            }
+        }
+
+        impl<$($nth_type_parameter: Axis),*> Axis for AxesTuple<($($nth_type_parameter),*)> {
             type Coordinate = ($($nth_type_parameter::Coordinate),*);
             type BinInterval = ($($nth_type_parameter::BinInterval),*);
 
             fn index(&self, coordinate: &Self::Coordinate) -> Option<usize> {
-                let num_bins: Vec<_> = [$(self.$nth_index.num_bins()),*].iter().scan(1, |acc, nbin| {*acc *= *nbin; Some(*acc)}).collect();
-                let indices = [$(self.$nth_index.index(&coordinate.$nth_index)?),*];
+                let num_bins: Vec<_> = [$(self.axes.$nth_index.num_bins()),*].iter().scan(1, |acc, nbin| {*acc *= *nbin; Some(*acc)}).collect();
+                let indices = [$(self.axes.$nth_index.index(&coordinate.$nth_index)?),*];
 
                 let index = num_bins.iter()
                     .rev()
@@ -70,11 +89,11 @@ macro_rules! impl_axes {
 
             fn num_bins(&self) -> usize {
                 //let arr = [self.$index.num_bins(), $(self.$nth_index.num_bins()),*];
-                $(self.$nth_index.num_bins()*)* 1
+                $(self.axes.$nth_index.num_bins()*)* 1
             }
 
             fn bin(&self, index: usize) -> Option<Self::BinInterval> {
-                let num_bins = [$(self.$nth_index.num_bins()),*];
+                let num_bins = [$(self.axes.$nth_index.num_bins()),*];
                 let product = num_bins.iter().scan(1, |acc, it| Some(*acc * *it));
                 let mut index = index;
                 let index: Vec<_> = product.map(|nb| {
@@ -84,7 +103,7 @@ macro_rules! impl_axes {
                 } ).collect();
                 Some(
                     (
-                        $(self.$nth_index.bin(index[$nth_index])?),*
+                        $(self.axes.$nth_index.bin(index[$nth_index])?),*
                 )
             )
             }

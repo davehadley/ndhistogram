@@ -130,6 +130,7 @@ mod histogram;
 pub mod value;
 
 pub use axes::Axes;
+pub use axes::AxesTuple;
 pub use histogram::fill::Fill;
 pub use histogram::fill::FillWith;
 pub use histogram::fill::FillWithWeighted;

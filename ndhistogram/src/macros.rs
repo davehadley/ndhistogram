@@ -60,6 +60,8 @@ macro_rules! ndhistogram {
                 $x,
             )*
         );
+
+            let axes  = $crate::AxesTuple::<_>::from(axes);
             $crate::VecHistogram::<_, $type>::new(axes)
         }
     };
@@ -70,6 +72,7 @@ macro_rules! ndhistogram {
                 $x,
             )*
         );
+            let axes  = $crate::AxesTuple::<_>::from(axes);
             $crate::VecHistogram::<_, f64>::new(axes)
         }
     };
