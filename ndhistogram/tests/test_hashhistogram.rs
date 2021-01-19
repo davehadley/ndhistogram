@@ -4,6 +4,7 @@ use ndhistogram::{
     value::WeightedMean,
     Histogram,
 };
+use rand::{prelude::StdRng, Rng, SeedableRng};
 
 #[test]
 fn test_hashhistogram_fill() {
@@ -37,4 +38,33 @@ fn test_hashhistogram_axes() {
     let sparsehist = sparsehistogram!(x.clone(), y.clone(), z.clone());
     let vechist = ndhistogram!(x, y, z);
     assert_eq!(sparsehist.axes(), vechist.axes())
+}
+
+#[test]
+fn test_hashhistogram_iter() {
+    let x = Uniform::new(10, 0.0, 10.0);
+    let y = Variable::new(vec![0.0, 2.0, 5.0, 10.0]);
+    let mut sparsehist = sparsehistogram!(x.clone(), y.clone(); i32);
+    let mut vechist = ndhistogram!(x, y; i32);
+
+    // fill both histograms with the same data
+    let mut rng = StdRng::seed_from_u64(123);
+    (0..1000)
+        .map(|_| {
+            let rx: f64 = rng.gen_range(-1.0..11.0);
+            let ry: f64 = rng.gen_range(-1.0..11.0);
+            let rz: i32 = rng.gen_range(1..10);
+            (rx, ry, rz)
+        })
+        .for_each(|(x, y, z)| {
+            sparsehist.fill_with(&(x, y), z);
+            vechist.fill_with(&(x, y), z);
+        });
+
+    // check item iterator
+    let mut sparseitems: Vec<_> = sparsehist.iter().collect();
+    let mut vecitems: Vec<_> = vechist.iter().filter(|item| *item.value > 0).collect();
+    sparseitems.sort_by_key(|item| item.index);
+    vecitems.sort_by_key(|item| item.index);
+    assert_eq!(sparseitems, vecitems);
 }

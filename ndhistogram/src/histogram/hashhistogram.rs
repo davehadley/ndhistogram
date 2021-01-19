@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
 use super::histogram::{Histogram, Iter, IterMut, ValuesMut};
-use crate::axis::Axis;
+use crate::{axis::Axis, Item};
 
 /// A sparse N-dimensional [Histogram] that stores its values in a [HashMap].
 ///
@@ -41,7 +41,11 @@ impl<A: Axis, V: Default> Histogram<A, V> for HashHistogram<A, V> {
     }
 
     fn iter(&self) -> Iter<'_, A, V> {
-        todo!()
+        Box::new(self.values.iter().map(move |(index, value)| Item {
+            index: *index,
+            bin: self.axes.bin(*index).unwrap(),
+            value,
+        }))
     }
 
     fn value_at_index_mut(&mut self, index: usize) -> Option<&mut V> {
