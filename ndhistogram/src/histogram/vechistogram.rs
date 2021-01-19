@@ -6,7 +6,7 @@ use std::{
     ops::{Add, Div, Mul, Sub},
 };
 
-use crate::axes::Axes;
+use crate::{axes::Axes, axis::Axis, AxesTuple};
 
 use super::histogram::{Histogram, Item, Iter, IterMut, ValuesMut};
 

@@ -8,7 +8,13 @@ pub trait Axes: Axis {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct AxesTuple<T> {
-    axes: T
+    axes: T,
+}
+
+impl<T> AxesTuple<T> {
+    pub fn as_tuple(&self) -> &T {
+        &self.axes
+    }
 }
 
 // Count idents in macro from: <https://danielkeep.github.io/tlborm/book/blk-counting.html>
@@ -25,7 +31,7 @@ macro_rules! count_idents {
 
 macro_rules! impl_axes {
     () => {
-        
+
     };
     //( ($index:tt => $type_parameter:ident), ) => {
         ( $type_parameter:ident: $index:tt, ) => {
@@ -38,7 +44,7 @@ macro_rules! impl_axes {
             fn from(item: (X,)) -> Self {
                 Self { axes: item }
             }
-        } 
+        }
 
         impl<X: Axis> Axis for AxesTuple<(X,)> {
             type Coordinate = X::Coordinate;
