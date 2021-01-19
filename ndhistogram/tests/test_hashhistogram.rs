@@ -74,4 +74,18 @@ fn test_hashhistogram_iter() {
     sparseitems.sort();
     vecitems.sort();
     assert_eq!(sparseitems, vecitems);
+
+    // check mutable item iterator
+    let mut sparseitems: Vec<_> = sparsehist.iter_mut().collect();
+    let mut vecitems: Vec<_> = vechist.iter_mut().filter(|item| *item.value > 0).collect();
+    sparseitems.sort_by_key(|item| item.index);
+    vecitems.sort_by_key(|item| item.index);
+    assert_eq!(sparseitems, vecitems);
+
+    // check mutable values iterator
+    let mut sparseitems: Vec<_> = sparsehist.values_mut().collect();
+    let mut vecitems: Vec<_> = vechist.values_mut().filter(|value| **value > 0).collect();
+    sparseitems.sort();
+    vecitems.sort();
+    assert_eq!(sparseitems, vecitems);
 }
