@@ -37,7 +37,7 @@ impl<A: Axis, V: Default> Histogram<A, V> for HashHistogram<A, V> {
     }
 
     fn values(&self) -> super::histogram::Values<'_, V> {
-        todo!()
+        Box::new(self.values.values())
     }
 
     fn iter(&self) -> Iter<'_, A, V> {
@@ -53,11 +53,16 @@ impl<A: Axis, V: Default> Histogram<A, V> for HashHistogram<A, V> {
     }
 
     fn values_mut(&mut self) -> ValuesMut<'_, V> {
-        todo!()
+        Box::new(self.values.values_mut())
     }
 
     fn iter_mut(&mut self) -> IterMut<'_, A, V> {
-        todo!()
+        let axes = &self.axes;
+        Box::new(self.values.iter_mut().map(move |(index, value)| Item {
+            index: *index,
+            bin: axes.bin(*index).unwrap(),
+            value,
+        }))
     }
 
     fn fill(&mut self, coordinate: &A::Coordinate)
