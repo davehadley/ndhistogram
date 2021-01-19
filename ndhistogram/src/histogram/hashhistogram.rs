@@ -158,7 +158,7 @@ macro_rules! impl_binary_op {
         impl<A: Axis + PartialEq + Clone, V> $Trait<&HashHistogram<A, V>> for &HashHistogram<A, V>
         where
             HashHistogram<A, V>: Histogram<A, V>,
-            V: Clone,
+            V: Clone + Default,
             for<'a> &'a V: $Trait<Output = V>,
         {
             type Output = Result<HashHistogram<A, V>, ()>;
@@ -167,12 +167,13 @@ macro_rules! impl_binary_op {
                 if self.axes() != rhs.axes() {
                     return Err(());
                 }
-                let values = self
-                    .values
-                    .clone()
-                    .into_iter()
-                    .chain(rhs.values.clone())
-                    .collect();
+                let values = rhs.values.iter().map(|(index, rhsvalue)| {
+                    let lhsvalue = self.values.get(index);
+                    match lhsvalue {
+                        Some(lhsvalue) => (*index, lhsvalue $mathsymbol rhsvalue),
+                        None => (*index, &V::default() $mathsymbol rhsvalue),
+                    }
+            }).collect();
                 Ok(HashHistogram {
                     axes: self.axes().clone(),
                     values,
