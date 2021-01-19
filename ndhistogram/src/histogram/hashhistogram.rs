@@ -1,4 +1,8 @@
-use std::collections::HashMap;
+use std::{
+    collections::HashMap,
+    fmt::Display,
+    ops::{Add, Div, Mul, Sub},
+};
 
 use super::histogram::{Histogram, Iter, IterMut, ValuesMut};
 use crate::{axis::Axis, Item};
@@ -95,3 +99,90 @@ impl<A: Axis, V: Default> Histogram<A, V> for HashHistogram<A, V> {
         }
     }
 }
+
+impl<'a, A: Axis, V> IntoIterator for &'a HashHistogram<A, V>
+where
+    HashHistogram<A, V>: Histogram<A, V>,
+{
+    type Item = Item<A::BinInterval, &'a V>;
+
+    type IntoIter = Iter<'a, A, V>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.iter()
+    }
+}
+
+impl<'a, A: Axis, V: 'a> IntoIterator for &'a mut HashHistogram<A, V>
+where
+    HashHistogram<A, V>: Histogram<A, V>,
+{
+    type Item = Item<A::BinInterval, &'a mut V>;
+
+    type IntoIter = IterMut<'a, A, V>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.iter_mut()
+    }
+}
+
+impl<A: Axis, V> Display for HashHistogram<A, V>
+where
+    HashHistogram<A, V>: Histogram<A, V>,
+    V: Clone + Into<f64>,
+    A::BinInterval: Display,
+{
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let precision = f.precision().unwrap_or(2);
+
+        let sum = self
+            .values()
+            .map(|it| {
+                let x: f64 = it.clone().into();
+                x
+            })
+            .fold(0.0, |it, value| it + value);
+        write!(
+            f,
+            "HashHistogram{}D({} bins, sum={})",
+            self.axes().num_dim(),
+            self.axes().num_bins(),
+            sum
+        )?;
+        Ok(())
+    }
+}
+
+macro_rules! impl_binary_op {
+    ($Trait:tt, $method:tt, $mathsymbol:tt) => {
+        impl<A: Axis + PartialEq + Clone, V> $Trait<&HashHistogram<A, V>> for &HashHistogram<A, V>
+        where
+            HashHistogram<A, V>: Histogram<A, V>,
+            V: Clone,
+            for<'a> &'a V: $Trait<Output = V>,
+        {
+            type Output = Result<HashHistogram<A, V>, ()>;
+
+            fn $method(self, rhs: &HashHistogram<A, V>) -> Self::Output {
+                if self.axes() != rhs.axes() {
+                    return Err(());
+                }
+                let values = self
+                    .values
+                    .clone()
+                    .into_iter()
+                    .chain(rhs.values.clone())
+                    .collect();
+                Ok(HashHistogram {
+                    axes: self.axes().clone(),
+                    values,
+                })
+            }
+        }
+    };
+}
+
+impl_binary_op! {Add, add, +}
+impl_binary_op! {Sub, sub, -}
+impl_binary_op! {Mul, mul, *}
+impl_binary_op! {Div, div, /}

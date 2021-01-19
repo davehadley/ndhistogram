@@ -2,9 +2,12 @@ use ndhistogram::{
     axis::{Category, Uniform, UniformNoFlow, Variable},
     ndhistogram, sparsehistogram,
     value::WeightedMean,
-    HashHistogram, Hist2D, HistND, Histogram, SparseHist2D, SparseHistND, VecHistogram,
+    HashHistogram, Hist2D, HistND, Histogram, SparseHist1D, SparseHist2D, SparseHist3D,
+    SparseHistND, VecHistogram,
 };
+use num_traits::Float;
 use rand::{prelude::StdRng, Rng, SeedableRng};
+use rand_distr::{uniform::UniformChar, Distribution, Normal, StandardNormal};
 
 #[test]
 fn test_hashhistogram_fill() {
@@ -107,4 +110,103 @@ fn test_hashhistogram_values_mut() {
     sparseitems.sort();
     vecitems.sort();
     assert_eq!(sparseitems, vecitems);
+}
+
+#[test]
+fn test_hashhistogram_display() {
+    let hist = sparsehistogram!(Uniform::new(4, 0.0, 2.0));
+    format!("{}", hist);
+}
+
+#[test]
+fn test_hashhistogram_clone() {
+    let hist = sparsehistogram!(Uniform::new(4, 0.0, 2.0));
+    let clone = hist.clone();
+    assert_eq!(hist, clone);
+}
+
+fn generate_normal_hist_1d(seed: u64) -> SparseHist1D<Uniform> {
+    let mut hist = sparsehistogram!(Uniform::new(10, -5.0, 5.0));
+    generate_nomal(-1.0, 2.0, seed)
+        .take(1000)
+        .for_each(|it| hist.fill(&it));
+    hist
+}
+
+fn generate_normal_hist_3d(seed: u64) -> SparseHist3D<Uniform, Uniform, Uniform> {
+    let mut hist = sparsehistogram!(
+        Uniform::new(10, -5.0, 5.0),
+        Uniform::new(10, -5.0, 5.0),
+        Uniform::new(10, -5.0, 5.0),
+    );
+    let x = generate_nomal(-1.0, 2.0, seed + 1);
+    let y = generate_nomal(0.0, 2.0, seed + 2);
+    let z = generate_nomal(1.0, 2.0, seed + 3);
+    let xyz = x.zip(y).zip(z).map(|((x, y), z)| (x, y, z));
+    xyz.take(1000).for_each(|it| hist.fill(&it));
+    hist
+}
+
+macro_rules! impl_binary_op {
+    ($fnname1d:tt, $fnname3d:tt, $fnnamefails:tt, $mathsymbol:tt) => {
+        #[test]
+        fn $fnname1d() {
+            let left = generate_normal_hist_1d(1);
+            let right = generate_normal_hist_1d(2);
+            let hadd = (&left $mathsymbol &right).unwrap();
+            let actual: Vec<_> = hadd
+                .iter()
+                .map(|it| (it.index, it.bin, *it.value))
+                .filter(|(_,_, v)| !v.is_nan())
+                .collect();
+            let expected: Vec<_> = left
+                .iter()
+                .zip(right.into_iter())
+                .map(|(l, r)| (l.index, l.bin, l.value $mathsymbol r.value))
+                .filter(|(_,_, v)| !v.is_nan())
+                .collect();
+            assert_eq!(actual, expected)
+        }
+
+        #[test]
+        fn $fnnamefails() {
+            let left = ndhistogram!(Uniform::new(10, -5.0, 5.0));
+            let right = ndhistogram!(Uniform::new(10, -5.0, 6.0));
+            let hadd = &left $mathsymbol &right;
+            assert!(hadd.is_err())
+        }
+
+
+        #[test]
+        fn $fnname3d() {
+            let left = generate_normal_hist_3d(1);
+            let right = generate_normal_hist_3d(2);
+            let hadd = (&left $mathsymbol &right).unwrap();
+            let actual: Vec<_> = hadd
+                .iter()
+                .map(|it| (it.index, it.bin, *it.value))
+                .filter(|(_,_, v)| !v.is_nan())
+                .collect();
+            let expected: Vec<_> = left
+                .iter()
+                .zip(right.into_iter())
+                .map(|(l, r)| (l.index, l.bin, l.value $mathsymbol r.value))
+                .filter(|(_,_, v)| !v.is_nan())
+                .collect();
+            assert_eq!(actual, expected)
+        }
+    }
+}
+
+impl_binary_op! {test_sparsehistogram_1d_elementwise_add, test_sparsehistogram_3d_elementwise_add, test_sparsehistogram_binning_mismatch_add, +}
+impl_binary_op! {test_sparsehistogram_1d_elementwise_mul, test_sparsehistogram_3d_elementwise_mul, test_sparsehistogram_binning_mismatch_mul, *}
+impl_binary_op! {test_sparsehistogram_1d_elementwise_sub, test_sparsehistogram_3d_elementwise_sub, test_sparsehistogram_binning_mismatch_sub, -}
+impl_binary_op! {test_sparsehistogram_1d_elementwise_div, test_sparsehistogram_3d_elementwise_div, test_sparsehistogram_binning_mismatch_div, /}
+
+pub fn generate_nomal<T: Float>(mu: T, sigma: T, seed: u64) -> impl Iterator<Item = T>
+where
+    StandardNormal: Distribution<T>,
+{
+    let rng = StdRng::seed_from_u64(seed);
+    Normal::new(mu, sigma).unwrap().sample_iter(rng)
 }
