@@ -1,4 +1,7 @@
-use ndhistogram::{AxesTuple, axis::{Axis, Category, CategoryNoFlow, SingleValueBinInterval, Uniform}};
+use ndhistogram::{
+    axis::{Axis, Category, CategoryNoFlow, SingleValueBinInterval, Uniform},
+    AxesTuple,
+};
 
 #[test]
 fn test_axes_2d_num_bins() {

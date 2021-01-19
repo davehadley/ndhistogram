@@ -42,17 +42,6 @@
 #[macro_export]
 macro_rules! ndhistogram {
 
-    // ($( $x:expr ),+ $(,)*; $type:ident<$($generics:tt),+> $(;)*) => {
-    //     {
-    //         let axes = (
-    //         $(
-    //             $x,
-    //         )*
-    //     );
-    //         $crate::VecHistogram::<_, $type<$($generics),+>>::new(axes)
-    //     }
-    // };
-
     ($( $x:expr ),+ $(,)*; $type:ty $(;)*) => {
         {
             let axes = (
@@ -73,6 +62,34 @@ macro_rules! ndhistogram {
         );
             let axes: $crate::AxesTuple<_> = axes.into();
             $crate::VecHistogram::<_, f64>::new(axes)
+        }
+    };
+
+}
+
+#[macro_export]
+macro_rules! sparsehistogram {
+
+    ($( $x:expr ),+ $(,)*; $type:ty $(;)*) => {
+        {
+            let axes = (
+            $(
+                $x,
+            )*
+        );
+            let axes: $crate::AxesTuple<_> = axes.into();
+            $crate::HashHistogram::<_, $type>::new(axes)
+        }
+    };
+    ($( $x:expr ),+ $(,)*) => {
+        {
+            let axes = (
+            $(
+                $x,
+            )*
+        );
+            let axes: $crate::AxesTuple<_> = axes.into();
+            $crate::HashHistogram::<_, f64>::new(axes)
         }
     };
 
