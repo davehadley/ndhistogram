@@ -20,7 +20,8 @@ pub struct VecHistogram<A, V> {
 }
 
 impl<A: Axis, V: Default + Clone> VecHistogram<A, V> {
-    ///
+    /// Factor method for VecHistogram. It is recommended to use the
+    /// [ndhistogram](crate::ndhistogram) macro instead.
     pub fn new(axes: A) -> VecHistogram<A, V> {
         let size = axes.num_bins();
         VecHistogram {
