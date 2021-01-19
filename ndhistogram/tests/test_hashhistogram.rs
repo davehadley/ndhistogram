@@ -1,8 +1,8 @@
 use ndhistogram::{
-    axis::{Category, Uniform, Variable},
+    axis::{Category, Uniform, UniformNoFlow, Variable},
     ndhistogram, sparsehistogram,
     value::WeightedMean,
-    Histogram,
+    HashHistogram, Hist2D, HistND, Histogram, SparseHist2D, SparseHistND, VecHistogram,
 };
 use rand::{prelude::StdRng, Rng, SeedableRng};
 
@@ -40,8 +40,10 @@ fn test_hashhistogram_axes() {
     assert_eq!(sparsehist.axes(), vechist.axes())
 }
 
-#[test]
-fn test_hashhistogram_iter() {
+fn random_2d_vec_and_sparse_hist() -> (
+    Hist2D<Uniform, Variable, i32>,
+    SparseHist2D<Uniform, Variable, i32>,
+) {
     let x = Uniform::new(10, 0.0, 10.0);
     let y = Variable::new(vec![0.0, 2.0, 5.0, 10.0]);
     let mut sparsehist = sparsehistogram!(x.clone(), y.clone(); i32);
@@ -60,28 +62,45 @@ fn test_hashhistogram_iter() {
             sparsehist.fill_with(&(x, y), z);
             vechist.fill_with(&(x, y), z);
         });
+    (vechist, sparsehist)
+}
 
+#[test]
+fn test_hashhistogram_iter() {
+    let (vechist, sparsehist) = random_2d_vec_and_sparse_hist();
     // check item iterator
     let mut sparseitems: Vec<_> = sparsehist.iter().collect();
     let mut vecitems: Vec<_> = vechist.iter().filter(|item| *item.value > 0).collect();
     sparseitems.sort_by_key(|item| item.index);
     vecitems.sort_by_key(|item| item.index);
     assert_eq!(sparseitems, vecitems);
+}
 
+#[test]
+fn test_hashhistogram_values() {
+    let (vechist, sparsehist) = random_2d_vec_and_sparse_hist();
     // check values iterator
     let mut sparseitems: Vec<_> = sparsehist.values().collect();
     let mut vecitems: Vec<_> = vechist.values().filter(|value| **value > 0).collect();
     sparseitems.sort();
     vecitems.sort();
     assert_eq!(sparseitems, vecitems);
+}
 
+#[test]
+fn test_hashhistogram_iter_mut() {
+    let (mut vechist, mut sparsehist) = random_2d_vec_and_sparse_hist();
     // check mutable item iterator
     let mut sparseitems: Vec<_> = sparsehist.iter_mut().collect();
     let mut vecitems: Vec<_> = vechist.iter_mut().filter(|item| *item.value > 0).collect();
     sparseitems.sort_by_key(|item| item.index);
     vecitems.sort_by_key(|item| item.index);
     assert_eq!(sparseitems, vecitems);
+}
 
+#[test]
+fn test_hashhistogram_values_mut() {
+    let (mut vechist, mut sparsehist) = random_2d_vec_and_sparse_hist();
     // check mutable values iterator
     let mut sparseitems: Vec<_> = sparsehist.values_mut().collect();
     let mut vecitems: Vec<_> = vechist.values_mut().filter(|value| **value > 0).collect();
