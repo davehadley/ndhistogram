@@ -138,5 +138,17 @@ pub use histogram::histogram::Histogram;
 pub use histogram::histogram::Item;
 pub use histogram::vechistogram::VecHistogram;
 
+/// Type alias for 1D [Histogram]s returned by [ndhistogram].
+pub type Hist1D<X, V = f64> = VecHistogram<AxesTuple<(X,)>, V>;
+
+/// Type alias for 2D [Histogram]s returned by [ndhistogram].
+pub type Hist2D<X, Y, V = f64> = VecHistogram<AxesTuple<(X, Y)>, V>;
+
+/// Type alias for 3D [Histogram]s returned by [ndhistogram].
+pub type Hist3D<X, Y, Z, V = f64> = VecHistogram<AxesTuple<(X, Y, Z)>, V>;
+
+/// Type alias for ND [Histogram]s returned by [ndhistogram].
+pub type HistND<A, V = f64> = VecHistogram<AxesTuple<A>, V>;
+
 #[macro_use]
 mod macros;

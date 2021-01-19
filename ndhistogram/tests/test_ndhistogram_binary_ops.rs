@@ -1,4 +1,4 @@
-use ndhistogram::{axis::Uniform, ndhistogram, AxesTuple, Histogram, VecHistogram};
+use ndhistogram::{axis::Uniform, ndhistogram, HistND, Histogram};
 
 use num_traits::Float;
 use rand::{prelude::StdRng, SeedableRng};
@@ -12,8 +12,8 @@ where
     Normal::new(mu, sigma).unwrap().sample_iter(rng)
 }
 
-type Hist1D = VecHistogram<AxesTuple<(Uniform<f64>,)>, f64>;
-type Hist3D = VecHistogram<AxesTuple<(Uniform<f64>, Uniform<f64>, Uniform<f64>)>, f64>;
+type Hist1D = HistND<(Uniform<f64>,), f64>;
+type Hist3D = HistND<(Uniform<f64>, Uniform<f64>, Uniform<f64>), f64>;
 
 fn generate_normal_hist_1d(seed: u64) -> Hist1D {
     let mut hist = ndhistogram!(Uniform::new(10, -5.0, 5.0));

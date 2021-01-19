@@ -107,6 +107,10 @@ pub trait Axis {
         Box::new(self.indices().map(move |it| self.bin(it).unwrap()))
     }
 
+    /// The number of dimensions that this object corresponds to.
+    /// For most Axis types this will simply be 1.
+    /// However, [Axes] (i.e. a set of [Axis]) also implement [Axis]
+    /// and should return the number of [Axis] that it contains.
     fn num_dim(&self) -> usize {
         1
     }

@@ -3,12 +3,14 @@ use super::axis::Axis;
 /// Axes provided an interface for a set of ND dimensional set of histograms.
 pub trait Axes: Axis {}
 
+/// Container for a set of [Axis] that implements [Axes].
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct AxesTuple<T> {
     axes: T,
 }
 
 impl<T> AxesTuple<T> {
+    /// Get the set of container Axis as a tuple
     pub fn as_tuple(&self) -> &T {
         &self.axes
     }
