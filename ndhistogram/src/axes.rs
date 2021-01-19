@@ -1,10 +1,7 @@
 use super::axis::Axis;
 
 /// Axes provided an interface for a set of ND dimensional set of histograms.
-pub trait Axes: Axis {
-    /// Returns the number of axes within this set.
-    fn num_dim(&self) -> usize;
-}
+pub trait Axes: Axis {}
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct AxesTuple<T> {
@@ -37,7 +34,6 @@ macro_rules! impl_axes {
         ( $type_parameter:ident: $index:tt, ) => {
 
         impl<X: Axis> Axes for AxesTuple<(X,)> {
-            fn num_dim(&self) -> usize { 1 }
         }
 
         impl<X:Axis> From<(X,)> for AxesTuple<(X,)> {
@@ -61,6 +57,7 @@ macro_rules! impl_axes {
             fn bin(&self, index: usize) -> Option<Self::BinInterval> {
                 self.axes.0.bin(index)
             }
+
         }
 
         impl_axes!();
@@ -68,7 +65,6 @@ macro_rules! impl_axes {
     //( $( ($nth_index:tt => $nth_type_parameter:ident), )+ ) => {
         ( $($nth_type_parameter:ident: $nth_index:tt, )+ ) => {
         impl<$($nth_type_parameter: Axis),*> Axes for AxesTuple<($($nth_type_parameter),*)> {
-            fn num_dim(&self) -> usize { count_idents!($($nth_type_parameter),*) }
         }
 
         impl<$($nth_type_parameter: Axis),*> From<($($nth_type_parameter),*)> for AxesTuple<($($nth_type_parameter),*)> {
@@ -96,6 +92,10 @@ macro_rules! impl_axes {
             fn num_bins(&self) -> usize {
                 //let arr = [self.$index.num_bins(), $(self.$nth_index.num_bins()),*];
                 $(self.axes.$nth_index.num_bins()*)* 1
+            }
+
+            fn num_dim(&self) -> usize {
+                count_idents!($($nth_type_parameter,)*)
             }
 
             fn bin(&self, index: usize) -> Option<Self::BinInterval> {

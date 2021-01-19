@@ -106,4 +106,8 @@ pub trait Axis {
     fn bins(&self) -> Bins<'_, Self::BinInterval> {
         Box::new(self.indices().map(move |it| self.bin(it).unwrap()))
     }
+
+    fn num_dim(&self) -> usize {
+        1
+    }
 }

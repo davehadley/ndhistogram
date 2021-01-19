@@ -1,4 +1,4 @@
-use crate::{axes::Axes, axis::Axis, FillWith};
+use crate::{axis::Axis, FillWith};
 
 use super::fill::{Fill, FillWithWeighted};
 
@@ -19,7 +19,7 @@ pub(crate) type IterMut<'a, A, V> =
 ///
 /// The most commonly used implementation is [VecHistogram](crate::VecHistogram).
 /// See [ndhistogram] for examples of its use.
-pub trait Histogram<A: Axes, V> {
+pub trait Histogram<A: Axis, V> {
     /// The histogram [Axes] that map coordinates to bin numbers.
     fn axes(&self) -> &A;
 

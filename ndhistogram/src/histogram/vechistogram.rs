@@ -6,7 +6,7 @@ use std::{
     ops::{Add, Div, Mul, Sub},
 };
 
-use crate::{axes::Axes, axis::Axis, AxesTuple};
+use crate::axis::Axis;
 
 use super::histogram::{Histogram, Item, Iter, IterMut, ValuesMut};
 
@@ -19,7 +19,7 @@ pub struct VecHistogram<A, V> {
     values: Vec<V>,
 }
 
-impl<A: Axes, V: Default + Clone> VecHistogram<A, V> {
+impl<A: Axis, V: Default + Clone> VecHistogram<A, V> {
     ///
     pub fn new(axes: A) -> VecHistogram<A, V> {
         let size = axes.num_bins();
@@ -30,7 +30,7 @@ impl<A: Axes, V: Default + Clone> VecHistogram<A, V> {
     }
 }
 
-impl<A: Axes, V> Histogram<A, V> for VecHistogram<A, V> {
+impl<A: Axis, V> Histogram<A, V> for VecHistogram<A, V> {
     fn value(&self, coordinate: &A::Coordinate) -> Option<&V> {
         let index = self.axes.index(coordinate)?;
         self.values.get(index)
@@ -74,7 +74,7 @@ impl<A: Axes, V> Histogram<A, V> for VecHistogram<A, V> {
     }
 }
 
-impl<'a, A: Axes, V> IntoIterator for &'a VecHistogram<A, V> {
+impl<'a, A: Axis, V> IntoIterator for &'a VecHistogram<A, V> {
     type Item = Item<A::BinInterval, &'a V>;
 
     type IntoIter = Iter<'a, A, V>;
@@ -84,7 +84,7 @@ impl<'a, A: Axes, V> IntoIterator for &'a VecHistogram<A, V> {
     }
 }
 
-impl<'a, A: Axes, V: 'a> IntoIterator for &'a mut VecHistogram<A, V> {
+impl<'a, A: Axis, V: 'a> IntoIterator for &'a mut VecHistogram<A, V> {
     type Item = Item<A::BinInterval, &'a mut V>;
 
     type IntoIter = IterMut<'a, A, V>;
@@ -94,7 +94,7 @@ impl<'a, A: Axes, V: 'a> IntoIterator for &'a mut VecHistogram<A, V> {
     }
 }
 
-impl<A: Axes, V> Display for VecHistogram<A, V>
+impl<A: Axis, V> Display for VecHistogram<A, V>
 where
     V: Clone + Into<f64>,
     A::BinInterval: Display,
@@ -149,7 +149,7 @@ where
 
 macro_rules! impl_binary_op {
     ($Trait:tt, $method:tt, $mathsymbol:tt) => {
-        impl<A: Axes + PartialEq + Clone, V> $Trait<&VecHistogram<A, V>> for &VecHistogram<A, V>
+        impl<A: Axis + PartialEq + Clone, V> $Trait<&VecHistogram<A, V>> for &VecHistogram<A, V>
 where
     for<'a> &'a V: $Trait<Output = V>,
 {
@@ -181,7 +181,7 @@ impl_binary_op! {Div, div, /}
 
 macro_rules! impl_binary_op_with_scalar {
     ($Trait:tt, $method:tt, $mathsymbol:tt) => {
-        impl<A: Axes + PartialEq + Clone, V> $Trait<&V> for &VecHistogram<A, V>
+        impl<A: Axis + PartialEq + Clone, V> $Trait<&V> for &VecHistogram<A, V>
 where
     for<'a> &'a V: $Trait<Output = V>,
 {
