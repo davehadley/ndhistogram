@@ -27,13 +27,13 @@ impl<A: Axis, V> HashHistogram<A, V> {
     }
 }
 
-impl<A: Axis, V> Histogram<A, V> for HashHistogram<A, V> {
+impl<A: Axis, V: Default> Histogram<A, V> for HashHistogram<A, V> {
     fn axes(&self) -> &A {
-        todo!()
+        &self.axes
     }
 
     fn value_at_index(&self, index: usize) -> Option<&V> {
-        todo!()
+        self.values.get(&index)
     }
 
     fn values(&self) -> super::histogram::Values<'_, V> {
@@ -45,7 +45,7 @@ impl<A: Axis, V> Histogram<A, V> for HashHistogram<A, V> {
     }
 
     fn value_at_index_mut(&mut self, index: usize) -> Option<&mut V> {
-        todo!()
+        self.values.get_mut(&index)
     }
 
     fn values_mut(&mut self) -> ValuesMut<'_, V> {
@@ -54,5 +54,35 @@ impl<A: Axis, V> Histogram<A, V> for HashHistogram<A, V> {
 
     fn iter_mut(&mut self) -> IterMut<'_, A, V> {
         todo!()
+    }
+
+    fn fill(&mut self, coordinate: &A::Coordinate)
+    where
+        V: crate::Fill,
+    {
+        if let Some(index) = self.axes.index(coordinate) {
+            self.values.entry(index).or_default().fill();
+        }
+    }
+
+    fn fill_with<D>(&mut self, coordinate: &A::Coordinate, data: D)
+    where
+        V: crate::FillWith<D>,
+    {
+        if let Some(index) = self.axes.index(coordinate) {
+            self.values.entry(index).or_default().fill_with(data);
+        }
+    }
+
+    fn fill_with_weighted<D, W>(&mut self, coordinate: &A::Coordinate, data: D, weight: W)
+    where
+        V: crate::FillWithWeighted<D, W>,
+    {
+        if let Some(index) = self.axes.index(coordinate) {
+            self.values
+                .entry(index)
+                .or_default()
+                .fill_with_weighted(data, weight);
+        }
     }
 }
