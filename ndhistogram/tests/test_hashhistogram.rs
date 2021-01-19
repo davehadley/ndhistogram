@@ -1,4 +1,9 @@
-use ndhistogram::{axis::Uniform, sparsehistogram, value::WeightedMean, Histogram};
+use ndhistogram::{
+    axis::{Category, Uniform, Variable},
+    ndhistogram, sparsehistogram,
+    value::WeightedMean,
+    Histogram,
+};
 
 #[test]
 fn test_hashhistogram_fill() {
@@ -22,4 +27,14 @@ fn test_hashhistogram_fill_with_weighted() {
     hist.fill_with_weighted(&0.5, 2, 2);
     hist.fill_with_weighted(&0.5, 3, 3);
     assert_float_eq(hist.value(&0.5).unwrap().mean(), 14.0 / 6.0)
+}
+
+#[test]
+fn test_hashhistogram_axes() {
+    let x = Uniform::new(10, 0.0, 10.0);
+    let y = Variable::new(vec![1.0, 2.0, 10.0]);
+    let z = Category::new(vec!["A", "B", "C"]);
+    let sparsehist = sparsehistogram!(x.clone(), y.clone(), z.clone());
+    let vechist = ndhistogram!(x, y, z);
+    assert_eq!(sparsehist.axes(), vechist.axes())
 }
