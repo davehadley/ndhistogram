@@ -15,7 +15,7 @@ use std::fmt::{Debug, Display};
 ///    use ndhistogram::{ndhistogram, Histogram};
 ///    use ndhistogram::axis::{Axis, UniformNoFlow, BinInterval};
 ///    let hist = ndhistogram!(UniformNoFlow::new(10, -5.0, 5.0));
-///    let axis = &hist.axes().0;
+///    let axis = &hist.axes().as_tuple().0;
 ///    assert_eq!(axis.bin(0), Some(BinInterval::new(-5.0, -4.0)));
 ///    assert_eq!(axis.bin(10), None);
 ///

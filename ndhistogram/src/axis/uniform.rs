@@ -16,7 +16,7 @@ use super::{Axis, BinInterval};
 ///    use ndhistogram::{ndhistogram, Histogram};
 ///    use ndhistogram::axis::{Axis, Uniform, BinInterval};
 ///    let hist = ndhistogram!(Uniform::new(10, -5.0, 5.0));
-///    let axis = &hist.axes().0;
+///    let axis = &hist.axes().as_tuple().0;
 ///    assert_eq!(axis.bin(0), Some(BinInterval::underflow(-5.0)));
 ///    assert_eq!(axis.bin(1), Some(BinInterval::new(-5.0, -4.0)));
 ///    assert_eq!(axis.bin(11), Some(BinInterval::overflow(5.0)));
