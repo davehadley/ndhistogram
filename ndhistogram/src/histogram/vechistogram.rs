@@ -52,10 +52,14 @@ impl<A: Axis, V> Histogram<A, V> for VecHistogram<A, V> {
     }
 
     fn iter<'a>(&'a self) -> Box<dyn Iterator<Item = Item<A::BinInterval, &'a V>> + 'a> {
-        Box::new(self.axes().iter().map(move |(index, binrange)| Item {
-            index,
-            bin: binrange,
-            value: self.value_at_index(index).unwrap(),
+        Box::new(self.axes().iter().map(move |(index, binrange)| {
+            Item {
+                index,
+                bin: binrange,
+                value: self
+                    .value_at_index(index)
+                    .expect("iter() indices are always in range"),
+            }
         }))
     }
 

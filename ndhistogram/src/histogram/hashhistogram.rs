@@ -48,10 +48,15 @@ impl<A: Axis, V: Default> Histogram<A, V> for HashHistogram<A, V> {
     }
 
     fn iter(&self) -> Iter<'_, A, V> {
-        Box::new(self.values.iter().map(move |(index, value)| Item {
-            index: *index,
-            bin: self.axes.bin(*index).unwrap(),
-            value,
+        Box::new(self.values.iter().map(move |(index, value)| {
+            Item {
+                index: *index,
+                bin: self
+                    .axes
+                    .bin(*index)
+                    .expect("iter() indices are always valid bins"),
+                value,
+            }
         }))
     }
 
@@ -65,10 +70,14 @@ impl<A: Axis, V: Default> Histogram<A, V> for HashHistogram<A, V> {
 
     fn iter_mut(&mut self) -> IterMut<'_, A, V> {
         let axes = &self.axes;
-        Box::new(self.values.iter_mut().map(move |(index, value)| Item {
-            index: *index,
-            bin: axes.bin(*index).unwrap(),
-            value,
+        Box::new(self.values.iter_mut().map(move |(index, value)| {
+            Item {
+                index: *index,
+                bin: axes
+                    .bin(*index)
+                    .expect("iter_mut() indices are always valid bins"),
+                value,
+            }
         }))
     }
 

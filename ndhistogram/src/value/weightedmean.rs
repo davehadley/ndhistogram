@@ -33,8 +33,8 @@ use crate::FillWithWeighted;
 /// hist.fill_with_weighted(&0.0, 2, 2);
 /// hist.fill_with_weighted(&0.0, 4, 3);
 ///
-/// let weightedmean = hist.value(&0.0).unwrap();
-/// assert_eq!(weightedmean.get(), 3.0);
+/// let weightedmean = hist.value(&0.0);
+/// assert_eq!(weightedmean.unwrap().get(), 3.0);
 /// ```
 #[derive(
     Copy, Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Serialize, Deserialize,

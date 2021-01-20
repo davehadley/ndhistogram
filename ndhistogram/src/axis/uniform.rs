@@ -71,8 +71,13 @@ impl<T: Float> Axis for Uniform<T> {
         } else if frac >= T::one() {
             return Some(self.num + 1);
         }
-        let idx: T = T::from(self.num).unwrap() * frac;
-        Some((idx.to_usize().unwrap()) + 1)
+        let idx: T =
+            T::from(self.num).expect("num bins conversion to bin value type always succeed") * frac;
+        Some(
+            (idx.to_usize()
+                .expect("bin number can always be converted to a valid usize"))
+                + 1,
+        )
     }
 
     fn num_bins(&self) -> usize {

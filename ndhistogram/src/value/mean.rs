@@ -33,8 +33,8 @@ use crate::FillWith;
 /// hist.fill_with(&0.0, 2);
 /// hist.fill_with(&0.0, 3);
 ///
-/// let mean = hist.value(&0.0).unwrap();
-/// assert_eq!(mean.get(), 2.0); // should be the mean of [1,2,3]
+/// let mean = hist.value(&0.0);
+/// assert_eq!(mean.unwrap().get(), 2.0); // should be the mean of [1,2,3]
 /// ```
 #[derive(
     Copy, Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Serialize, Deserialize,
