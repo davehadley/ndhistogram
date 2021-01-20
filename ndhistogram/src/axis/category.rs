@@ -78,7 +78,7 @@ impl<T: Value> Axis for Category<T> {
     type BinInterval = SingleValueBinInterval<T>;
 
     fn index(&self, coordinate: &Self::Coordinate) -> Option<usize> {
-        self.get_index(&coordinate).or_else(|| Some(self.len()))
+        self.get_index(coordinate).or_else(|| Some(self.len()))
     }
 
     fn num_bins(&self) -> usize {

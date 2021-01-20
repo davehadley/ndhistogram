@@ -28,7 +28,7 @@ pub struct UniformNoFlow<T> {
 impl<T: Float> UniformNoFlow<T> {
     /// Factory method to create an axis with num uniformly spaced bins in the range [low, high) with no under/overflow bins.
     pub fn new(num: usize, low: T, high: T) -> Self {
-        UniformNoFlow {
+        Self {
             axis: Uniform::new(num, low, high),
         }
     }

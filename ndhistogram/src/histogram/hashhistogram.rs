@@ -24,8 +24,8 @@ pub struct HashHistogram<A, V> {
 impl<A: Axis, V> HashHistogram<A, V> {
     /// Factory method for HashHistogram. It is recommended to use the
     /// [sparsehistogram](crate::sparsehistogram) macro instead.
-    pub fn new(axes: A) -> HashHistogram<A, V> {
-        HashHistogram {
+    pub fn new(axes: A) -> Self {
+        Self {
             axes,
             values: HashMap::new(),
         }

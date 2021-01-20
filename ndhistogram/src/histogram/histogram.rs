@@ -104,7 +104,7 @@ pub struct Item<T, V> {
 
 impl<T, V> Item<T, V> {
     /// Factory method to create [Item].
-    pub fn new(index: usize, bin: T, value: V) -> Item<T, V> {
-        Item { index, bin, value }
+    pub fn new(index: usize, bin: T, value: V) -> Self {
+        Self { index, bin, value }
     }
 }

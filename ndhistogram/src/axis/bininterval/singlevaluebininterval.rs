@@ -17,13 +17,13 @@ pub enum SingleValueBinInterval<T> {
 
 impl<T> SingleValueBinInterval<T> {
     /// A factory method to create a new single valued bin interval.
-    pub fn new(value: T) -> SingleValueBinInterval<T> {
-        SingleValueBinInterval::Bin { value }
+    pub fn new(value: T) -> Self {
+        Self::Bin { value }
     }
 
     /// A factory method to create a new overflow bin interval.
-    pub fn overflow() -> SingleValueBinInterval<T> {
-        SingleValueBinInterval::Overflow {}
+    pub fn overflow() -> Self {
+        Self::Overflow {}
     }
 
     /// Returns the value included in the interval where it is well-defined.
@@ -31,8 +31,8 @@ impl<T> SingleValueBinInterval<T> {
     /// For the overflow bin (which may cover many values), it returns None.
     pub fn value(&self) -> Option<&T> {
         match self {
-            SingleValueBinInterval::Overflow => None,
-            SingleValueBinInterval::Bin { value } => Some(value),
+            Self::Overflow => None,
+            Self::Bin { value } => Some(value),
         }
     }
 }
@@ -40,8 +40,8 @@ impl<T> SingleValueBinInterval<T> {
 impl<T: Display> Display for SingleValueBinInterval<T> {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::result::Result<(), std::fmt::Error> {
         match self {
-            SingleValueBinInterval::Overflow => write!(f, "{{overflow}}"),
-            SingleValueBinInterval::Bin { value } => write!(f, "{{{}}}", value),
+            Self::Overflow => write!(f, "{{overflow}}"),
+            Self::Bin { value } => write!(f, "{{{}}}", value),
         }
     }
 }

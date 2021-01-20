@@ -119,7 +119,7 @@
         missing_docs,
         missing_crate_level_docs,
         missing_doc_code_examples,
-        broken_intra_doc_links
+        broken_intra_doc_links,
     )
 )]
 

@@ -34,14 +34,14 @@ where
     T: PartialOrd,
 {
     /// Factory method to create an axis with num uniformly spaced bins in the range [low, high). Under/overflow bins cover values outside this range.
-    pub fn new(num: usize, low: T, high: T) -> Uniform<T> {
+    pub fn new(num: usize, low: T, high: T) -> Self {
         if num == 0 {
             panic!("Invalid axis num bins ({})", num);
         }
         if low >= high {
             panic!("Invalid axis range bins (low >= high)");
         }
-        Uniform { num, low, high }
+        Self { num, low, high }
     }
 }
 

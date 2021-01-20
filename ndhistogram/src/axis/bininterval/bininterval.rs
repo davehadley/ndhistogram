@@ -51,9 +51,9 @@ impl<T: Copy> BinInterval<T> {
     /// The underflow bin returns None.
     pub fn start(&self) -> Option<T> {
         match self {
-            BinInterval::Underflow { end: _ } => None,
-            BinInterval::Overflow { start } => Some(*start),
-            BinInterval::Bin { start, end: _ } => Some(*start),
+            Self::Underflow { end: _ } => None,
+            Self::Overflow { start } => Some(*start),
+            Self::Bin { start, end: _ } => Some(*start),
         }
     }
 
@@ -62,16 +62,16 @@ impl<T: Copy> BinInterval<T> {
     /// The overflow bin returns None.
     pub fn end(&self) -> Option<T> {
         match self {
-            BinInterval::Underflow { end } => Some(*end),
-            BinInterval::Overflow { start: _ } => None,
-            BinInterval::Bin { start: _, end } => Some(*end),
+            Self::Underflow { end } => Some(*end),
+            Self::Overflow { start: _ } => None,
+            Self::Bin { start: _, end } => Some(*end),
         }
     }
 }
 
 impl<T> From<Range<T>> for BinInterval<T> {
     fn from(other: Range<T>) -> Self {
-        BinInterval::Bin {
+        Self::Bin {
             start: other.start,
             end: other.end,
         }
@@ -80,13 +80,13 @@ impl<T> From<Range<T>> for BinInterval<T> {
 
 impl<T> From<RangeTo<T>> for BinInterval<T> {
     fn from(other: RangeTo<T>) -> Self {
-        BinInterval::Underflow { end: other.end }
+        Self::Underflow { end: other.end }
     }
 }
 
 impl<T> From<RangeFrom<T>> for BinInterval<T> {
     fn from(other: RangeFrom<T>) -> Self {
-        BinInterval::Overflow { start: other.start }
+        Self::Overflow { start: other.start }
     }
 }
 
@@ -95,7 +95,7 @@ impl<T> TryFrom<BinInterval<T>> for Range<T> {
 
     fn try_from(value: BinInterval<T>) -> Result<Self, Self::Error> {
         if let BinInterval::Bin { start, end } = value {
-            return Ok(Range { start, end });
+            return Ok(Self { start, end });
         }
         Err(())
     }
@@ -106,7 +106,7 @@ impl<T> TryFrom<BinInterval<T>> for RangeTo<T> {
 
     fn try_from(value: BinInterval<T>) -> Result<Self, Self::Error> {
         if let BinInterval::Underflow { end } = value {
-            return Ok(RangeTo { end });
+            return Ok(Self { end });
         }
         Err(())
     }
@@ -117,7 +117,7 @@ impl<T> TryFrom<BinInterval<T>> for RangeFrom<T> {
 
     fn try_from(value: BinInterval<T>) -> Result<Self, Self::Error> {
         if let BinInterval::Overflow { start } = value {
-            return Ok(RangeFrom { start });
+            return Ok(Self { start });
         }
         Err(())
     }
@@ -128,19 +128,19 @@ macro_rules! impl_display {
         impl<T: $Trait> $Trait for BinInterval<T> {
             fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
                 match self {
-                    BinInterval::Underflow { end } => {
+                    Self::Underflow { end } => {
                         //write!(f, "(-inf, {})", end)?;
                         write!(f, "(-inf, ")?;
                         end.fmt(f)?;
                         write!(f, ")")?;
                     }
-                    BinInterval::Overflow { start } => {
+                    Self::Overflow { start } => {
                         //write!(f, "[{}, inf)", start)?;
                         write!(f, "[")?;
                         start.fmt(f)?;
                         write!(f, ", inf)")?;
                     }
-                    BinInterval::Bin { start, end } => {
+                    Self::Bin { start, end } => {
                         //write!(f, "[{}, {})", start, end)?;
                         write!(f, "[")?;
                         start.fmt(f)?;
