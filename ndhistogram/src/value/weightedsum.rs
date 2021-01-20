@@ -27,6 +27,11 @@ impl<T: Copy> WeightedSum<T> {
 
     /// Get the current value of the weighted sum.
     pub fn get(&self) -> T {
+        self.sum()
+    }
+
+    /// Get the current value of the weighted sum.
+    pub fn sum(&self) -> T {
         self.sumw
     }
 

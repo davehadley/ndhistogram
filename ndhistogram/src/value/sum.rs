@@ -19,8 +19,13 @@ impl<T: Copy> Sum<T> {
         Self::default()
     }
 
-    /// Get the current value.
+    /// Get the current value of the sum.
     pub fn get(&self) -> T {
+        self.sum()
+    }
+
+    /// Get the current value.
+    pub fn sum(&self) -> T {
         self.sum
     }
 
