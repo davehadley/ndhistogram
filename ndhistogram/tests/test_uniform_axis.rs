@@ -3,9 +3,9 @@ use ndhistogram::axis::{Axis, BinInterval, Uniform};
 use std::{convert::TryFrom, ops::Range};
 
 #[test]
-fn test_uniform_num_bins() {
+fn test_uniform_numbins() {
     let ax = Uniform::new(5, 0.0, 1.0);
-    assert_eq!(ax.num_bins(), 5 + 2)
+    assert_eq!(ax.numbins(), 5 + 2)
 }
 
 #[test]

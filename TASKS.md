@@ -1,8 +1,15 @@
 # Task List
 
-- [ ] Integer binning
+- [ ] Check API and naming guidelines are met (https://rust-lang.github.io/api-guidelines).
 - [ ] Uniform with transform binning
+- [ ] Integer binning
 - [ ] Dynamic histogram (i.e. axes only know at runtime)
+- [x] "SumW2" histogram values
+- [x] "Profile" histograms
+- [ ] ndarray-like slicing
+- [ ] Pretty display for histogram
+- [x] Histogram +, -, /, *, ==, operations 
+- [ ] Implement grow for Uniform
 - [ ] Re-binnable axis.
 - [ ] Growable/Extendable axis.
-- [ ] ndarray-like slicing?
+- [ ] Spell check documentation.

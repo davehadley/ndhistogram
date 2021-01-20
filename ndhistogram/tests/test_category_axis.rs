@@ -1,9 +1,9 @@
 use ndhistogram::axis::{Axis, Category, SingleValueBinInterval};
 
 #[test]
-fn test_category_num_bins() {
+fn test_category_numbins() {
     let ax = Category::new(vec!["A", "B", "C"]);
-    assert_eq!(ax.num_bins(), 3 + 1)
+    assert_eq!(ax.numbins(), 3 + 1)
 }
 
 #[test]
@@ -105,7 +105,7 @@ fn string_category_ab() -> (Vec<String>, Category<String>) {
 fn test_string_category() {
     // sanaity check that we get sensible results when category is String type
     let (cats, category) = string_category_ab();
-    assert_eq!(category.num_bins(), cats.len() + 1);
+    assert_eq!(category.numbins(), cats.len() + 1);
     assert_eq!(category.indices().collect::<Vec<_>>(), vec![0, 1, 2]);
     assert_eq!(category.index(&"A".to_string()), Some(0));
     assert_eq!(

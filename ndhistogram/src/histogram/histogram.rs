@@ -1,8 +1,6 @@
-use crate::{axis::Axis, FillWith};
+use crate::{axes::Axes, axis::Axis, FillWith};
 
 use super::fill::{Fill, FillWithWeighted};
-
-use serde::{Deserialize, Serialize};
 
 // TODO: Using generic associated types would give a cleaner interface and avoid boxing the iterators
 // https://github.com/rust-lang/rfcs/blob/master/text/1598-generic_associated_types.md
@@ -21,8 +19,8 @@ pub(crate) type IterMut<'a, A, V> =
 ///
 /// The most commonly used implementation is [VecHistogram](crate::VecHistogram).
 /// See [ndhistogram] for examples of its use.
-pub trait Histogram<A: Axis, V> {
-    /// The histogram [Axes](crate::Axes) that map coordinates to bin numbers.
+pub trait Histogram<A: Axes, V> {
+    /// The histogram [Axes] that map coordinates to bin numbers.
     fn axes(&self) -> &A;
 
     /// Read a bin value given an index.
@@ -30,7 +28,7 @@ pub trait Histogram<A: Axis, V> {
     fn value_at_index(&self, index: usize) -> Option<&V>;
 
     /// Read a bin value given a coordinate.
-    /// Returns an Option as the given coordinate may not be mapped to a bin.
+    /// Returns an Option as the given coordinate may not be mapeed to a bin.
     fn value(&self, coordinate: &A::Coordinate) -> Option<&V> {
         let index = self.axes().index(coordinate)?;
         self.value_at_index(index)
@@ -53,12 +51,12 @@ pub trait Histogram<A: Axis, V> {
 
     /// Mutable iterator over bin values.
     fn values_mut(&mut self) -> ValuesMut<'_, V>;
-    /// Mutable iterator over bin indices, bin interval and bin values.
+    /// Mutable iterator bin indices, bin interval and bin values.
     fn iter_mut(&mut self) -> IterMut<'_, A, V>;
 
     /// Fill the histogram bin value at coordinate with unit weight.
-    /// If the [Axes](crate::Axes) do not cover that coordinate, do nothing.
-    /// See [Fill](crate::Fill).
+    /// If the [Axes] do no cover that coordinate, do nothing.
+    /// See [Fill].
     fn fill(&mut self, coordinate: &A::Coordinate)
     where
         V: Fill,
@@ -69,12 +67,11 @@ pub trait Histogram<A: Axis, V> {
     }
 
     /// Fill the histogram bin value at coordinate with some data.
-    /// If the [Axes](crate::Axes) do not cover that coordinate, do nothing.
-    /// See [FillWith](crate::FillWith).
+    /// If the [Axes] do not cover that coordinate, do nothing.
+    /// See [FillWith].
     fn fill_with<D>(&mut self, coordinate: &A::Coordinate, data: D)
     where
         V: FillWith<D>,
-        Self: Sized,
     {
         if let Some(value) = self.value_mut(coordinate) {
             value.fill_with(data)
@@ -82,12 +79,11 @@ pub trait Histogram<A: Axis, V> {
     }
 
     /// Fill the histogram bin value at coordinate with some data.
-    /// If the [Axes](crate::Axes) do not cover that coordinate, do nothing.
-    /// See [FillWithWeighted].
+    /// If the [Axes] do not cover that coordinate, do nothing.
+    /// See [FillWith].
     fn fill_with_weighted<D, W>(&mut self, coordinate: &A::Coordinate, data: D, weight: W)
     where
         V: FillWithWeighted<D, W>,
-        Self: Sized,
     {
         if let Some(value) = self.value_mut(coordinate) {
             value.fill_with_weighted(data, weight)
@@ -96,9 +92,7 @@ pub trait Histogram<A: Axis, V> {
 }
 
 /// Struct to be returned when iterating over [Histogram]s bins.
-#[derive(
-    Copy, Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Serialize, Deserialize,
-)]
+#[derive(Debug, PartialEq, Eq, Clone)]
 pub struct Item<T, V> {
     /// Bin number
     pub index: usize,
@@ -110,7 +104,7 @@ pub struct Item<T, V> {
 
 impl<T, V> Item<T, V> {
     /// Factory method to create [Item].
-    pub fn new(index: usize, bin: T, value: V) -> Self {
-        Self { index, bin, value }
+    pub fn new(index: usize, bin: T, value: V) -> Item<T, V> {
+        Item { index, bin, value }
     }
 }

@@ -1,9 +1,9 @@
 use ndhistogram::axis::{Axis, CategoryNoFlow, SingleValueBinInterval};
 
 #[test]
-fn test_categorynoflow_num_bins() {
+fn test_categorynoflow_numbins() {
     let ax = CategoryNoFlow::new(vec!["A", "B", "C"]);
-    assert_eq!(ax.num_bins(), 3)
+    assert_eq!(ax.numbins(), 3)
 }
 
 #[test]

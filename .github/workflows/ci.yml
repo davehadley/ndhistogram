@@ -58,6 +58,5 @@ jobs:
       with:
         command: clippy
         args: -- -D warnings
-    - name: cargo doc
-      run: RUSTDOCFLAGS="-D warnings" cargo doc
+
 

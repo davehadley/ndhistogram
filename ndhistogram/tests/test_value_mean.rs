@@ -1,4 +1,4 @@
-use ndhistogram::{axis::Uniform, ndhistogram, value::Mean, Hist1D, Histogram};
+use ndhistogram::{axis::Uniform, ndhistogram, value::Mean, Histogram, VecHistogram};
 
 fn assert_float_eq(left: f64, right: f64) {
     assert!(
@@ -7,7 +7,7 @@ fn assert_float_eq(left: f64, right: f64) {
     )
 }
 
-fn simple_filled_float_mean_hist() -> Hist1D<Uniform, Mean> {
+fn simple_filled_float_mean_hist() -> VecHistogram<(Uniform,), Mean> {
     let mut hist = ndhistogram!(Uniform::new(1, 0.0, 1.0); Mean);
     hist.fill_with(&0.0, 1.0);
     hist.fill_with(&0.0, 2.0);
@@ -49,7 +49,7 @@ fn test_mean_value_stderr() {
     );
 }
 
-fn simple_filled_int_mean_hist() -> Hist1D<Uniform, Mean<i32>> {
+fn simple_filled_int_mean_hist() -> VecHistogram<(Uniform,), Mean<i32>> {
     let mut hist = ndhistogram!(Uniform::new(1, 0.0, 1.0); Mean<i32>);
     hist.fill_with(&0.0, 1);
     hist.fill_with(&0.0, 2);

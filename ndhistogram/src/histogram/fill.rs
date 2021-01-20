@@ -32,18 +32,9 @@ pub trait FillWith<D> {
     fn fill_with(&mut self, value: D);
 }
 
-impl<D> FillWith<&D> for D
-where
-    for<'a> Self: AddAssign<&'a D>,
-{
-    fn fill_with(&mut self, data: &D) {
-        *self += data;
-    }
-}
-
 impl<D> FillWith<D> for D
 where
-    for<'a> Self: AddAssign<D>,
+    Self: AddAssign<D>,
 {
     fn fill_with(&mut self, data: D) {
         *self += data;

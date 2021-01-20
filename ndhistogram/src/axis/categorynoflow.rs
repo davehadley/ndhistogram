@@ -1,8 +1,5 @@
 use super::{category::Value, Axis, Category, SingleValueBinInterval};
 use std::fmt::{Debug, Display};
-use std::hash::Hash;
-
-use serde::{Deserialize, Serialize};
 
 /// An axis to represent a finite set of discrete values or categories without an overflow bin.
 ///
@@ -18,10 +15,10 @@ use serde::{Deserialize, Serialize};
 /// assert_eq!(colors.bin(1), Some(SingleValueBinInterval::new("blue")));
 /// assert_eq!(colors.bin(5), None);
 /// ```
-#[derive(Default, Clone, PartialEq, Eq, Debug, Serialize, Deserialize)]
+#[derive(Clone, PartialEq, Debug)]
 pub struct CategoryNoFlow<T>
 where
-    T: Eq + Hash,
+    T: Value,
 {
     axis: Category<T>,
 }
@@ -44,14 +41,14 @@ impl<T: Value> Axis for CategoryNoFlow<T> {
 
     fn index(&self, coordinate: &Self::Coordinate) -> Option<usize> {
         let index = self.axis.index(coordinate)?;
-        if index == self.axis.num_bins() - 1 {
+        if index == self.axis.numbins() - 1 {
             return None;
         }
         Some(index)
     }
 
-    fn num_bins(&self) -> usize {
-        self.axis.num_bins() - 1
+    fn numbins(&self) -> usize {
+        self.axis.numbins() - 1
     }
 
     fn bin(&self, index: usize) -> Option<Self::BinInterval> {

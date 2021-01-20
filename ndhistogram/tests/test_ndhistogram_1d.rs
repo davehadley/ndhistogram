@@ -3,7 +3,7 @@ use rand_distr::{Distribution, Normal};
 
 use ndhistogram::{
     axis::{Axis, Uniform},
-    ndhistogram, AxesTuple, Histogram, Item,
+    ndhistogram, Histogram, Item,
 };
 
 #[test]
@@ -55,7 +55,7 @@ fn test_histogram_uniform_1d_get_axes() {
     let ax = Uniform::new(2, 0.0, 2.0);
     let hist = ndhistogram!(ax.clone());
     let axtuple = hist.axes();
-    assert_eq!(ax, axtuple.as_tuple().0);
+    assert_eq!(ax, axtuple.0);
 }
 
 #[test]
@@ -79,7 +79,7 @@ fn test_histogram_uniform_1d_value_at_coordinate() {
     assert_eq!(hist.value(&2.0), Some(&0.0));
 }
 
-fn make_normal_histogram() -> impl Histogram<AxesTuple<(Uniform,)>, f64> {
+fn make_normal_histogram() -> impl Histogram<(Uniform,), f64> {
     let mut hist = ndhistogram!(Uniform::new(5, 0.0, 5.0));
     Normal::new(0.0, 5.0)
         .unwrap()
@@ -163,6 +163,6 @@ fn test_histogram_uniform_1d_iter_mut() {
 
 #[test]
 fn test_histogram_display() {
-    let hist = ndhistogram!(Uniform::new(4, 0.0, 2.0));
+    let hist = ndhistogram!(Uniform::new(2, 0.0, 2.0));
     format!("{}", hist);
 }

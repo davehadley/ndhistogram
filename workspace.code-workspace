@@ -7,7 +7,6 @@
 	"settings": {
 		"debug.allowBreakpointsEverywhere": true,
 		"testExplorer.mergeSuites": true,
-		"testExplorer.addToEditorContextMenu": true,
-		"rust-analyzer.inlayHints.enable": true
+		"testExplorer.addToEditorContextMenu": true
 	},
 }

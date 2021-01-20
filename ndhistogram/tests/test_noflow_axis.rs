@@ -1,15 +1,15 @@
 use ndhistogram::axis::{Axis, BinInterval, UniformNoFlow};
 
 #[test]
-fn test_uniformnoflow_axis_num_bins() {
+fn test_uniformnoflow_axis_numbins() {
     let axis = UniformNoFlow::new(2, 0.0, 2.0);
-    assert_eq!(axis.num_bins(), 2);
+    assert_eq!(axis.numbins(), 2);
 }
 
 #[test]
 fn test_uniformnoflow_axis_index() {
     let axis = UniformNoFlow::new(2, 0.0, 2.0);
-    assert_eq!(axis.num_bins(), 2);
+    assert_eq!(axis.numbins(), 2);
 }
 
 #[test]
