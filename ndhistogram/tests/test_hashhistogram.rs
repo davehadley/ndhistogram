@@ -1,9 +1,8 @@
 use ndhistogram::{
-    axis::{Category, Uniform, UniformNoFlow, Variable},
+    axis::{Category, Uniform, Variable},
     ndhistogram, sparsehistogram,
     value::WeightedMean,
-    HashHistogram, Hist1D, Hist2D, Hist3D, HistND, Histogram, Item, SparseHist1D, SparseHist2D,
-    SparseHist3D, SparseHistND, VecHistogram,
+    Hist1D, Hist2D, Hist3D, Histogram, Item, SparseHist1D, SparseHist2D, SparseHist3D,
 };
 use num_traits::Float;
 use rand::{prelude::StdRng, Rng, SeedableRng};

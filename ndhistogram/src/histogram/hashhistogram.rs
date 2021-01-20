@@ -134,8 +134,6 @@ where
     A::BinInterval: Display,
 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let precision = f.precision().unwrap_or(2);
-
         let sum = self
             .values()
             .map(|it| {
