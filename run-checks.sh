@@ -2,6 +2,6 @@
 
 cargo check \
 && cargo fmt \
-&& cargo clippy -- -W clippy::pedantic \
+&& cargo clippy \
 && RUSTDOCFLAGS="-D warnings" cargo doc \
 && cd ndhistogram && cargo publish --locked --dry-run
