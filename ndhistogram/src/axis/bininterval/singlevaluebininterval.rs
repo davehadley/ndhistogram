@@ -4,7 +4,7 @@ use std::fmt::{Display, Formatter};
 ///
 /// Similar to [BinInterval](crate::axis::BinInterval), except each interval only covers a single value.
 /// The only exception is the Overflow bin which may be used to mean "all other bin values".
-#[derive(Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
+#[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
 pub enum SingleValueBinInterval<T> {
     /// An interval to represent "other values".
     Overflow,
