@@ -2,12 +2,12 @@ use ndhistogram::{
     axis::{Category, Uniform, UniformNoFlow, Variable},
     ndhistogram, sparsehistogram,
     value::WeightedMean,
-    HashHistogram, Hist2D, HistND, Histogram, SparseHist1D, SparseHist2D, SparseHist3D,
-    SparseHistND, VecHistogram,
+    HashHistogram, Hist1D, Hist2D, Hist3D, HistND, Histogram, Item, SparseHist1D, SparseHist2D,
+    SparseHist3D, SparseHistND, VecHistogram,
 };
 use num_traits::Float;
 use rand::{prelude::StdRng, Rng, SeedableRng};
-use rand_distr::{uniform::UniformChar, Distribution, Normal, StandardNormal};
+use rand_distr::{Distribution, Normal, StandardNormal};
 
 #[test]
 fn test_hashhistogram_fill() {
@@ -125,16 +125,28 @@ fn test_hashhistogram_clone() {
     assert_eq!(hist, clone);
 }
 
-fn generate_normal_hist_1d(seed: u64) -> SparseHist1D<Uniform> {
-    let mut hist = sparsehistogram!(Uniform::new(10, -5.0, 5.0));
-    generate_nomal(-1.0, 2.0, seed)
-        .take(1000)
-        .for_each(|it| hist.fill(&it));
-    hist
+fn generate_normal_hist_1d(seed: u64) -> (Hist1D<Uniform>, SparseHist1D<Uniform>) {
+    let mut vechist = ndhistogram!(Uniform::new(10, -5.0, 5.0));
+    let mut sparsehist = sparsehistogram!(Uniform::new(10, -5.0, 5.0));
+    generate_nomal(-1.0, 2.0, seed).take(1000).for_each(|it| {
+        vechist.fill(&it);
+        sparsehist.fill(&it);
+    });
+    (vechist, sparsehist)
 }
 
-fn generate_normal_hist_3d(seed: u64) -> SparseHist3D<Uniform, Uniform, Uniform> {
-    let mut hist = sparsehistogram!(
+fn generate_normal_hist_3d(
+    seed: u64,
+) -> (
+    Hist3D<Uniform, Uniform, Uniform>,
+    SparseHist3D<Uniform, Uniform, Uniform>,
+) {
+    let mut vechist = ndhistogram!(
+        Uniform::new(10, -5.0, 5.0),
+        Uniform::new(10, -5.0, 5.0),
+        Uniform::new(10, -5.0, 5.0),
+    );
+    let mut sparsehist = sparsehistogram!(
         Uniform::new(10, -5.0, 5.0),
         Uniform::new(10, -5.0, 5.0),
         Uniform::new(10, -5.0, 5.0),
@@ -143,28 +155,34 @@ fn generate_normal_hist_3d(seed: u64) -> SparseHist3D<Uniform, Uniform, Uniform>
     let y = generate_nomal(0.0, 2.0, seed + 2);
     let z = generate_nomal(1.0, 2.0, seed + 3);
     let xyz = x.zip(y).zip(z).map(|((x, y), z)| (x, y, z));
-    xyz.take(1000).for_each(|it| hist.fill(&it));
-    hist
+    xyz.take(1000).for_each(|it| {
+        vechist.fill(&it);
+        sparsehist.fill(&it)
+    });
+    (vechist, sparsehist)
 }
 
 macro_rules! impl_binary_op {
     ($fnname1d:tt, $fnname3d:tt, $fnnamefails:tt, $mathsymbol:tt) => {
         #[test]
         fn $fnname1d() {
-            let left = generate_normal_hist_1d(1);
-            let right = generate_normal_hist_1d(2);
-            let hadd = (&left $mathsymbol &right).unwrap();
-            let actual: Vec<_> = hadd
+            let (leftvec, leftsparse) = generate_normal_hist_1d(1);
+            let (rightvec, rightsparse) = generate_normal_hist_1d(2);
+            let haddvec = (&leftvec $mathsymbol &rightvec).unwrap();
+            let haddsparse = (&leftsparse $mathsymbol &rightsparse).unwrap();
+            let mut actual: Vec<_> = haddsparse
                 .iter()
-                .map(|it| (it.index, it.bin, *it.value))
-                .filter(|(_,_, v)| !v.is_nan())
+                .map(|it| Item{index:it.index, bin:it.bin, value:it.value})
+                .filter(|item| !item.value.is_nan())
+                .filter(|item| *item.value!=0.0)
                 .collect();
-            let expected: Vec<_> = left
+            let mut expected: Vec<_> = haddvec
                 .iter()
-                .zip(right.into_iter())
-                .map(|(l, r)| (l.index, l.bin, l.value $mathsymbol r.value))
-                .filter(|(_,_, v)| !v.is_nan())
+                .filter(|item| !item.value.is_nan())
+                .filter(|item| *item.value!=0.0)
                 .collect();
+            actual.sort_by_key(|item| item.index);
+            expected.sort_by_key(|item| item.index);
             assert_eq!(actual, expected)
         }
 
@@ -179,20 +197,23 @@ macro_rules! impl_binary_op {
 
         #[test]
         fn $fnname3d() {
-            let left = generate_normal_hist_3d(1);
-            let right = generate_normal_hist_3d(2);
-            let hadd = (&left $mathsymbol &right).unwrap();
-            let actual: Vec<_> = hadd
+            let (leftvec, leftsparse) = generate_normal_hist_3d(1);
+            let (rightvec, rightsparse) = generate_normal_hist_3d(2);
+            let haddvec = (&leftvec $mathsymbol &rightvec).unwrap();
+            let haddsparse = (&leftsparse $mathsymbol &rightsparse).unwrap();
+            let mut actual: Vec<_> = haddsparse
                 .iter()
-                .map(|it| (it.index, it.bin, *it.value))
-                .filter(|(_,_, v)| !v.is_nan())
+                .map(|it| Item{index:it.index, bin:it.bin, value:it.value})
+                .filter(|item| !item.value.is_nan())
+                .filter(|item| *item.value!=0.0)
                 .collect();
-            let expected: Vec<_> = left
+            let mut expected: Vec<_> = haddvec
                 .iter()
-                .zip(right.into_iter())
-                .map(|(l, r)| (l.index, l.bin, l.value $mathsymbol r.value))
-                .filter(|(_,_, v)| !v.is_nan())
+                .filter(|item| !item.value.is_nan())
+                .filter(|item| *item.value!=0.0)
                 .collect();
+            actual.sort_by_key(|item| item.index);
+            expected.sort_by_key(|item| item.index);
             assert_eq!(actual, expected)
         }
     }
