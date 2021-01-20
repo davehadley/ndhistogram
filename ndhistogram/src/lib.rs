@@ -76,7 +76,7 @@
 //! this may not be practical for very high dimension histograms.
 //! - [HashHistogram]: bin values are stored in a [HashMap](std::collections::HashMap).
 //! Created with the [sparsehistogram] macro.
-//! Useful for high dimension mostly empty histograms as empty bins
+//! Useful for high dimension, mostly empty, histograms as empty bins
 //! take up no memory.
 //!
 //! Alternative implementations are possible by implementing the [Histogram] trait.
