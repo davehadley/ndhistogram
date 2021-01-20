@@ -1,6 +1,6 @@
 use ndhistogram::{
     axis::{Axis, Category},
-    ndhistogram, Histogram, Item, VecHistogram,
+    ndhistogram, Hist1D, Histogram, Item,
 };
 
 #[test]
@@ -45,7 +45,7 @@ fn test_histogram_category_1d_get_axes() {
     let ax = Category::new(vec!["A", "B"]);
     let hist = ndhistogram!(ax.clone());
     let axtuple = hist.axes();
-    assert_eq!(ax, axtuple.0);
+    assert_eq!(ax, axtuple.as_tuple().0);
 }
 
 #[test]
@@ -67,7 +67,7 @@ fn test_histogram_category_1d_value_at_coordinate() {
     assert_eq!(hist.value(&"C"), Some(&0));
 }
 
-fn make_simple_cat_histogram() -> VecHistogram<(Category<&'static str>,), i32> {
+fn make_simple_cat_histogram() -> Hist1D<Category<&'static str>, i32> {
     let mut hist = ndhistogram!(Category::new(vec!["A", "B"]); i32);
     hist.fill(&"A");
     hist.fill_with(&"B", 2);

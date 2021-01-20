@@ -2,6 +2,8 @@ use std::fmt::Display;
 
 use super::{Axis, BinInterval};
 
+use serde::{Deserialize, Serialize};
+
 /// An axis with variable sized bins.
 ///
 /// An axis with variable sized bins.
@@ -10,7 +12,7 @@ use super::{Axis, BinInterval};
 /// Hence this axis has num edges + 1 bins.
 ///
 /// # Example
-/// Create a 1D histogram with 3 variable width bin 0.0 and 7.0, plus overflow and underflow bins.
+/// Create a 1D histogram with 3 variable width bins between 0.0 and 7.0, plus overflow and underflow bins.
 /// ```rust
 ///    use ndhistogram::{ndhistogram, Histogram};
 ///    use ndhistogram::axis::{Axis, Variable, BinInterval};
@@ -24,7 +26,7 @@ use super::{Axis, BinInterval};
 ///    );
 ///
 /// ```
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Serialize, Deserialize)]
 pub struct Variable<T = f64> {
     bin_edges: Vec<T>,
 }
@@ -50,18 +52,16 @@ where
 
     /// Low edge of axis (excluding underflow bin).
     pub fn low(&self) -> &T {
-        &self
-            .bin_edges
+        self.bin_edges
             .first()
-            .expect("Variable binedges unexpectedly empty")
+            .expect("Variable bin_edges unexpectedly empty")
     }
 
     /// High edge of axis (excluding overflow bin).
     pub fn high(&self) -> &T {
-        &self
-            .bin_edges
+        self.bin_edges
             .last()
-            .expect("Variable binedges unexpectedly empty")
+            .expect("Variable bin_edges unexpectedly empty")
     }
 }
 
@@ -75,7 +75,7 @@ where
     fn index(&self, coordinate: &Self::Coordinate) -> Option<usize> {
         match self.bin_edges.binary_search_by(|probe| {
             probe
-                .partial_cmp(&coordinate)
+                .partial_cmp(coordinate)
                 .expect("incomparable values. NAN bin edges?")
         }) {
             Ok(index) => Some(index + 1),
@@ -83,7 +83,7 @@ where
         }
     }
 
-    fn numbins(&self) -> usize {
+    fn num_bins(&self) -> usize {
         self.bin_edges.len() + 1
     }
 

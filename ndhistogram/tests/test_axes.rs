@@ -1,17 +1,21 @@
-use ndhistogram::axis::{Axis, Category, CategoryNoFlow, SingleValueBinInterval, Uniform};
+use ndhistogram::{
+    axis::{Axis, Category, CategoryNoFlow, SingleValueBinInterval, Uniform},
+    AxesTuple,
+};
 
 #[test]
-fn test_axes_2d_numbins() {
+fn test_axes_2d_num_bins() {
     let x = Uniform::new(5, 0.0, 1.0);
     let y = Uniform::new(4, 0.0, 1.0);
-    assert_eq!((x, y).numbins(), (5 + 2) * (4 + 2))
+    let xy: AxesTuple<_> = (x, y).into();
+    assert_eq!(xy.num_bins(), (5 + 2) * (4 + 2))
 }
 
 #[test]
 fn test_axes_2d_iter() {
     let x = Category::new(vec!["A", "B"]);
     let y = Category::new(vec!["C", "D"]);
-    let actual: Vec<_> = (x, y).iter().collect();
+    let actual: Vec<_> = AxesTuple::<_>::from((x, y)).iter().collect();
     let new = SingleValueBinInterval::new;
     let overflow = SingleValueBinInterval::overflow;
     let expected = vec![
@@ -32,7 +36,7 @@ fn test_axes_2d_iter() {
 fn test_axes_2d_index() {
     let x = CategoryNoFlow::new(vec!["A", "B"]);
     let y = CategoryNoFlow::new(vec!["C", "D"]);
-    let xy = (x.clone(), y.clone());
+    let xy: AxesTuple<_> = (x.clone(), y.clone()).into();
     let actual = vec![
         xy.index(&("A", "C")),
         xy.index(&("B", "C")),
@@ -47,7 +51,7 @@ fn test_axes_2d_index() {
 fn test_axes_2d_bin() {
     let x = CategoryNoFlow::new(vec!["A", "B"]);
     let y = CategoryNoFlow::new(vec!["C", "D"]);
-    let xy = (x.clone(), y.clone());
+    let xy: AxesTuple<_> = (x.clone(), y.clone()).into();
     let actual = vec![xy.bin(0), xy.bin(1), xy.bin(2), xy.bin(3)];
     let new = SingleValueBinInterval::new;
     let expected = vec![
@@ -60,11 +64,12 @@ fn test_axes_2d_bin() {
 }
 
 #[test]
-fn test_axes_3d_numbins() {
+fn test_axes_3d_num_bins() {
     let x = Uniform::new(5, 0.0, 1.0);
     let y = Uniform::new(4, 0.0, 1.0);
     let z = Uniform::new(3, 0.0, 1.0);
-    assert_eq!((x, y, z).numbins(), (5 + 2) * (4 + 2) * (3 + 2))
+    let xyz: AxesTuple<_> = (x, y, z).into();
+    assert_eq!(xyz.num_bins(), (5 + 2) * (4 + 2) * (3 + 2))
 }
 
 #[test]
@@ -72,7 +77,7 @@ fn test_axes_3d_iter() {
     let x = CategoryNoFlow::new(vec!["x0", "x1"]);
     let y = CategoryNoFlow::new(vec!["y0", "y1"]);
     let z = CategoryNoFlow::new(vec!["z0", "z1"]);
-    let actual: Vec<_> = (x, y, z).iter().collect();
+    let actual: Vec<_> = AxesTuple::<_>::from((x, y, z)).iter().collect();
     let new = SingleValueBinInterval::new;
     let expected = vec![
         (0, (new("x0"), new("y0"), new("z0"))),
@@ -92,7 +97,7 @@ fn test_axes_3d_index() {
     let x = CategoryNoFlow::new(vec!["x0", "x1"]);
     let y = CategoryNoFlow::new(vec!["y0", "y1"]);
     let z = CategoryNoFlow::new(vec!["z0", "z1"]);
-    let xyz = (x.clone(), y.clone(), z.clone());
+    let xyz: AxesTuple<_> = (x.clone(), y.clone(), z.clone()).into();
     let actual = vec![
         xyz.index(&("x0", "y0", "z0")),
         xyz.index(&("x1", "y0", "z0")),
@@ -112,7 +117,7 @@ fn test_axes_3d_bin() {
     let x = CategoryNoFlow::new(vec!["x0", "x1"]);
     let y = CategoryNoFlow::new(vec!["y0", "y1"]);
     let z = CategoryNoFlow::new(vec!["z0", "z1"]);
-    let xyz = (x.clone(), y.clone(), z.clone());
+    let xyz: AxesTuple<_> = (x.clone(), y.clone(), z.clone()).into();
     let actual: Vec<_> = (0..8).map(|index| xyz.bin(index)).collect();
     let new = SingleValueBinInterval::new;
     let expected = vec![

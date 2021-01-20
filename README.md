@@ -22,6 +22,11 @@ Before committing any code, please install pre-commit hooks with:
 source install-hook.sh
 ```
 
+Some additional checks may be run with:
+```
+./run-checks.sh
+```
+
 ## License
 
 Licensed under either of

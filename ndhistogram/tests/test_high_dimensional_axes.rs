@@ -1,11 +1,14 @@
-use ndhistogram::axis::{Axis, Category, Uniform};
+use ndhistogram::{
+    axis::{Axis, Category, Uniform},
+    AxesTuple,
+};
 use rand::{prelude::StdRng, Rng, SeedableRng};
 
 #[test]
 fn test_axes_2d() {
     let xaxis = Uniform::new(3, 0.0, 3.0);
     let yaxis = Category::new(vec!["A", "B"]);
-    let axes3d = (xaxis.clone(), yaxis.clone());
+    let axes3d: AxesTuple<_> = (xaxis.clone(), yaxis.clone()).into();
     let mut rng = StdRng::seed_from_u64(12);
     let ntests = 10000;
     (0..ntests)
@@ -32,16 +35,18 @@ fn test_axes_2d() {
 
 macro_rules! make_nd_axes {
     () => {(,)};
-    ($($d:ident)+) => {
-        (
+    ($($d:ident)+) => { {
+        let t = (
         $(
             {
                 let $d = Uniform::new(2, 0.0, 2.0);
                 $d
             },
         )*
-    )
-    };
+    );
+    let t: AxesTuple<_> = t.into();
+    t
+    }};
 }
 
 macro_rules! make_test_nd_axes {

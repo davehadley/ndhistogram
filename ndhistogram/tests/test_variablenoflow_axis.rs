@@ -3,9 +3,9 @@ use std::f64::NAN;
 use ndhistogram::axis::{Axis, BinInterval, VariableNoFlow};
 
 #[test]
-fn test_variablenoflow_numbins() {
+fn test_variablenoflow_num_bins() {
     let ax = VariableNoFlow::new(vec![0.0, 1.0, 4.0, 8.0]);
-    assert_eq!(ax.numbins(), 3)
+    assert_eq!(ax.num_bins(), 3)
 }
 
 #[test]

@@ -1,33 +1,39 @@
 use std::{
+    cmp::Ordering,
+    f64::INFINITY,
     fmt::Display,
+    iter::repeat,
     ops::{Add, Div, Mul, Sub},
 };
 
-use crate::axes::Axes;
+use crate::{axis::Axis, error::BinaryOperationError};
+
+use serde::{Deserialize, Serialize};
 
 use super::histogram::{Histogram, Item, Iter, IterMut, ValuesMut};
 
-/// A Histogram that stores its values in a [Vec].
+/// A [Histogram] that stores its values in a [Vec].
 ///
 /// See [ndhistogram] for examples of its use.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Serialize, Deserialize)]
 pub struct VecHistogram<A, V> {
     axes: A,
     values: Vec<V>,
 }
 
-impl<A: Axes, V: Default + Clone> VecHistogram<A, V> {
-    ///
-    pub fn new(axes: A) -> VecHistogram<A, V> {
-        let size = axes.numbins();
-        VecHistogram {
+impl<A: Axis, V: Default + Clone> VecHistogram<A, V> {
+    /// Factor method for VecHistogram. It is recommended to use the
+    /// [ndhistogram](crate::ndhistogram) macro instead.
+    pub fn new(axes: A) -> Self {
+        let size = axes.num_bins();
+        Self {
             axes,
             values: vec![V::default(); size],
         }
     }
 }
 
-impl<A: Axes, V> Histogram<A, V> for VecHistogram<A, V> {
+impl<A: Axis, V> Histogram<A, V> for VecHistogram<A, V> {
     fn value(&self, coordinate: &A::Coordinate) -> Option<&V> {
         let index = self.axes.index(coordinate)?;
         self.values.get(index)
@@ -46,10 +52,14 @@ impl<A: Axes, V> Histogram<A, V> for VecHistogram<A, V> {
     }
 
     fn iter<'a>(&'a self) -> Box<dyn Iterator<Item = Item<A::BinInterval, &'a V>> + 'a> {
-        Box::new(self.axes().iter().map(move |(index, binrange)| Item {
-            index,
-            bin: binrange,
-            value: self.value_at_index(index).unwrap(),
+        Box::new(self.axes().iter().map(move |(index, binrange)| {
+            Item {
+                index,
+                bin: binrange,
+                value: self
+                    .value_at_index(index)
+                    .expect("iter() indices are always in range"),
+            }
         }))
     }
 
@@ -71,7 +81,7 @@ impl<A: Axes, V> Histogram<A, V> for VecHistogram<A, V> {
     }
 }
 
-impl<'a, A: Axes, V> IntoIterator for &'a VecHistogram<A, V> {
+impl<'a, A: Axis, V> IntoIterator for &'a VecHistogram<A, V> {
     type Item = Item<A::BinInterval, &'a V>;
 
     type IntoIter = Iter<'a, A, V>;
@@ -81,7 +91,7 @@ impl<'a, A: Axes, V> IntoIterator for &'a VecHistogram<A, V> {
     }
 }
 
-impl<'a, A: Axes, V: 'a> IntoIterator for &'a mut VecHistogram<A, V> {
+impl<'a, A: Axis, V: 'a> IntoIterator for &'a mut VecHistogram<A, V> {
     type Item = Item<A::BinInterval, &'a mut V>;
 
     type IntoIter = IterMut<'a, A, V>;
@@ -91,23 +101,70 @@ impl<'a, A: Axes, V: 'a> IntoIterator for &'a mut VecHistogram<A, V> {
     }
 }
 
-impl<A: Axes, V> Display for VecHistogram<A, V> {
+impl<A: Axis, V> Display for VecHistogram<A, V>
+where
+    V: Clone + Into<f64>,
+    A::BinInterval: Display,
+{
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "VecHistogram{}D", self.axes().num_dim())
+        let precision = f.precision().unwrap_or(2);
+
+        let sum = self
+            .values()
+            .map(|it| {
+                let x: f64 = it.clone().into();
+                x
+            })
+            .fold(0.0, |it, value| it + value);
+        write!(
+            f,
+            "VecHistogram{}D({} bins, sum={})",
+            self.axes().num_dim(),
+            self.axes().num_bins(),
+            sum
+        )?;
+        let values: Vec<_> = self
+            .iter()
+            .take(50)
+            .map(|item| {
+                (item.bin, {
+                    let x: f64 = item.value.clone().into();
+                    x
+                })
+            })
+            .collect();
+        let scale = values
+            .iter()
+            .max_by(|l, r| l.1.partial_cmp(&r.1).unwrap_or(Ordering::Less))
+            .map(|it| it.1)
+            .unwrap_or(INFINITY);
+        values
+            .into_iter()
+            .map(|(bin, value)| (bin, 50.0 * (value / scale)))
+            .map(|(bin, value)| {
+                (
+                    format!("{:.precision$}", bin, precision = precision),
+                    repeat("#").take(value as usize).collect::<String>(),
+                )
+            })
+            .map(|(bin, value)| write!(f, "\n{:>16} | {}", bin, value))
+            .filter_map(Result::ok)
+            .count();
+        Ok(())
     }
 }
 
 macro_rules! impl_binary_op {
     ($Trait:tt, $method:tt, $mathsymbol:tt) => {
-        impl<A: Axes + PartialEq + Clone, V> $Trait<&VecHistogram<A, V>> for &VecHistogram<A, V>
+        impl<A: Axis + PartialEq + Clone, V> $Trait<&VecHistogram<A, V>> for &VecHistogram<A, V>
 where
     for<'a> &'a V: $Trait<Output = V>,
 {
-    type Output = Result<VecHistogram<A, V>, ()>;
+    type Output = Result<VecHistogram<A, V>, BinaryOperationError>;
 
     fn $method(self, rhs: &VecHistogram<A, V>) -> Self::Output {
         if self.axes() != rhs.axes() {
-            return Err(());
+            return Err(BinaryOperationError);
         }
         let values = self
             .values
@@ -131,7 +188,7 @@ impl_binary_op! {Div, div, /}
 
 macro_rules! impl_binary_op_with_scalar {
     ($Trait:tt, $method:tt, $mathsymbol:tt) => {
-        impl<A: Axes + PartialEq + Clone, V> $Trait<&V> for &VecHistogram<A, V>
+        impl<A: Axis + PartialEq + Clone, V> $Trait<&V> for &VecHistogram<A, V>
 where
     for<'a> &'a V: $Trait<Output = V>,
 {
