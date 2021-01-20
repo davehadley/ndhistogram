@@ -20,7 +20,7 @@ pub(crate) type IterMut<'a, A, V> =
 /// The most commonly used implementation is [VecHistogram](crate::VecHistogram).
 /// See [ndhistogram] for examples of its use.
 pub trait Histogram<A: Axis, V> {
-    /// The histogram [Axes] that map coordinates to bin numbers.
+    /// The histogram [Axes](crate::Axes) that map coordinates to bin numbers.
     fn axes(&self) -> &A;
 
     /// Read a bin value given an index.
@@ -55,8 +55,8 @@ pub trait Histogram<A: Axis, V> {
     fn iter_mut(&mut self) -> IterMut<'_, A, V>;
 
     /// Fill the histogram bin value at coordinate with unit weight.
-    /// If the [Axes] do not cover that coordinate, do nothing.
-    /// See [Fill].
+    /// If the [Axes](crate::Axes) do not cover that coordinate, do nothing.
+    /// See [Fill](crate::Fill).
     fn fill(&mut self, coordinate: &A::Coordinate)
     where
         V: Fill,
@@ -67,8 +67,8 @@ pub trait Histogram<A: Axis, V> {
     }
 
     /// Fill the histogram bin value at coordinate with some data.
-    /// If the [Axes] do not cover that coordinate, do nothing.
-    /// See [FillWith].
+    /// If the [Axes](crate::Axes) do not cover that coordinate, do nothing.
+    /// See [FillWith](crate::FillWith).
     fn fill_with<D>(&mut self, coordinate: &A::Coordinate, data: D)
     where
         V: FillWith<D>,
@@ -79,7 +79,7 @@ pub trait Histogram<A: Axis, V> {
     }
 
     /// Fill the histogram bin value at coordinate with some data.
-    /// If the [Axes] do not cover that coordinate, do nothing.
+    /// If the [Axes](crate::Axes) do not cover that coordinate, do nothing.
     /// See [FillWithWeighted].
     fn fill_with_weighted<D, W>(&mut self, coordinate: &A::Coordinate, data: D, weight: W)
     where

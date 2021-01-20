@@ -12,7 +12,7 @@ use crate::{axis::Axis, Item};
 ///
 /// Only bins that are filled will consume memory.
 /// This makes high-dimensional, many-binned (but mostly empty) histograms
-///  possible. If memory usage is not a concern, see [VecHistogram].
+///  possible. If memory usage is not a concern, see [VecHistogram](crate::VecHistogram).
 ///
 /// See [sparsehistogram] for examples of its use.
 #[derive(Debug, Clone, PartialEq, Eq)]

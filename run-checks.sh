@@ -4,4 +4,4 @@ cargo check \
 && cargo fmt \
 && cargo clippy \
 && RUSTDOCFLAGS="-D warnings" cargo doc \
-&& cargo publish --locked --dry-run
+&& cd ndhistogram && cargo publish --locked --dry-run

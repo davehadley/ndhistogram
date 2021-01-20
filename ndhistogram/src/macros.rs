@@ -69,7 +69,7 @@ macro_rules! ndhistogram {
 
 /// Creates a sparse [Histogram](crate::Histogram).
 ///
-/// As [ndhistogram], but creates a sparse histogram of type [HashHistogram].
+/// As [ndhistogram], but creates a sparse histogram of type [HashHistogram](crate::HashHistogram).
 /// The arguments are a command separated list of [Axis](crate::axis::Axis).
 /// Optionally, the type of the [Histogram](crate::Histogram) bin values may specified after a semi-colon after
 /// the list of [Axis](crate::axis::Axis). If the bin value type is not specified, the default is f64.
