@@ -109,7 +109,7 @@ pub trait Axis {
 
     /// The number of dimensions that this object corresponds to.
     /// For most Axis types this will simply be 1.
-    /// However, [Axes] (i.e. a set of [Axis]) also implement [Axis]
+    /// However, [Axes](crate::Axes) (i.e. a set of [Axis]) also implement [Axis]
     /// and should return the number of [Axis] that it contains.
     fn num_dim(&self) -> usize {
         1

@@ -134,6 +134,7 @@ pub use axes::AxesTuple;
 pub use histogram::fill::Fill;
 pub use histogram::fill::FillWith;
 pub use histogram::fill::FillWithWeighted;
+pub use histogram::hashhistogram::HashHistogram;
 pub use histogram::histogram::Histogram;
 pub use histogram::histogram::Item;
 pub use histogram::vechistogram::VecHistogram;
@@ -149,6 +150,18 @@ pub type Hist3D<X, Y, Z, V = f64> = VecHistogram<AxesTuple<(X, Y, Z)>, V>;
 
 /// Type alias for ND [Histogram]s returned by [ndhistogram].
 pub type HistND<A, V = f64> = VecHistogram<AxesTuple<A>, V>;
+
+/// Type alias for 1D [Histogram]s returned by [sparsehistogram].
+pub type SparseHist1D<X, V = f64> = HashHistogram<AxesTuple<(X,)>, V>;
+
+/// Type alias for 2D [Histogram]s returned by [sparsehistogram].
+pub type SparseHist2D<X, Y, V = f64> = HashHistogram<AxesTuple<(X, Y)>, V>;
+
+/// Type alias for 3D [Histogram]s returned by [sparsehistogram].
+pub type SparseHist3D<X, Y, Z, V = f64> = HashHistogram<AxesTuple<(X, Y, Z)>, V>;
+
+/// Type alias for ND [Histogram]s returned by [sparsehistogram].
+pub type SparseHistND<A, V = f64> = HashHistogram<AxesTuple<A>, V>;
 
 #[macro_use]
 mod macros;
