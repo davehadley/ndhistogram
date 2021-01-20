@@ -4,6 +4,8 @@ use num_traits::Float;
 
 use super::{Axis, BinInterval};
 
+use serde::{Deserialize, Serialize};
+
 /// An axis with equal sized bins.
 ///
 /// An axis with N equally spaced, equal sized, bins between (low, high].
@@ -22,7 +24,7 @@ use super::{Axis, BinInterval};
 ///    assert_eq!(axis.bin(11), Some(BinInterval::overflow(5.0)));
 ///
 /// ```
-#[derive(Clone, PartialEq, Debug, Eq)]
+#[derive(Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Serialize, Deserialize)]
 pub struct Uniform<T = f64> {
     num: usize,
     low: T,
@@ -34,14 +36,21 @@ where
     T: PartialOrd,
 {
     /// Factory method to create an axis with num uniformly spaced bins in the range [low, high). Under/overflow bins cover values outside this range.
-    pub fn new(num: usize, low: T, high: T) -> Uniform<T> {
+    ///
+    /// # Panics
+    /// Panics if num bins == 0 or low == high.
+    pub fn new(num: usize, low: T, high: T) -> Self {
         if num == 0 {
             panic!("Invalid axis num bins ({})", num);
         }
-        if low >= high {
-            panic!("Invalid axis range bins (low >= high)");
+        if low == high {
+            panic!("Invalid axis range (low == high)");
         }
-        Uniform { num, low, high }
+        if low > high {
+            Self { num, high, low }
+        } else {
+            Self { num, low, high }
+        }
     }
 }
 
@@ -69,8 +78,13 @@ impl<T: Float> Axis for Uniform<T> {
         } else if frac >= T::one() {
             return Some(self.num + 1);
         }
-        let idx: T = T::from(self.num).unwrap() * frac;
-        Some((idx.to_usize().unwrap()) + 1)
+        let idx: T =
+            T::from(self.num).expect("num bins conversion to bin value type always succeed") * frac;
+        Some(
+            (idx.to_usize()
+                .expect("bin number can always be converted to a valid usize"))
+                + 1,
+        )
     }
 
     fn num_bins(&self) -> usize {

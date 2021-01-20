@@ -2,6 +2,8 @@ use crate::{axis::Axis, FillWith};
 
 use super::fill::{Fill, FillWithWeighted};
 
+use serde::{Deserialize, Serialize};
+
 // TODO: Using generic associated types would give a cleaner interface and avoid boxing the iterators
 // https://github.com/rust-lang/rfcs/blob/master/text/1598-generic_associated_types.md
 pub(crate) type Values<'a, V> = Box<dyn Iterator<Item = &'a V> + 'a>;
@@ -72,6 +74,7 @@ pub trait Histogram<A: Axis, V> {
     fn fill_with<D>(&mut self, coordinate: &A::Coordinate, data: D)
     where
         V: FillWith<D>,
+        Self: Sized,
     {
         if let Some(value) = self.value_mut(coordinate) {
             value.fill_with(data)
@@ -84,6 +87,7 @@ pub trait Histogram<A: Axis, V> {
     fn fill_with_weighted<D, W>(&mut self, coordinate: &A::Coordinate, data: D, weight: W)
     where
         V: FillWithWeighted<D, W>,
+        Self: Sized,
     {
         if let Some(value) = self.value_mut(coordinate) {
             value.fill_with_weighted(data, weight)
@@ -92,7 +96,9 @@ pub trait Histogram<A: Axis, V> {
 }
 
 /// Struct to be returned when iterating over [Histogram]s bins.
-#[derive(Debug, PartialEq, Eq, Clone)]
+#[derive(
+    Copy, Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Serialize, Deserialize,
+)]
 pub struct Item<T, V> {
     /// Bin number
     pub index: usize,
@@ -104,7 +110,7 @@ pub struct Item<T, V> {
 
 impl<T, V> Item<T, V> {
     /// Factory method to create [Item].
-    pub fn new(index: usize, bin: T, value: V) -> Item<T, V> {
-        Item { index, bin, value }
+    pub fn new(index: usize, bin: T, value: V) -> Self {
+        Self { index, bin, value }
     }
 }

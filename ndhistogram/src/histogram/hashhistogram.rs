@@ -5,8 +5,10 @@ use std::{
     ops::{Add, Div, Mul, Sub},
 };
 
+use serde::{Deserialize, Serialize};
+
 use super::histogram::{Histogram, Iter, IterMut, ValuesMut};
-use crate::{axis::Axis, Item};
+use crate::{axis::Axis, error::BinaryOperationError, Item};
 
 /// A sparse N-dimensional [Histogram] that stores its values in a [HashMap].
 ///
@@ -15,7 +17,7 @@ use crate::{axis::Axis, Item};
 ///  possible. If memory usage is not a concern, see [VecHistogram](crate::VecHistogram).
 ///
 /// See [sparsehistogram] for examples of its use.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Default, Clone, PartialEq, Eq, Debug, Serialize, Deserialize)]
 pub struct HashHistogram<A, V> {
     axes: A,
     values: HashMap<usize, V>,
@@ -24,8 +26,8 @@ pub struct HashHistogram<A, V> {
 impl<A: Axis, V> HashHistogram<A, V> {
     /// Factory method for HashHistogram. It is recommended to use the
     /// [sparsehistogram](crate::sparsehistogram) macro instead.
-    pub fn new(axes: A) -> HashHistogram<A, V> {
-        HashHistogram {
+    pub fn new(axes: A) -> Self {
+        Self {
             axes,
             values: HashMap::new(),
         }
@@ -46,10 +48,15 @@ impl<A: Axis, V: Default> Histogram<A, V> for HashHistogram<A, V> {
     }
 
     fn iter(&self) -> Iter<'_, A, V> {
-        Box::new(self.values.iter().map(move |(index, value)| Item {
-            index: *index,
-            bin: self.axes.bin(*index).unwrap(),
-            value,
+        Box::new(self.values.iter().map(move |(index, value)| {
+            Item {
+                index: *index,
+                bin: self
+                    .axes
+                    .bin(*index)
+                    .expect("iter() indices are always valid bins"),
+                value,
+            }
         }))
     }
 
@@ -63,10 +70,14 @@ impl<A: Axis, V: Default> Histogram<A, V> for HashHistogram<A, V> {
 
     fn iter_mut(&mut self) -> IterMut<'_, A, V> {
         let axes = &self.axes;
-        Box::new(self.values.iter_mut().map(move |(index, value)| Item {
-            index: *index,
-            bin: axes.bin(*index).unwrap(),
-            value,
+        Box::new(self.values.iter_mut().map(move |(index, value)| {
+            Item {
+                index: *index,
+                bin: axes
+                    .bin(*index)
+                    .expect("iter_mut() indices are always valid bins"),
+                value,
+            }
         }))
     }
 
@@ -160,11 +171,11 @@ macro_rules! impl_binary_op {
             V: Clone + Default,
             for<'a> &'a V: $Trait<Output = V>,
         {
-            type Output = Result<HashHistogram<A, V>, ()>;
+            type Output = Result<HashHistogram<A, V>, BinaryOperationError>;
 
             fn $method(self, rhs: &HashHistogram<A, V>) -> Self::Output {
                 if self.axes() != rhs.axes() {
-                    return Err(());
+                    return Err(BinaryOperationError);
                 }
                 let indices: HashSet<usize> = self.values.keys().chain(rhs.values.keys()).copied().collect();
                 let values: HashMap<usize, V> = indices.into_iter().map(|index| {

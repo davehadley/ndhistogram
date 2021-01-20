@@ -1,10 +1,12 @@
 use super::axis::Axis;
+use serde::{Deserialize, Serialize};
 
 /// Axes provided an interface for a set of ND dimensional set of histograms.
 pub trait Axes: Axis {}
 
 /// Container for a set of [Axis] that implements [Axes].
-#[derive(Debug, Clone, PartialEq, Eq)]
+
+#[derive(Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Serialize, Deserialize)]
 pub struct AxesTuple<T> {
     axes: T,
 }

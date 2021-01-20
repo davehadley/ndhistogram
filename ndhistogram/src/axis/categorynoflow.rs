@@ -1,5 +1,8 @@
 use super::{category::Value, Axis, Category, SingleValueBinInterval};
 use std::fmt::{Debug, Display};
+use std::hash::Hash;
+
+use serde::{Deserialize, Serialize};
 
 /// An axis to represent a finite set of discrete values or categories without an overflow bin.
 ///
@@ -15,10 +18,10 @@ use std::fmt::{Debug, Display};
 /// assert_eq!(colors.bin(1), Some(SingleValueBinInterval::new("blue")));
 /// assert_eq!(colors.bin(5), None);
 /// ```
-#[derive(Clone, PartialEq, Debug)]
+#[derive(Default, Clone, PartialEq, Eq, Debug, Serialize, Deserialize)]
 pub struct CategoryNoFlow<T>
 where
-    T: Value,
+    T: Eq + Hash,
 {
     axis: Category<T>,
 }

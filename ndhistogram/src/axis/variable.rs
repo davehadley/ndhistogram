@@ -2,6 +2,8 @@ use std::fmt::Display;
 
 use super::{Axis, BinInterval};
 
+use serde::{Deserialize, Serialize};
+
 /// An axis with variable sized bins.
 ///
 /// An axis with variable sized bins.
@@ -24,7 +26,7 @@ use super::{Axis, BinInterval};
 ///    );
 ///
 /// ```
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Serialize, Deserialize)]
 pub struct Variable<T = f64> {
     bin_edges: Vec<T>,
 }
@@ -50,16 +52,14 @@ where
 
     /// Low edge of axis (excluding underflow bin).
     pub fn low(&self) -> &T {
-        &self
-            .bin_edges
+        self.bin_edges
             .first()
             .expect("Variable bin_edges unexpectedly empty")
     }
 
     /// High edge of axis (excluding overflow bin).
     pub fn high(&self) -> &T {
-        &self
-            .bin_edges
+        self.bin_edges
             .last()
             .expect("Variable bin_edges unexpectedly empty")
     }
@@ -75,7 +75,7 @@ where
     fn index(&self, coordinate: &Self::Coordinate) -> Option<usize> {
         match self.bin_edges.binary_search_by(|probe| {
             probe
-                .partial_cmp(&coordinate)
+                .partial_cmp(coordinate)
                 .expect("incomparable values. NAN bin edges?")
         }) {
             Ok(index) => Some(index + 1),

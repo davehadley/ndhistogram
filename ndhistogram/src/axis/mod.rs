@@ -99,12 +99,21 @@ pub trait Axis {
 
     /// An iterator over bin numbers and bin intervals
     fn iter(&self) -> Iter<'_, Self::BinInterval> {
-        Box::new(self.indices().map(move |it| (it, self.bin(it).unwrap())))
+        Box::new(self.indices().map(move |it| {
+            (
+                it,
+                self.bin(it)
+                    .expect("indices() should only produce valid indices"),
+            )
+        }))
     }
 
     /// An iterator over bin intervals.
     fn bins(&self) -> Bins<'_, Self::BinInterval> {
-        Box::new(self.indices().map(move |it| self.bin(it).unwrap()))
+        Box::new(self.indices().map(move |it| {
+            self.bin(it)
+                .expect("indices() should only produce valid indices")
+        }))
     }
 
     /// The number of dimensions that this object corresponds to.

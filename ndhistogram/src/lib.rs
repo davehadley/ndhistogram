@@ -106,6 +106,7 @@
 //! User defined bin value types are possible by implementing the [Fill], [FillWith] or [FillWithWeighted] traits.
 
 #![doc(issue_tracker_base_url = "https://github.com/davehadley/rust-hist/issues")]
+#![doc(html_root_url = "https://docs.rs/ndhistogram/0.4.0")]
 #![cfg_attr(
     debug_assertions,
     warn(
@@ -119,7 +120,7 @@
         missing_docs,
         missing_crate_level_docs,
         missing_doc_code_examples,
-        broken_intra_doc_links
+        broken_intra_doc_links,
     )
 )]
 
@@ -162,6 +163,9 @@ pub type SparseHist3D<X, Y, Z, V = f64> = HashHistogram<AxesTuple<(X, Y, Z)>, V>
 
 /// Type alias for ND [Histogram]s returned by [sparsehistogram].
 pub type SparseHistND<A, V = f64> = HashHistogram<AxesTuple<A>, V>;
+
+/// Provides errors that may be returned by [Histogram]s.
+pub mod error;
 
 #[macro_use]
 mod macros;

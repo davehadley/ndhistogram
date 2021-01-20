@@ -6,14 +6,16 @@ use std::{
     ops::{Add, Div, Mul, Sub},
 };
 
-use crate::axis::Axis;
+use crate::{axis::Axis, error::BinaryOperationError};
+
+use serde::{Deserialize, Serialize};
 
 use super::histogram::{Histogram, Item, Iter, IterMut, ValuesMut};
 
 /// A [Histogram] that stores its values in a [Vec].
 ///
 /// See [ndhistogram] for examples of its use.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Serialize, Deserialize)]
 pub struct VecHistogram<A, V> {
     axes: A,
     values: Vec<V>,
@@ -22,9 +24,9 @@ pub struct VecHistogram<A, V> {
 impl<A: Axis, V: Default + Clone> VecHistogram<A, V> {
     /// Factor method for VecHistogram. It is recommended to use the
     /// [ndhistogram](crate::ndhistogram) macro instead.
-    pub fn new(axes: A) -> VecHistogram<A, V> {
+    pub fn new(axes: A) -> Self {
         let size = axes.num_bins();
-        VecHistogram {
+        Self {
             axes,
             values: vec![V::default(); size],
         }
@@ -50,10 +52,14 @@ impl<A: Axis, V> Histogram<A, V> for VecHistogram<A, V> {
     }
 
     fn iter<'a>(&'a self) -> Box<dyn Iterator<Item = Item<A::BinInterval, &'a V>> + 'a> {
-        Box::new(self.axes().iter().map(move |(index, binrange)| Item {
-            index,
-            bin: binrange,
-            value: self.value_at_index(index).unwrap(),
+        Box::new(self.axes().iter().map(move |(index, binrange)| {
+            Item {
+                index,
+                bin: binrange,
+                value: self
+                    .value_at_index(index)
+                    .expect("iter() indices are always in range"),
+            }
         }))
     }
 
@@ -154,11 +160,11 @@ macro_rules! impl_binary_op {
 where
     for<'a> &'a V: $Trait<Output = V>,
 {
-    type Output = Result<VecHistogram<A, V>, ()>;
+    type Output = Result<VecHistogram<A, V>, BinaryOperationError>;
 
     fn $method(self, rhs: &VecHistogram<A, V>) -> Self::Output {
         if self.axes() != rhs.axes() {
-            return Err(());
+            return Err(BinaryOperationError);
         }
         let values = self
             .values
