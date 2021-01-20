@@ -1,5 +1,6 @@
 use std::{
     collections::HashMap,
+    collections::HashSet,
     fmt::Display,
     ops::{Add, Div, Mul, Sub},
 };
@@ -167,13 +168,18 @@ macro_rules! impl_binary_op {
                 if self.axes() != rhs.axes() {
                     return Err(());
                 }
-                let values = rhs.values.iter().map(|(index, rhsvalue)| {
-                    let lhsvalue = self.values.get(index);
-                    match lhsvalue {
-                        Some(lhsvalue) => (*index, lhsvalue $mathsymbol rhsvalue),
-                        None => (*index, &V::default() $mathsymbol rhsvalue),
-                    }
-            }).collect();
+                let indices: HashSet<usize> = self.values.keys().chain(rhs.values.keys()).copied().collect();
+                let values: HashMap<usize, V> = indices.into_iter().map(|index| {
+                    let left = self.values.get(&index);
+                    let right = rhs.values.get(&index);
+                    let newvalue = match (left, right) {
+                        (Some(left), Some(right)) => { left $mathsymbol right },
+                        (None, Some(right)) => { &V::default() $mathsymbol right },
+                        (Some(left), None) => { left $mathsymbol &V::default() },
+                        (None, None) => { unreachable!() },
+                    };
+                    (index, newvalue)
+                }).collect();
                 Ok(HashHistogram {
                     axes: self.axes().clone(),
                     values,
