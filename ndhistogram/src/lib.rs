@@ -106,7 +106,7 @@
 //! User defined bin value types are possible by implementing the [Fill], [FillWith] or [FillWithWeighted] traits.
 
 #![doc(issue_tracker_base_url = "https://github.com/davehadley/rust-hist/issues")]
-#![doc(html_root_url = "https://docs.rs/ndhistogram/0.4.0")]
+#![doc(html_root_url = "https://docs.rs/ndhistogram/0.5.0")]
 #![cfg_attr(
     debug_assertions,
     warn(

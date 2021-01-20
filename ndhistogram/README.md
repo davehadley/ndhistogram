@@ -17,7 +17,7 @@ Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-ndhistogram = "0.4.0"
+ndhistogram = "0.5.0"
 ```
 
 To get started see the [quick start guide](https://docs.rs/ndhistogram).
