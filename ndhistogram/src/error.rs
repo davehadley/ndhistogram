@@ -10,7 +10,7 @@ pub struct BinaryOperationError;
 
 impl Display for BinaryOperationError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "BinaryOperationError")
+        write!(f, "histogram binary operation failed (check binning?)")
     }
 }
 

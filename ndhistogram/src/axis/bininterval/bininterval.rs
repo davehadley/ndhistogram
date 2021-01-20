@@ -165,7 +165,7 @@ pub struct BinIntervalConversionError;
 
 impl Display for BinIntervalConversionError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "BinIntervalConversionError")
+        write!(f, "invalid range to bin interval conversion")
     }
 }
 
