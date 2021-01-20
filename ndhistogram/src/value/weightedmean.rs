@@ -4,37 +4,41 @@ use std::{
 };
 
 use num_traits::{Float, NumOps, One, Signed};
+use serde::{Deserialize, Serialize};
 
 use crate::FillWithWeighted;
 
 /// ndhistogram bin value computes the mean of the data samples provided when
 /// filling.
 ///
-/// Mean had 3 type parameters:
+/// Mean has 4 type parameters:
 /// - the type that is being averaged,
+/// - the type of the weights that are being filled,
 /// - the type of the output when calculating the mean and its uncertainty,
 /// - the type that counts the number of fills.
 ///
 /// This allows, for example, integers to be used when filling or counting,
 /// but a floating point type to compute the mean.
-/// In most cases, you will only need to specify the first type as
+/// In most cases, you will only need to specify the first two type parameters as
 /// sensible defaults are set for the second two type parameters.
 ///
 ///
 /// # Example
 /// ```rust
-/// use ndhistogram::{ndhistogram, Histogram, axis::Uniform, value::Mean};
+/// use ndhistogram::{ndhistogram, Histogram, axis::Uniform, value::WeightedMean};
 ///
 /// // create a histogram and fill it with some values
-/// let mut hist = ndhistogram!(Uniform::new(10, 0.0, 10.0); Mean<i32>);
-/// hist.fill_with(&0.0, 1);
-/// hist.fill_with(&0.0, 2);
-/// hist.fill_with(&0.0, 3);
+/// let mut hist = ndhistogram!(Uniform::new(10, 0.0, 10.0); WeightedMean<i32, i32>);
+/// hist.fill_with_weighted(&0.0, 2, 1);
+/// hist.fill_with_weighted(&0.0, 2, 2);
+/// hist.fill_with_weighted(&0.0, 4, 3);
 ///
-/// let mean = hist.value(&0.0).unwrap();
-/// assert_eq!(mean.get(), 2.0); // should be the mean of [1,2,3]
+/// let weightedmean = hist.value(&0.0);
+/// assert_eq!(weightedmean.unwrap().get(), 3.0);
 /// ```
-#[derive(Default, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
+#[derive(
+    Copy, Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Serialize, Deserialize,
+)]
 pub struct WeightedMean<T = f64, W = f64, O = f64, C = u32> {
     sumwt: T,
     sumwt2: T,

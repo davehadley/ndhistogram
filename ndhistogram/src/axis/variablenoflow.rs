@@ -1,4 +1,5 @@
 use super::{Axis, BinInterval, Variable};
+use serde::{Deserialize, Serialize};
 use std::fmt::{Debug, Display};
 
 /// An axis with variable sized bins and no overflow bins.
@@ -7,12 +8,12 @@ use std::fmt::{Debug, Display};
 /// This axis has (num edges - 1) bins.
 ///
 /// # Example
-/// Create a 1D histogram with 3 variable width bin 0.0 and 7.0, plus overflow and underflow bins.
+/// Create a 1D histogram with 3 variable width bins between 0.0 and 7.0.
 /// ```rust
 ///    use ndhistogram::{ndhistogram, Histogram};
 ///    use ndhistogram::axis::{Axis, VariableNoFlow};
 ///    let mut hist = ndhistogram!(VariableNoFlow::new(vec![0.0, 1.0, 3.0, 7.0]); i32);
-///    hist.fill(&-1.0); // will be ignore as there is no underflow bin
+///    hist.fill(&-1.0); // will be ignored as there is no underflow bin
 ///    hist.fill(&1.0);
 ///    hist.fill(&2.0);
 ///    assert_eq!(
@@ -21,16 +22,19 @@ use std::fmt::{Debug, Display};
 ///    );
 ///
 /// ```
-#[derive(Clone, PartialEq, Eq, Debug)]
-pub struct VariableNoFlow<T> {
+#[derive(Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Serialize, Deserialize)]
+pub struct VariableNoFlow<T = f64> {
     axis: Variable<T>,
 }
 
 impl<T: PartialOrd + Copy> VariableNoFlow<T> {
     /// Factory method to create an variable binning from a set of bin edges with no under/overflow bins.
     /// See the documentation for [Variable::new].
+    ///
+    /// # Panics
+    /// Panics under the same conditions as [Variable::new].
     pub fn new<I: IntoIterator<Item = T>>(bin_edges: I) -> Self {
-        VariableNoFlow {
+        Self {
             axis: Variable::new(bin_edges),
         }
     }
@@ -52,14 +56,14 @@ impl<T: PartialOrd + Copy> Axis for VariableNoFlow<T> {
 
     fn index(&self, coordinate: &Self::Coordinate) -> Option<usize> {
         let index = self.axis.index(coordinate)?;
-        if index == 0 || index + 1 == self.axis.numbins() {
+        if index == 0 || index + 1 == self.axis.num_bins() {
             return None;
         }
         Some(index - 1)
     }
 
-    fn numbins(&self) -> usize {
-        self.axis.numbins() - 2
+    fn num_bins(&self) -> usize {
+        self.axis.num_bins() - 2
     }
 
     fn bin(&self, index: usize) -> Option<Self::BinInterval> {
@@ -89,7 +93,7 @@ where
         write!(
             f,
             "Axis{{# bins={}, range=[{}, {}), class={}}}",
-            self.numbins(),
+            self.num_bins(),
             self.axis.low(),
             self.axis.high(),
             stringify!(VariableNoFlow)

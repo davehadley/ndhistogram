@@ -48,8 +48,16 @@ fn test_histogram_uniform_2d_unweighted_fill_bin_edges() {
         .map(|bin| {
             (
                 (
-                    hist.axes().0.index(&bin.0.start().unwrap_or(-1.0)).unwrap(),
-                    hist.axes().1.index(&bin.1.start().unwrap_or(-1.0)).unwrap(),
+                    hist.axes()
+                        .as_tuple()
+                        .0
+                        .index(&bin.0.start().unwrap_or(-1.0))
+                        .unwrap(),
+                    hist.axes()
+                        .as_tuple()
+                        .1
+                        .index(&bin.1.start().unwrap_or(-1.0))
+                        .unwrap(),
                 ),
                 *hist
                     .value(&(bin.0.start().unwrap_or(-1.0), bin.1.start().unwrap_or(-1.0)))

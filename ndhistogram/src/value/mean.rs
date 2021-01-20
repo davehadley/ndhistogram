@@ -5,12 +5,14 @@ use std::{
 
 use num_traits::{abs, Float, NumOps, One, Signed};
 
+use serde::{Deserialize, Serialize};
+
 use crate::FillWith;
 
-/// ndhistogram bin value computes the mean of the data samples provided when
+/// This ndhistogram bin value computes the mean of the data samples provided when
 /// filling.
 ///
-/// Mean had 3 type parameters:
+/// Mean has 3 type parameters:
 /// - the type that is being averaged,
 /// - the type of the output when calculating the mean and its uncertainty,
 /// - the type that counts the number of fills.
@@ -31,10 +33,12 @@ use crate::FillWith;
 /// hist.fill_with(&0.0, 2);
 /// hist.fill_with(&0.0, 3);
 ///
-/// let mean = hist.value(&0.0).unwrap();
-/// assert_eq!(mean.get(), 2.0); // should be the mean of [1,2,3]
+/// let mean = hist.value(&0.0);
+/// assert_eq!(mean.unwrap().get(), 2.0); // should be the mean of [1,2,3]
 /// ```
-#[derive(Default, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
+#[derive(
+    Copy, Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Serialize, Deserialize,
+)]
 pub struct Mean<T = f64, O = f64, C = u32> {
     sumw: T,
     sumw2: T,
