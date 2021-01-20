@@ -3,6 +3,8 @@ use num_traits::Float;
 use super::{Axis, BinInterval, Uniform};
 use std::fmt::{Debug, Display};
 
+use serde::{Deserialize, Serialize};
+
 /// An axis with equal sized bins and no under/overflow bins.
 ///
 /// An axis with N equally spaced, equal sized, bins between (low, high].
@@ -20,7 +22,7 @@ use std::fmt::{Debug, Display};
 ///    assert_eq!(axis.bin(10), None);
 ///
 /// ```
-#[derive(Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
+#[derive(Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Serialize, Deserialize)]
 pub struct UniformNoFlow<T> {
     axis: Uniform<T>,
 }

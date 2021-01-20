@@ -8,12 +8,14 @@ use std::{
 
 use crate::axis::Axis;
 
+use serde::{Deserialize, Serialize};
+
 use super::histogram::{Histogram, Item, Iter, IterMut, ValuesMut};
 
 /// A [Histogram] that stores its values in a [Vec].
 ///
 /// See [ndhistogram] for examples of its use.
-#[derive(Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
+#[derive(Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Serialize, Deserialize)]
 pub struct VecHistogram<A, V> {
     axes: A,
     values: Vec<V>,

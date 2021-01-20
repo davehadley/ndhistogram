@@ -5,6 +5,8 @@ use std::{
     ops::{Add, Div, Mul, Sub},
 };
 
+use serde::{Deserialize, Serialize};
+
 use super::histogram::{Histogram, Iter, IterMut, ValuesMut};
 use crate::{axis::Axis, Item};
 
@@ -15,7 +17,7 @@ use crate::{axis::Axis, Item};
 ///  possible. If memory usage is not a concern, see [VecHistogram](crate::VecHistogram).
 ///
 /// See [sparsehistogram] for examples of its use.
-#[derive(Default, Clone, PartialEq, Eq, Debug)]
+#[derive(Default, Clone, PartialEq, Eq, Debug, Serialize, Deserialize)]
 pub struct HashHistogram<A, V> {
     axes: A,
     values: HashMap<usize, V>,

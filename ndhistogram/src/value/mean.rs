@@ -5,6 +5,8 @@ use std::{
 
 use num_traits::{abs, Float, NumOps, One, Signed};
 
+use serde::{Deserialize, Serialize};
+
 use crate::FillWith;
 
 /// This ndhistogram bin value computes the mean of the data samples provided when
@@ -34,7 +36,9 @@ use crate::FillWith;
 /// let mean = hist.value(&0.0).unwrap();
 /// assert_eq!(mean.get(), 2.0); // should be the mean of [1,2,3]
 /// ```
-#[derive(Copy, Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
+#[derive(
+    Copy, Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Serialize, Deserialize,
+)]
 pub struct Mean<T = f64, O = f64, C = u32> {
     sumw: T,
     sumw2: T,

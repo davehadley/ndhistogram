@@ -4,6 +4,8 @@ use num_traits::Float;
 
 use super::{Axis, BinInterval};
 
+use serde::{Deserialize, Serialize};
+
 /// An axis with equal sized bins.
 ///
 /// An axis with N equally spaced, equal sized, bins between (low, high].
@@ -22,7 +24,7 @@ use super::{Axis, BinInterval};
 ///    assert_eq!(axis.bin(11), Some(BinInterval::overflow(5.0)));
 ///
 /// ```
-#[derive(Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
+#[derive(Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Serialize, Deserialize)]
 pub struct Uniform<T = f64> {
     num: usize,
     low: T,

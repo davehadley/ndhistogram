@@ -2,6 +2,8 @@ use std::fmt::Display;
 
 use super::{Axis, BinInterval};
 
+use serde::{Deserialize, Serialize};
+
 /// An axis with variable sized bins.
 ///
 /// An axis with variable sized bins.
@@ -24,7 +26,7 @@ use super::{Axis, BinInterval};
 ///    );
 ///
 /// ```
-#[derive(Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
+#[derive(Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Serialize, Deserialize)]
 pub struct Variable<T = f64> {
     bin_edges: Vec<T>,
 }

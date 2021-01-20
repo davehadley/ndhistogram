@@ -4,13 +4,17 @@ use num_traits::Float;
 
 use crate::{Fill, FillWith};
 
+use serde::{Deserialize, Serialize};
+
 /// ndhistogram bin value type that calculates a weight sum.
 /// It also provides methods to keep track of the sum of weights squared.
 /// This is used to provide estimates of the statistical error on the weighted
 /// sum. This performs a similar function to `Sumw2` that
 /// [ROOT](https://root.cern.ch/doc/master/classTH1.html) users may be familiar
 /// with.
-#[derive(Copy, Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
+#[derive(
+    Copy, Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Serialize, Deserialize,
+)]
 pub struct WeightedSum<T = f64> {
     sumw: T,
     sumw2: T,
