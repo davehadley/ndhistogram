@@ -8,6 +8,7 @@ use rand::{prelude::StdRng, Rng, SeedableRng};
 
 macro_rules! test_serialize_empty_impl {
     ($fnname:ident; $Type:ty; $construct:expr) => {
+        #[allow(clippy::type_complexity)]
         #[test]
         fn $fnname() {
             let hist: $Type = $construct;

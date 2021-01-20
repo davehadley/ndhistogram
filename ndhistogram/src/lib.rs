@@ -163,5 +163,8 @@ pub type SparseHist3D<X, Y, Z, V = f64> = HashHistogram<AxesTuple<(X, Y, Z)>, V>
 /// Type alias for ND [Histogram]s returned by [sparsehistogram].
 pub type SparseHistND<A, V = f64> = HashHistogram<AxesTuple<A>, V>;
 
+/// Provides errors that may be returned by [Histogram]s.
+pub mod error;
+
 #[macro_use]
 mod macros;

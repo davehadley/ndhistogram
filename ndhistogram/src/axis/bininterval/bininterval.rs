@@ -1,5 +1,6 @@
 use std::{
     convert::TryFrom,
+    error::Error,
     fmt::{Display, LowerExp, UpperExp},
     ops::{Range, RangeFrom, RangeTo},
 };
@@ -91,35 +92,35 @@ impl<T> From<RangeFrom<T>> for BinInterval<T> {
 }
 
 impl<T> TryFrom<BinInterval<T>> for Range<T> {
-    type Error = ();
+    type Error = BinIntervalConversionError;
 
     fn try_from(value: BinInterval<T>) -> Result<Self, Self::Error> {
         if let BinInterval::Bin { start, end } = value {
             return Ok(Self { start, end });
         }
-        Err(())
+        Err(BinIntervalConversionError)
     }
 }
 
 impl<T> TryFrom<BinInterval<T>> for RangeTo<T> {
-    type Error = ();
+    type Error = BinIntervalConversionError;
 
     fn try_from(value: BinInterval<T>) -> Result<Self, Self::Error> {
         if let BinInterval::Underflow { end } = value {
             return Ok(Self { end });
         }
-        Err(())
+        Err(BinIntervalConversionError)
     }
 }
 
 impl<T> TryFrom<BinInterval<T>> for RangeFrom<T> {
-    type Error = ();
+    type Error = BinIntervalConversionError;
 
     fn try_from(value: BinInterval<T>) -> Result<Self, Self::Error> {
         if let BinInterval::Overflow { start } = value {
             return Ok(Self { start });
         }
-        Err(())
+        Err(BinIntervalConversionError)
     }
 }
 
@@ -158,3 +159,14 @@ macro_rules! impl_display {
 impl_display! {Display}
 impl_display! {LowerExp}
 impl_display! {UpperExp}
+
+#[derive(Debug)]
+pub struct BinIntervalConversionError;
+
+impl Display for BinIntervalConversionError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "BinIntervalConversionError")
+    }
+}
+
+impl Error for BinIntervalConversionError {}
