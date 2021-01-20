@@ -23,7 +23,7 @@ use std::fmt::{Debug, Display};
 ///
 /// ```
 #[derive(Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Serialize, Deserialize)]
-pub struct VariableNoFlow<T> {
+pub struct VariableNoFlow<T = f64> {
     axis: Variable<T>,
 }
 

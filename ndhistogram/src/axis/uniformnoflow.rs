@@ -23,7 +23,7 @@ use serde::{Deserialize, Serialize};
 ///
 /// ```
 #[derive(Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Serialize, Deserialize)]
-pub struct UniformNoFlow<T> {
+pub struct UniformNoFlow<T = f64> {
     axis: Uniform<T>,
 }
 
