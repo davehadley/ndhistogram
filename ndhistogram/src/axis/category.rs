@@ -28,7 +28,7 @@ impl<T: Eq + Hash + Clone> Value for T {}
 #[derive(Default, Clone, PartialEq, Eq, Debug, Serialize, Deserialize)]
 pub struct Category<T>
 where
-    T: Value,
+    T: Eq + Hash,
 {
     map_t_to_index: HashMap<T, usize>,
     map_index_to_t: HashMap<usize, T>,

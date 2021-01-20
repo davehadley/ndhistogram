@@ -1,5 +1,6 @@
 use super::{category::Value, Axis, Category, SingleValueBinInterval};
 use std::fmt::{Debug, Display};
+use std::hash::Hash;
 
 use serde::{Deserialize, Serialize};
 
@@ -20,7 +21,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Default, Clone, PartialEq, Eq, Debug, Serialize, Deserialize)]
 pub struct CategoryNoFlow<T>
 where
-    T: Value,
+    T: Eq + Hash,
 {
     axis: Category<T>,
 }
