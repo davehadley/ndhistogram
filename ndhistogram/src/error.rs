@@ -6,12 +6,12 @@ use std::{error::Error, fmt::Display};
 #[derive(
     Default, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Serialize, Deserialize,
 )]
-pub struct HistogramBinaryOperationError;
+pub struct BinaryOperationError;
 
-impl Display for HistogramBinaryOperationError {
+impl Display for BinaryOperationError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "HistogramBinaryOperationError")
+        write!(f, "BinaryOperationError")
     }
 }
 
-impl Error for HistogramBinaryOperationError {}
+impl Error for BinaryOperationError {}

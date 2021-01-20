@@ -6,7 +6,7 @@ use std::{
     ops::{Add, Div, Mul, Sub},
 };
 
-use crate::{axis::Axis, error::HistogramBinaryOperationError};
+use crate::{axis::Axis, error::BinaryOperationError};
 
 use serde::{Deserialize, Serialize};
 
@@ -156,11 +156,11 @@ macro_rules! impl_binary_op {
 where
     for<'a> &'a V: $Trait<Output = V>,
 {
-    type Output = Result<VecHistogram<A, V>, HistogramBinaryOperationError>;
+    type Output = Result<VecHistogram<A, V>, BinaryOperationError>;
 
     fn $method(self, rhs: &VecHistogram<A, V>) -> Self::Output {
         if self.axes() != rhs.axes() {
-            return Err(HistogramBinaryOperationError);
+            return Err(BinaryOperationError);
         }
         let values = self
             .values

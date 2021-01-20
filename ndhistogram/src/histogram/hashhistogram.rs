@@ -8,7 +8,7 @@ use std::{
 use serde::{Deserialize, Serialize};
 
 use super::histogram::{Histogram, Iter, IterMut, ValuesMut};
-use crate::{axis::Axis, error::HistogramBinaryOperationError, Item};
+use crate::{axis::Axis, error::BinaryOperationError, Item};
 
 /// A sparse N-dimensional [Histogram] that stores its values in a [HashMap].
 ///
@@ -162,11 +162,11 @@ macro_rules! impl_binary_op {
             V: Clone + Default,
             for<'a> &'a V: $Trait<Output = V>,
         {
-            type Output = Result<HashHistogram<A, V>, HistogramBinaryOperationError>;
+            type Output = Result<HashHistogram<A, V>, BinaryOperationError>;
 
             fn $method(self, rhs: &HashHistogram<A, V>) -> Self::Output {
                 if self.axes() != rhs.axes() {
-                    return Err(HistogramBinaryOperationError);
+                    return Err(BinaryOperationError);
                 }
                 let indices: HashSet<usize> = self.values.keys().chain(rhs.values.keys()).copied().collect();
                 let values: HashMap<usize, V> = indices.into_iter().map(|index| {
