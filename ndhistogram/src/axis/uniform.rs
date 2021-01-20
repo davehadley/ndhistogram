@@ -36,14 +36,21 @@ where
     T: PartialOrd,
 {
     /// Factory method to create an axis with num uniformly spaced bins in the range [low, high). Under/overflow bins cover values outside this range.
+    ///
+    /// # Panics
+    /// Panics if num bins == 0 or low == high.
     pub fn new(num: usize, low: T, high: T) -> Self {
         if num == 0 {
             panic!("Invalid axis num bins ({})", num);
         }
-        if low >= high {
-            panic!("Invalid axis range bins (low >= high)");
+        if low == high {
+            panic!("Invalid axis range (low == high)");
         }
-        Self { num, low, high }
+        if low > high {
+            Self { num, high, low }
+        } else {
+            Self { num, low, high }
+        }
     }
 }
 

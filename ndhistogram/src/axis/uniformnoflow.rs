@@ -29,6 +29,9 @@ pub struct UniformNoFlow<T = f64> {
 
 impl<T: Float> UniformNoFlow<T> {
     /// Factory method to create an axis with num uniformly spaced bins in the range [low, high) with no under/overflow bins.
+    ///
+    /// # Panics
+    /// Panics under the same conditions as [Uniform::new].
     pub fn new(num: usize, low: T, high: T) -> Self {
         Self {
             axis: Uniform::new(num, low, high),
