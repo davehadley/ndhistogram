@@ -74,6 +74,7 @@ pub trait Histogram<A: Axis, V> {
     fn fill_with<D>(&mut self, coordinate: &A::Coordinate, data: D)
     where
         V: FillWith<D>,
+        Self: Sized,
     {
         if let Some(value) = self.value_mut(coordinate) {
             value.fill_with(data)
@@ -86,6 +87,7 @@ pub trait Histogram<A: Axis, V> {
     fn fill_with_weighted<D, W>(&mut self, coordinate: &A::Coordinate, data: D, weight: W)
     where
         V: FillWithWeighted<D, W>,
+        Self: Sized,
     {
         if let Some(value) = self.value_mut(coordinate) {
             value.fill_with_weighted(data, weight)

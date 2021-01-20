@@ -13,6 +13,7 @@ mod test_ndhistogram_display;
 mod test_ndhistogram_macro;
 mod test_noflow_axis;
 mod test_serialization;
+mod test_trait_object_safety;
 mod test_uniform_axis;
 mod test_value_mean;
 mod test_value_sum;
