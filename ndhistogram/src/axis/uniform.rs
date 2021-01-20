@@ -22,7 +22,7 @@ use super::{Axis, BinInterval};
 ///    assert_eq!(axis.bin(11), Some(BinInterval::overflow(5.0)));
 ///
 /// ```
-#[derive(Clone, PartialEq, Debug, Eq)]
+#[derive(Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
 pub struct Uniform<T = f64> {
     num: usize,
     low: T,

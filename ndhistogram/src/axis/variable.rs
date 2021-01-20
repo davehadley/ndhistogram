@@ -24,7 +24,7 @@ use super::{Axis, BinInterval};
 ///    );
 ///
 /// ```
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
 pub struct Variable<T = f64> {
     bin_edges: Vec<T>,
 }

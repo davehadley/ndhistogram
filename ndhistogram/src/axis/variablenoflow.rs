@@ -21,7 +21,7 @@ use std::fmt::{Debug, Display};
 ///    );
 ///
 /// ```
-#[derive(Clone, PartialEq, Eq, Debug)]
+#[derive(Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
 pub struct VariableNoFlow<T> {
     axis: Variable<T>,
 }

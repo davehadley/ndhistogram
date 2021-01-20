@@ -13,7 +13,7 @@ use super::histogram::{Histogram, Item, Iter, IterMut, ValuesMut};
 /// A [Histogram] that stores its values in a [Vec].
 ///
 /// See [ndhistogram] for examples of its use.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
 pub struct VecHistogram<A, V> {
     axes: A,
     values: Vec<V>,

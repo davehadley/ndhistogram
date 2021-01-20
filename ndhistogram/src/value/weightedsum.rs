@@ -10,7 +10,7 @@ use crate::{Fill, FillWith};
 /// sum. This performs a similar function to `Sumw2` that
 /// [ROOT](https://root.cern.ch/doc/master/classTH1.html) users may be familiar
 /// with.
-#[derive(Default, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
+#[derive(Copy, Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
 pub struct WeightedSum<T = f64> {
     sumw: T,
     sumw2: T,

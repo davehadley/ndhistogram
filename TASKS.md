@@ -9,4 +9,4 @@
 - [ ] Re-binnable axis.
 - [ ] Growable/Extendable axis.
 - [ ] Spell check documentation.
-- [ ] Sparse histograms
+- [x] Sparse histograms

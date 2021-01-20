@@ -15,7 +15,7 @@ use std::fmt::{Debug, Display};
 /// assert_eq!(colors.bin(1), Some(SingleValueBinInterval::new("blue")));
 /// assert_eq!(colors.bin(5), None);
 /// ```
-#[derive(Clone, PartialEq, Debug)]
+#[derive(Default, Clone, PartialEq, Eq, Debug)]
 pub struct CategoryNoFlow<T>
 where
     T: Value,

@@ -15,7 +15,7 @@ use crate::{axis::Axis, Item};
 ///  possible. If memory usage is not a concern, see [VecHistogram](crate::VecHistogram).
 ///
 /// See [sparsehistogram] for examples of its use.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Default, Clone, PartialEq, Eq, Debug)]
 pub struct HashHistogram<A, V> {
     axes: A,
     values: HashMap<usize, V>,

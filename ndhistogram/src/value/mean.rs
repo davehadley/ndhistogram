@@ -34,7 +34,7 @@ use crate::FillWith;
 /// let mean = hist.value(&0.0).unwrap();
 /// assert_eq!(mean.get(), 2.0); // should be the mean of [1,2,3]
 /// ```
-#[derive(Default, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
+#[derive(Copy, Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
 pub struct Mean<T = f64, O = f64, C = u32> {
     sumw: T,
     sumw2: T,

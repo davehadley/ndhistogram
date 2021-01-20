@@ -5,7 +5,7 @@ use std::{
 };
 
 /// BinInterval represents a single bin interval in a 1D axis.
-#[derive(Debug, PartialEq, Clone)]
+#[derive(Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
 pub enum BinInterval<T> {
     /// The underflow bin covers all values from (-inf, end].
     /// The interval excludes end.

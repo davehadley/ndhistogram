@@ -24,7 +24,7 @@ impl<T: Eq + Hash + Clone> Value for T {}
 /// assert_eq!(colors.bin(1), Some(SingleValueBinInterval::new("blue")));
 /// assert_eq!(colors.bin(5), Some(SingleValueBinInterval::overflow()));
 /// ```
-#[derive(Debug, Clone, Default, PartialEq)]
+#[derive(Default, Clone, PartialEq, Eq, Debug)]
 pub struct Category<T>
 where
     T: Value,

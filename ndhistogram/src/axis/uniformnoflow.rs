@@ -20,7 +20,7 @@ use std::fmt::{Debug, Display};
 ///    assert_eq!(axis.bin(10), None);
 ///
 /// ```
-#[derive(Clone, PartialEq, Debug)]
+#[derive(Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
 pub struct UniformNoFlow<T> {
     axis: Uniform<T>,
 }

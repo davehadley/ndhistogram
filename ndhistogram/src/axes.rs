@@ -4,7 +4,7 @@ use super::axis::Axis;
 pub trait Axes: Axis {}
 
 /// Container for a set of [Axis] that implements [Axes].
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
 pub struct AxesTuple<T> {
     axes: T,
 }
