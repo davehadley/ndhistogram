@@ -1,9 +1,6 @@
-use std::{
-    fmt::{Debug, Display},
-    ops::Neg,
-};
+use std::fmt::{Debug, Display};
 
-use num_traits::{abs, Float, Num, NumCast, NumOps, Signed, Zero};
+use num_traits::{Float, Num, NumCast, NumOps};
 
 use super::{Axis, BinInterval};
 

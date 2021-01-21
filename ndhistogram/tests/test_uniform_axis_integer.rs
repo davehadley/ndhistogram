@@ -1,7 +1,5 @@
 use ndhistogram::axis::{Axis, BinInterval, Uniform};
 
-use std::{convert::TryFrom, ops::Range};
-
 #[test]
 fn test_uniform_num_bins() {
     let ax = Uniform::with_step_size(3, 0, 2);
