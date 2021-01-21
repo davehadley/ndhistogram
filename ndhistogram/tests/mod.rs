@@ -15,6 +15,7 @@ mod test_noflow_axis;
 mod test_serialization;
 mod test_trait_object_safety;
 mod test_uniform_axis;
+mod test_uniform_axis_integer;
 mod test_value_mean;
 mod test_value_sum;
 mod test_value_weightedmean;

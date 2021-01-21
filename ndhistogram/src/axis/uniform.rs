@@ -1,6 +1,6 @@
 use std::fmt::{Debug, Display};
 
-use num_traits::Float;
+use num_traits::{Float, Num, NumCast, NumOps};
 
 use super::{Axis, BinInterval};
 
@@ -29,27 +29,57 @@ pub struct Uniform<T = f64> {
     num: usize,
     low: T,
     high: T,
+    step: T,
 }
 
 impl<T> Uniform<T>
 where
-    T: PartialOrd,
+    T: PartialOrd + Num + NumCast + NumOps + Copy,
 {
     /// Factory method to create an axis with num uniformly spaced bins in the range [low, high). Under/overflow bins cover values outside this range.
     ///
+    /// Only implemented for [Float]. Use [Uniform::with_step_size] for integers.
+    ///
     /// # Panics
     /// Panics if num bins == 0 or low == high.
-    pub fn new(num: usize, low: T, high: T) -> Self {
+    pub fn new(num: usize, low: T, high: T) -> Self
+    where
+        T: Float,
+    {
         if num == 0 {
             panic!("Invalid axis num bins ({})", num);
         }
         if low == high {
             panic!("Invalid axis range (low == high)");
         }
-        if low > high {
-            Self { num, high, low }
-        } else {
-            Self { num, low, high }
+        let (low, high) = if low > high { (high, low) } else { (low, high) };
+        let step = (high - low) / T::from(num).expect("");
+        Self {
+            num,
+            high,
+            low,
+            step,
+        }
+    }
+
+    /// Factory method to create an axis with num uniformly spaced bins in the range [low, low+num*step). Under/overflow bins cover values outside this range.
+    ///
+    /// # Panics
+    /// Panics if num bins == 0 or step < 0.
+    pub fn with_step_size(num: usize, low: T, step: T) -> Self {
+        let high = T::from(num).expect("num bins can be converted to coordinate type") * step + low;
+        if num == 0 {
+            panic!("Invalid axis num bins ({})", num);
+        }
+        if step < T::zero() {
+            panic!("Invalid negative step size");
+        }
+        let (low, high) = if low > high { (high, low) } else { (low, high) };
+        Self {
+            num,
+            high,
+            low,
+            step,
         }
     }
 }
@@ -67,21 +97,21 @@ impl<T> Uniform<T> {
 }
 
 // TODO: relax float restriction or add implementation for Integers
-impl<T: Float> Axis for Uniform<T> {
+impl<T: PartialOrd + NumCast + NumOps + Copy> Axis for Uniform<T> {
     type Coordinate = T;
     type BinInterval = BinInterval<T>;
 
     fn index(&self, coordinate: &Self::Coordinate) -> Option<usize> {
-        let frac = (*coordinate - self.low) / (self.high - self.low);
-        if frac < T::zero() {
+        if coordinate < &self.low {
             return Some(0);
-        } else if frac >= T::one() {
+        }
+        if coordinate >= &self.high {
             return Some(self.num + 1);
         }
-        let idx: T =
-            T::from(self.num).expect("num bins conversion to bin value type always succeed") * frac;
+        let steps = (*coordinate - self.low) / (self.step);
         Some(
-            (idx.to_usize()
+            (steps
+                .to_usize()
                 .expect("bin number can always be converted to a valid usize"))
                 + 1,
         )
@@ -123,7 +153,10 @@ impl<T: Display> Display for Uniform<T> {
     }
 }
 
-impl<'a, T: Float> IntoIterator for &'a Uniform<T> {
+impl<'a, T> IntoIterator for &'a Uniform<T>
+where
+    Uniform<T>: Axis,
+{
     type Item = (usize, <Uniform<T> as Axis>::BinInterval);
     type IntoIter = Box<dyn Iterator<Item = Self::Item> + 'a>;
 

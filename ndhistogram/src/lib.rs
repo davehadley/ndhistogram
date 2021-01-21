@@ -3,9 +3,10 @@
 //! Features include:
 //! - Histograms with any number of dimensions from 1 up to 21 dimensions.
 //! - Continuous (eg represented by a floating point number) and discrete axis (eg a category represented by a string value or enum) types.
-//! - Flexible bin values including any primitive number type, or a user-defined struct.
+//! - Flexible bin values including any primitive number type, or a user-defined type.
 //! - Unweighted and weighted filling of histograms.
 //! - Flexible, user-definable axis types.
+//! - Sparse histograms to reduce memory footprint of high bin count, mostly empty bins.
 //!
 //! ## Quick-start
 //!
@@ -73,7 +74,10 @@
 //! This is the recommended implementation for most use cases.
 //! However, as memory is allocated even for empty bins,
 //! this may not be practical for very high dimension histograms.
-//!
+//! - [HashHistogram]: bin values are stored in a [HashMap](std::collections::HashMap).
+//! Created with the [sparsehistogram] macro.
+//! Useful for high dimension mostly empty histograms as empty bins
+//! take up no memory.
 //!
 //! Alternative implementations are possible by implementing the [Histogram] trait.
 //!
