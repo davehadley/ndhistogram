@@ -24,7 +24,7 @@ source install-hook.sh
 
 Some additional checks may be run with:
 ```
-./run-checks.sh
+./run-checks.py
 ```
 
 ## License
