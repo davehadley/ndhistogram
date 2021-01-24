@@ -1,12 +1,28 @@
-//! Multi-dimensional histogramming for Rust.
+//! ndhistogram implements multi-dimensional histograms for Rust.
+//!
+//! This library aims to provide a similar feature set to the C++ library
+//! [boost-histogram](https://www.boost.org/doc/libs/1_75_0/libs/histogram)
+//! but with an idomatic pure-Rust implementation.
 //!
 //! Features include:
 //! - Histograms with any number of dimensions from 1 up to 21 dimensions.
-//! - Continuous (eg represented by a floating point number) and discrete axis (eg a category represented by a string value or enum) types.
+//! - Continuous (eg represented by a floating point number) and discrete axis (eg a category represented by a string value or enum) types that are composable (eg you may mix discrete and continuous axes).
 //! - Flexible bin values including any primitive number type, or a user-defined type.
 //! - Unweighted and weighted filling of histograms.
 //! - Flexible, user-definable axis types.
-//! - Sparse histograms to reduce memory footprint of high bin count, mostly empty bins.
+//! - Sparse histograms to reduce the memory footprint of high bin count, mostly empty, histograms.
+//!
+//!
+//! ## Usage
+//!
+//! Add this to your `Cargo.toml`:
+//!
+//! ```toml
+//! [dependencies]
+//! ndhistogram = "0.5.0"
+//! ```
+//!
+//! Please report any bugs in the [issues tracker](https://github.com/davehadley/ndhistogram/issues).
 //!
 //! ## Quick-start
 //!
@@ -62,9 +78,9 @@
 //!
 //! ## Overview
 //!
-//! A [Histogram](crate::Histogram) is composed of two components:
-//! - The [Axes] which is a set of [Axis](crate::axis::Axis) corresponding to each dimension of the histogram.
-//! The [Axes] and [Axis](crate::axis::Axis) define the binning of the histogram and are responsible for mapping from coordinate space (eg \[x,y,z\]) to an integer bin number.
+//! A [Histogram](Histogram) is composed of two components:
+//! - The [Axes] which is a set of [Axis](axis::Axis) corresponding to each dimension of the histogram.
+//! The [Axes] and [Axis](axis::Axis) define the binning of the histogram and are responsible for mapping from coordinate space (eg \[x,y,z\]) to an integer bin number.
 //! - The histogram bin value storage. Valid bin value types including any integer and floating number type as well as user defined types that implement [Fill], [FillWith] or [FillWithWeighted].
 //!
 //! ### Histogram Implementations
@@ -76,18 +92,18 @@
 //! this may not be practical for very high dimension histograms.
 //! - [HashHistogram]: bin values are stored in a [HashMap](std::collections::HashMap).
 //! Created with the [sparsehistogram] macro.
-//! Useful for high dimension mostly empty histograms as empty bins
+//! Useful for high dimension, mostly empty, histograms as empty bins
 //! take up no memory.
 //!
 //! Alternative implementations are possible by implementing the [Histogram] trait.
 //!
 //! ### Axis Implementations
 //!
-//! - [Uniform](crate::axis::Uniform)/[UniformNoFlow](crate::axis::UniformNoFlow): equally sized bins in a some range with optional underflow/overflow bins.
-//! - [Variable](crate::axis::Variable)/[VariableNoFlow](crate::axis::VariableNoFlow): variable sized bins with optional underflow/overflow bins.
-//! - [Category](crate::axis::Category)/[CategoryNoFlow](crate::axis::CategoryNoFlow): a finite set of discrete values with optional overflow bin.
+//! - [Uniform](axis::Uniform)/[UniformNoFlow](axis::UniformNoFlow): equally sized bins in a some range with optional underflow/overflow bins.
+//! - [Variable](axis::Variable)/[VariableNoFlow](axis::VariableNoFlow): variable sized bins with optional underflow/overflow bins.
+//! - [Category](axis::Category)/[CategoryNoFlow](axis::CategoryNoFlow): a finite set of discrete values with optional overflow bin.
 //!
-//! User defined axes types are possible by implementing the [Axis](crate::axis::Axis) trait.
+//! User defined axes types are possible by implementing the [Axis](axis::Axis) trait.
 //!
 //! ### Histogram Bin Values
 //!
@@ -102,10 +118,10 @@
 //!
 //! This crate defines the following bin value types:
 //!
-//! - [Sum](crate::value::Sum) : a simple bin count that counts the number of times it has been filled.
-//! - [WeightedSum](crate::value::WeightedSum) : as Sum but with weighted fills.
-//! - [Mean](crate::value::Mean) : computes the mean of the values it is filled with.
-//! - [WeightedMean](crate::value::WeightedMean) : as Mean but with weighted fills.
+//! - [Sum](value::Sum) : a simple bin count that counts the number of times it has been filled.
+//! - [WeightedSum](value::WeightedSum) : as Sum but with weighted fills.
+//! - [Mean](value::Mean) : computes the mean of the values it is filled with.
+//! - [WeightedMean](value::WeightedMean) : as Mean but with weighted fills.
 //!
 //! User defined bin value types are possible by implementing the [Fill], [FillWith] or [FillWithWeighted] traits.
 
