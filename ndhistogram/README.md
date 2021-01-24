@@ -9,15 +9,33 @@
 
 <!-- cargo-sync-readme start -->
 
-Multi-dimensional histogramming for Rust.
+ndhistogram implements multi-dimensional histograms for Rust.
+
+This library aims to provide a similar feature set to the C++ library
+[boost-histogram](https://www.boost.org/doc/libs/1_75_0/libs/histogram)
+but with an idomatic pure-Rust implementation.
 
 Features include:
 - Histograms with any number of dimensions from 1 up to 21 dimensions.
-- Continuous (eg represented by a floating point number) and discrete axis (eg a category represented by a string value or enum) types.
+- Continuous (eg represented by a floating point number) and discrete axis (eg a category represented by a string value or enum) types that are composable (eg you may mix discrete and continuous axes).
 - Flexible bin values including any primitive number type, or a user-defined type.
 - Unweighted and weighted filling of histograms.
 - Flexible, user-definable axis types.
-- Sparse histograms to reduce memory footprint of high bin count, mostly empty bins.
+- Sparse histograms to reduce the memory footprint of high bin count, mostly empty, histograms.
+
+
+## Usage
+
+Add this to your `Cargo.toml`:
+
+```toml
+[dependencies]
+ndhistogram = "0.5.0"
+```
+
+See the [change log](https://github.com/davehadley/ndhistogram/blob/main/ndhistogram/CHANGELOG.md)
+for differences between releases.
+Please report any bugs in the [issues tracker](https://github.com/davehadley/ndhistogram/issues).
 
 ## Quick-start
 

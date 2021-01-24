@@ -22,6 +22,8 @@
 //! ndhistogram = "0.5.0"
 //! ```
 //!
+//! See the [change log](https://github.com/davehadley/ndhistogram/blob/main/ndhistogram/CHANGELOG.md)
+//! for differences between releases.
 //! Please report any bugs in the [issues tracker](https://github.com/davehadley/ndhistogram/issues).
 //!
 //! ## Quick-start
