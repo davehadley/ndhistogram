@@ -1,8 +1,7 @@
-use num_traits::Float;
-
 use super::{Axis, BinInterval, Uniform};
 use std::fmt::{Debug, Display};
 
+use num_traits::{Float, Num, NumCast, NumOps};
 use serde::{Deserialize, Serialize};
 
 /// An axis with equal sized bins and no under/overflow bins.
@@ -27,14 +26,33 @@ pub struct UniformNoFlow<T = f64> {
     axis: Uniform<T>,
 }
 
-impl<T: Float> UniformNoFlow<T> {
+impl<T> UniformNoFlow<T>
+where
+    T: PartialOrd + NumCast + NumOps + Copy,
+{
     /// Factory method to create an axis with num uniformly spaced bins in the range [low, high) with no under/overflow bins.
     ///
     /// # Panics
     /// Panics under the same conditions as [Uniform::new].
-    pub fn new(num: usize, low: T, high: T) -> Self {
+    pub fn new(num: usize, low: T, high: T) -> Self
+    where
+        T: Float,
+    {
         Self {
             axis: Uniform::new(num, low, high),
+        }
+    }
+
+    /// Factory method to create an axis with num uniformly spaced bins in the range [low, low+num*step) with no under/overflow bins.
+    ///
+    /// # Panics
+    /// Panics under the same conditions as [Uniform::with_step_size].
+    pub fn with_step_size(num: usize, low: T, step: T) -> Self
+    where
+        T: Num,
+    {
+        Self {
+            axis: Uniform::with_step_size(num, low, step),
         }
     }
 
@@ -49,7 +67,10 @@ impl<T: Float> UniformNoFlow<T> {
     }
 }
 
-impl<T: Float> Axis for UniformNoFlow<T> {
+impl<T> Axis for UniformNoFlow<T>
+where
+    T: PartialOrd + NumCast + NumOps + Copy,
+{
     type Coordinate = T;
     type BinInterval = BinInterval<T>;
 
@@ -75,7 +96,10 @@ impl<T: Float> Axis for UniformNoFlow<T> {
     }
 }
 
-impl<'a, T: Float> IntoIterator for &'a UniformNoFlow<T> {
+impl<'a, T> IntoIterator for &'a UniformNoFlow<T>
+where
+    T: PartialOrd + NumCast + NumOps + Copy,
+{
     type Item = (usize, <Uniform<T> as Axis>::BinInterval);
     type IntoIter = Box<dyn Iterator<Item = Self::Item> + 'a>;
 
@@ -84,7 +108,10 @@ impl<'a, T: Float> IntoIterator for &'a UniformNoFlow<T> {
     }
 }
 
-impl<T: Float + Display> Display for UniformNoFlow<T> {
+impl<T> Display for UniformNoFlow<T>
+where
+    T: PartialOrd + NumCast + NumOps + Copy + Display,
+{
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
