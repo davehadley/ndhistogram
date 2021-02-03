@@ -5,7 +5,7 @@ if [ ! -d "venv" ]
 then
     python3 -m venv venv \
     && source venv/bin/activate \
-    && python -m pip install pre-commit isort mypy black flake8;
+    && python3 -m pip install pre-commit isort mypy black flake8;
 fi
 source venv/bin/activate
 
