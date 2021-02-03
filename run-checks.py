@@ -19,6 +19,8 @@ run(
     env=env(RUSTDOCFLAGS="-D warnings"),
     check=True,
 )
+if run(["cargo", "sync-readme", "-V"]).returncode != 0:
+    run(["cargo", "install", "cargo-sync-readme"])
 run(
     [
         "cargo",
