@@ -35,6 +35,7 @@ impl<A: Axis, V> HashHistogram<A, V> {
 }
 
 impl<A: Axis, V: Default> Histogram<A, V> for HashHistogram<A, V> {
+    #[inline]
     fn axes(&self) -> &A {
         &self.axes
     }

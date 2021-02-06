@@ -101,6 +101,7 @@ impl<T: PartialOrd + NumCast + NumOps + Copy> Axis for Uniform<T> {
     type Coordinate = T;
     type BinInterval = BinInterval<T>;
 
+    #[inline]
     fn index(&self, coordinate: &Self::Coordinate) -> Option<usize> {
         if coordinate < &self.low {
             return Some(0);

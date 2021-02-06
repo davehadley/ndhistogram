@@ -50,6 +50,7 @@ macro_rules! impl_axes {
             type Coordinate = X::Coordinate;
             type BinInterval = X::BinInterval;
 
+            #[inline]
             fn index(&self, coordinate: &Self::Coordinate) -> Option<usize> {
                 self.axes.0.index(coordinate)
             }
@@ -81,6 +82,7 @@ macro_rules! impl_axes {
             type Coordinate = ($($nth_type_parameter::Coordinate),*);
             type BinInterval = ($($nth_type_parameter::BinInterval),*);
 
+            #[inline]
             fn index(&self, coordinate: &Self::Coordinate) -> Option<usize> {
                 let num_bins: Vec<_> = [$(self.axes.$nth_index.num_bins()),*].iter().scan(1, |acc, nbin| {*acc *= *nbin; Some(*acc)}).collect();
                 let indices = [$(self.axes.$nth_index.index(&coordinate.$nth_index)?),*];
