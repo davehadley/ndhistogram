@@ -48,6 +48,7 @@ impl<T: Copy> Sum<T> {
 }
 
 impl<T: Copy + Fill> Fill for Sum<T> {
+    #[inline]
     fn fill(&mut self) {
         self.sum.fill();
     }

@@ -54,6 +54,7 @@ impl<T: PartialOrd + Copy> Axis for VariableNoFlow<T> {
     type Coordinate = T;
     type BinInterval = BinInterval<T>;
 
+    #[inline]
     fn index(&self, coordinate: &Self::Coordinate) -> Option<usize> {
         let index = self.axis.index(coordinate)?;
         if index == 0 || index + 1 == self.axis.num_bins() {

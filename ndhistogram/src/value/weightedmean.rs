@@ -124,6 +124,7 @@ where
     W: Copy + AddAssign + Mul<W, Output = W>,
     C: AddAssign + One,
 {
+    #[inline]
     fn fill_with_weighted(&mut self, value: T, weight: W) {
         self.sumwt += value * weight;
         self.sumwt2 += value * value * weight;

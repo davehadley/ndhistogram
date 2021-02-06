@@ -39,6 +39,7 @@ impl<A: Axis, V> Histogram<A, V> for VecHistogram<A, V> {
         self.values.get(index)
     }
 
+    #[inline]
     fn axes(&self) -> &A {
         &self.axes
     }

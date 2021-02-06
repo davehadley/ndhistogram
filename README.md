@@ -17,14 +17,22 @@ For usage instructions see:
 
 Report bugs/issues or submit pull requests to <https://github.com/davehadley/ndhistogram/issues>.
 
+Setup the development environment with:
+```
+source setup-environment.sh
+```
+or you may use the 
+[development container](https://code.visualstudio.com/docs/remote/containers)
+inside `.devcontainer/Dockerfile`.
+
 Before committing any code, please install pre-commit hooks with:
 ```
-source install-hook.sh
+./scripts/install-hook.py
 ```
 
 Some additional checks may be run with:
 ```
-./run-checks.py
+./scripts/run-checks.py
 ```
 
 ## License

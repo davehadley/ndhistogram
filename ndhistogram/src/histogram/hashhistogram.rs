@@ -35,6 +35,7 @@ impl<A: Axis, V> HashHistogram<A, V> {
 }
 
 impl<A: Axis, V: Default> Histogram<A, V> for HashHistogram<A, V> {
+    #[inline]
     fn axes(&self) -> &A {
         &self.axes
     }
@@ -81,6 +82,7 @@ impl<A: Axis, V: Default> Histogram<A, V> for HashHistogram<A, V> {
         }))
     }
 
+    #[inline]
     fn fill(&mut self, coordinate: &A::Coordinate)
     where
         V: crate::Fill,
@@ -90,6 +92,7 @@ impl<A: Axis, V: Default> Histogram<A, V> for HashHistogram<A, V> {
         }
     }
 
+    #[inline]
     fn fill_with<D>(&mut self, coordinate: &A::Coordinate, data: D)
     where
         V: crate::FillWith<D>,
@@ -99,6 +102,7 @@ impl<A: Axis, V: Default> Histogram<A, V> for HashHistogram<A, V> {
         }
     }
 
+    #[inline]
     fn fill_with_weighted<D, W>(&mut self, coordinate: &A::Coordinate, data: D, weight: W)
     where
         V: crate::FillWithWeighted<D, W>,
