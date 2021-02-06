@@ -56,6 +56,7 @@ impl<T: Copy> WeightedSum<T> {
 }
 
 impl<T: Copy + Fill> Fill for WeightedSum<T> {
+    #[inline]
     fn fill(&mut self) {
         self.sumw.fill();
         self.sumw2.fill();
@@ -67,6 +68,7 @@ where
     T: FillWith<W> + Copy,
     W: Mul<Output = W> + Copy,
 {
+    #[inline]
     fn fill_with(&mut self, weight: W) {
         self.sumw.fill_with(weight);
         self.sumw2.fill_with(weight * weight);

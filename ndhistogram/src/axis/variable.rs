@@ -72,6 +72,7 @@ where
     type Coordinate = T;
     type BinInterval = BinInterval<T>;
 
+    #[inline]
     fn index(&self, coordinate: &Self::Coordinate) -> Option<usize> {
         match self.bin_edges.binary_search_by(|probe| {
             probe

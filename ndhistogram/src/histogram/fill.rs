@@ -15,6 +15,7 @@ pub trait Fill {
 }
 
 impl<T: One + AddAssign> Fill for T {
+    #[inline]
     fn fill(&mut self) {
         *self += Self::one();
     }
@@ -36,6 +37,7 @@ impl<D> FillWith<&D> for D
 where
     for<'a> Self: AddAssign<&'a D>,
 {
+    #[inline]
     fn fill_with(&mut self, data: &D) {
         *self += data;
     }
@@ -45,6 +47,7 @@ impl<D> FillWith<D> for D
 where
     for<'a> Self: AddAssign<D>,
 {
+    #[inline]
     fn fill_with(&mut self, data: D) {
         *self += data;
     }

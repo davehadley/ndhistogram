@@ -1,3 +1,10 @@
+[[bench]]
+name = "bench_fill"
+harness = false
+
+[lib]
+bench = false
+
 [package]
 name = "ndhistogram"
 version = "0.6.0"
@@ -18,7 +25,12 @@ rand = "0.8.0"
 rand_distr = "0.4.0"
 serde_json = "1.0.61"
 version-sync = "0.9.1"
+paste = "1.0.4"
 
 [dependencies.serde]
 version = "1.0.120"
 features = [ "derive",]
+
+[dev-dependencies.criterion]
+version = "0.3.4"
+features = [ "html_reports",]
