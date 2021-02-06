@@ -11,5 +11,5 @@ commithash = run(
     cwd=packagedirectory,
     capture_output=True,
     text=True,
-).stdout
+).stdout.strip("\n")
 run(["cargo", "bench", "--", "--save-baseline", commithash], cwd=packagedirectory)
