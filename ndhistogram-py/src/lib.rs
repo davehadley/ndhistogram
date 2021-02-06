@@ -3,7 +3,7 @@ use pyo3::wrap_pyfunction;
 
 #[pyfunction]
 fn hello_world() -> PyResult<String> {
-    Ok("Hello world".to_string())
+    Ok("Hello World".to_string())
 }
 
 /// A Python module implemented in Rust.

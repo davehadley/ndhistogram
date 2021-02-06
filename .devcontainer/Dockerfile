@@ -4,4 +4,4 @@
 FROM mcr.microsoft.com/vscode/devcontainers/rust:1
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && apt-get -y install --no-install-recommends python3-pip python3-venv git python3-dev python-dev
-RUN python3 -m pip install pre-commit isort mypy black flake8 maturin
+RUN python3 -m pip install pre-commit isort mypy black flake8 maturin pytest
