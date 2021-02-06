@@ -1,0 +1,16 @@
+[package]
+name = "ndhistogram-py"
+version = "0.1.0"
+authors = [ "David Hadley <davehadley@users.noreply.github.com>",]
+edition = "2018"
+
+[lib]
+name = "ndhistogram"
+crate-type = [ "cdylib",]
+
+[dependencies]
+ndhistogram = "0.6.0"
+
+[dependencies.pyo3]
+version = "0.13.1"
+features = [ "extension-module",]
