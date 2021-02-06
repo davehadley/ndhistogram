@@ -59,6 +59,7 @@ pub trait Histogram<A: Axis, V> {
     /// Fill the histogram bin value at coordinate with unit weight.
     /// If the [Axes](crate::Axes) do not cover that coordinate, do nothing.
     /// See [Fill](crate::Fill).
+    #[inline]
     fn fill(&mut self, coordinate: &A::Coordinate)
     where
         V: Fill,
@@ -71,6 +72,7 @@ pub trait Histogram<A: Axis, V> {
     /// Fill the histogram bin value at coordinate with some data.
     /// If the [Axes](crate::Axes) do not cover that coordinate, do nothing.
     /// See [FillWith](crate::FillWith).
+    #[inline]
     fn fill_with<D>(&mut self, coordinate: &A::Coordinate, data: D)
     where
         V: FillWith<D>,
@@ -84,6 +86,7 @@ pub trait Histogram<A: Axis, V> {
     /// Fill the histogram bin value at coordinate with some data.
     /// If the [Axes](crate::Axes) do not cover that coordinate, do nothing.
     /// See [FillWithWeighted].
+    #[inline]
     fn fill_with_weighted<D, W>(&mut self, coordinate: &A::Coordinate, data: D, weight: W)
     where
         V: FillWithWeighted<D, W>,

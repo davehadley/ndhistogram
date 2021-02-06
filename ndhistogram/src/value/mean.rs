@@ -116,6 +116,7 @@ where
     T: Copy + AddAssign + Mul<Output = T>,
     C: AddAssign + One,
 {
+    #[inline]
     fn fill_with(&mut self, data: T) {
         self.sumw += data;
         self.sumw2 += data * data;
