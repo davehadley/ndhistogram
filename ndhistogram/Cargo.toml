@@ -2,6 +2,9 @@
 name = "bench_fill"
 harness = false
 
+[lib]
+bench = false
+
 [package]
 name = "ndhistogram"
 version = "0.6.0"
