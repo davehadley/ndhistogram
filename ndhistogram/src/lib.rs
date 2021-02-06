@@ -19,7 +19,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! ndhistogram = "0.6.0"
+//! ndhistogram = "0.7.0"
 //! ```
 //!
 //! See the [change log](https://github.com/davehadley/ndhistogram/blob/main/ndhistogram/CHANGELOG.md)
@@ -128,7 +128,7 @@
 //! User defined bin value types are possible by implementing the [Fill], [FillWith] or [FillWithWeighted] traits.
 
 #![doc(issue_tracker_base_url = "https://github.com/davehadley/rust-hist/issues")]
-#![doc(html_root_url = "https://docs.rs/ndhistogram/0.6.0")]
+#![doc(html_root_url = "https://docs.rs/ndhistogram/0.7.0")]
 #![cfg_attr(
     debug_assertions,
     warn(
