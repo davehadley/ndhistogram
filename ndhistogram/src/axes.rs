@@ -9,6 +9,7 @@ pub trait Axes: Axis {}
 #[derive(Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Serialize, Deserialize)]
 pub struct AxesTuple<T> {
     axes: T,
+    shape: Vec<usize>,
 }
 
 impl<T> AxesTuple<T> {
@@ -42,7 +43,8 @@ macro_rules! impl_axes {
 
         impl<X:Axis> From<(X,)> for AxesTuple<(X,)> {
             fn from(item: (X,)) -> Self {
-                Self { axes: item }
+                let shape = vec![item.0.num_bins()];
+                Self { axes: item, shape }
             }
         }
 
@@ -74,7 +76,8 @@ macro_rules! impl_axes {
 
         impl<$($nth_type_parameter: Axis),*> From<($($nth_type_parameter),*)> for AxesTuple<($($nth_type_parameter),*)> {
             fn from(item: ($($nth_type_parameter),*)) -> Self {
-                Self { axes: item }
+                let shape = [$(item.$nth_index.num_bins()),*].iter().scan(1, |acc, nbin| {*acc *= *nbin; Some(*acc)}).collect();
+                Self { axes: item, shape }
             }
         }
 
@@ -84,10 +87,9 @@ macro_rules! impl_axes {
 
             #[inline]
             fn index(&self, coordinate: &Self::Coordinate) -> Option<usize> {
-                let num_bins: Vec<_> = [$(self.axes.$nth_index.num_bins()),*].iter().scan(1, |acc, nbin| {*acc *= *nbin; Some(*acc)}).collect();
                 let indices = [$(self.axes.$nth_index.index(&coordinate.$nth_index)?),*];
 
-                let index = num_bins.iter()
+                let index = self.shape.iter()
                     .rev()
                     .skip(1)
                     .zip(indices.iter().rev())
