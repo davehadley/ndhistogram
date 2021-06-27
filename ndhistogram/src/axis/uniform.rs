@@ -56,8 +56,8 @@ where
         let step = (high - low) / T::from(num).expect("");
         Self {
             num,
-            high,
             low,
+            high,
             step,
         }
     }
@@ -77,8 +77,8 @@ where
         let (low, high) = if low > high { (high, low) } else { (low, high) };
         Self {
             num,
-            high,
             low,
+            high,
             step,
         }
     }
