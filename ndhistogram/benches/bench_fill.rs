@@ -40,7 +40,7 @@ macro_rules! generate_fill_axis_benches {
                 let mut hist = $histoconstructor!($axis, $axis);
                 let mut rng = StdRng::seed_from_u64(12);
                 let mut group = c.benchmark_group(stringify!([< bench_ $name _iter_fill_2d_vs_num_fills >]));
-                for size in vec![1000, 10000, 100000, 1000000] {
+                for size in [1000, 10000, 100000, 1000000] {
                     let input: Vec<_> = (0..size)
                         .map(|_| (rng.gen_range(-0.1..1.1), rng.gen_range(-0.1..1.1)))
                         .collect();
@@ -53,7 +53,7 @@ macro_rules! generate_fill_axis_benches {
 
             fn [< bench_ $name _iter_fill_2d_vs_num_bins >](c: &mut Criterion) {
                 let mut group = c.benchmark_group(stringify!([< bench_ $name _iter_fill_2d_vs_num_bins >]));
-                for size in vec![10, 100, 1000, 10000] {
+                for size in [10, 100, 1000, 10000] {
                     let $numbins = size;
                     let mut hist = $histoconstructor!($axis, $axis);
                     let mut rng = StdRng::seed_from_u64(12);

@@ -3,7 +3,9 @@ use ndhistogram::{axis::Uniform, ndhistogram, value::WeightedSum, Histogram};
 fn assert_float_eq(left: f64, right: f64) {
     assert!(
         (left - right).abs() < (1e-6 * (left + right)),
-        "left={} does not equal right={}", left, right
+        "left={} does not equal right={}",
+        left,
+        right
     )
 }
 
