@@ -74,7 +74,7 @@ fn test_binrange_bin_conversion() {
     let start = 0.0;
     let end = 1.0;
     let bin = BinInterval::new(start, end);
-    let range: Range<_> = bin.clone().try_into().unwrap();
+    let range: Range<_> = bin.try_into().unwrap();
     let bin2: BinInterval<_> = range.clone().into();
     assert_eq!(range.start, start);
     assert_eq!(range.end, end);
@@ -86,8 +86,8 @@ fn test_binrange_bin_conversion() {
 fn test_binrange_underflow_conversion() {
     let end = 1.0;
     let bin = BinInterval::underflow(end);
-    let range: RangeTo<_> = bin.clone().try_into().unwrap();
-    let bin2: BinInterval<_> = range.clone().into();
+    let range: RangeTo<_> = bin.try_into().unwrap();
+    let bin2: BinInterval<_> = range.into();
     assert_eq!(range.end, end);
     assert_eq!(bin, bin2);
 }
@@ -97,7 +97,7 @@ fn test_binrange_underflow_conversion() {
 fn test_binrange_overflow_conversion() {
     let start = 1.0;
     let bin = BinInterval::overflow(start);
-    let range: RangeFrom<_> = bin.clone().try_into().unwrap();
+    let range: RangeFrom<_> = bin.try_into().unwrap();
     let bin2: BinInterval<_> = range.clone().into();
     assert_eq!(range.start, start);
     assert_eq!(bin, bin2);
