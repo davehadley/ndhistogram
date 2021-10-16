@@ -2,23 +2,12 @@
 name = "bench_fill"
 harness = false
 
-[lib]
-bench = false
-
-[package]
-name = "ndhistogram"
-version = "0.6.1"
-authors = [ "David Hadley <davehadley@users.noreply.github.com>",]
-edition = "2018"
-license = "MIT OR Apache-2.0"
-description = "multi-dimensional histogramming for Rust"
-repository = "https://github.com/davehadley/rust-hist"
-readme = "README.md"
-keywords = [ "histogram", "statistics", "data", "analysis", "multidimensional",]
-categories = [ "science", "mathematics", "data-structures",]
-
 [dependencies]
 num-traits = "0.2.14"
+
+[dependencies.serde]
+version = "1.0.120"
+features = [ "derive",]
 
 [dev-dependencies]
 rand = "0.8.0"
@@ -27,10 +16,21 @@ serde_json = "1.0.61"
 version-sync = "0.9.1"
 paste = "1.0.4"
 
-[dependencies.serde]
-version = "1.0.120"
-features = [ "derive",]
-
 [dev-dependencies.criterion]
 version = "0.3.4"
 features = [ "html_reports",]
+
+[lib]
+bench = false
+
+[package]
+name = "ndhistogram"
+version = "0.6.2"
+authors = [ "David Hadley <davehadley@users.noreply.github.com>",]
+edition = "2018"
+license = "MIT OR Apache-2.0"
+description = "multi-dimensional histogramming for Rust"
+repository = "https://github.com/davehadley/rust-hist"
+readme = "README.md"
+keywords = [ "histogram", "statistics", "data", "analysis", "multidimensional",]
+categories = [ "science", "mathematics", "data-structures",]

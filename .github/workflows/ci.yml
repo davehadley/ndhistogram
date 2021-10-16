@@ -60,4 +60,10 @@ jobs:
         args: -- -D warnings
     - name: cargo doc
       run: RUSTDOCFLAGS="-D warnings" cargo doc
+    - name: Setup python
+      uses: actions/setup-python@v2
+    - name: Run pre-commit hooks
+      run: |
+        pip install pre-commit \
+        && pre-commit run --all
 
