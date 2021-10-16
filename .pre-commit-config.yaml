@@ -11,13 +11,13 @@ repos:
     types: [rust]
 
 - repo: https://github.com/timothycrosley/isort
-  rev: 5.5.3
+  rev: 5.9.3
   hooks:
   - id: isort
     stages: [commit]
 
 - repo: https://github.com/ambv/black
-  rev: stable
+  rev: 21.9b0
   hooks:
   - id: black
     language_version: python3
@@ -25,18 +25,18 @@ repos:
 
 
 - repo: https://gitlab.com/pycqa/flake8
-  rev: 3.8.2
+  rev: 3.9.2
   hooks:
   - id: flake8
     stages: [commit]
 
 - repo: https://github.com/pre-commit/mirrors-mypy
-  rev: v0.782
+  rev: v0.910-1
   hooks:
   - id: mypy
 
 - repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
-  rev: v1.6.1
+  rev: v2.2.0
   hooks:
   - id: pretty-format-yaml
     args: [--autofix]
@@ -44,7 +44,7 @@ repos:
     args: [--autofix]
 
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v3.2.0
+  rev: v4.0.1
   hooks:
   - id: check-added-large-files
   - id: check-ast
