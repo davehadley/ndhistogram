@@ -140,9 +140,9 @@
     deny(unsafe_code, macro_use_extern_crate),
     warn(
         missing_docs,
-        missing_crate_level_docs,
-        missing_doc_code_examples,
-        broken_intra_doc_links,
+        rustdoc::missing_crate_level_docs,
+        rustdoc::missing_doc_code_examples,
+        rustdoc::broken_intra_doc_links,
     )
 )]
 
