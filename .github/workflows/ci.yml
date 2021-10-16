@@ -5,6 +5,9 @@ on:
     branches: [main, develop]
   pull_request:
     branches: [main, develop]
+  schedule:
+  # run once per week in case latest version of depedencies or compiler cause issues
+  - cron: '41 2 * * 0'
 
 
 jobs:
