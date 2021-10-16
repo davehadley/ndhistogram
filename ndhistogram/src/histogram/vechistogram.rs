@@ -2,7 +2,6 @@ use std::{
     cmp::Ordering,
     f64::INFINITY,
     fmt::Display,
-    iter::repeat,
     ops::{Add, Div, Mul, Sub},
 };
 
@@ -145,7 +144,7 @@ where
             .map(|(bin, value)| {
                 (
                     format!("{:.precision$}", bin, precision = precision),
-                    repeat("#").take(value as usize).collect::<String>(),
+                    "#".repeat(value as usize),
                 )
             })
             .map(|(bin, value)| write!(f, "\n{:>16} | {}", bin, value))

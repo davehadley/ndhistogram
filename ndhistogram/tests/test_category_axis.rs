@@ -10,7 +10,7 @@ fn test_category_num_bins() {
 fn test_category_get_index() {
     let cats = vec!["A", "B"];
     let ax = Category::new(cats.clone());
-    let actual: Vec<usize> = cats.iter().map(|c| ax.index(&c).unwrap()).collect();
+    let actual: Vec<usize> = cats.iter().map(|c| ax.index(c).unwrap()).collect();
     let expected = vec![0, 1];
     assert_eq!(expected, actual)
 }
