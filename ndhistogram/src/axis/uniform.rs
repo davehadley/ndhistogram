@@ -8,7 +8,7 @@ use serde::{Deserialize, Serialize};
 
 /// An axis with equal sized bins.
 ///
-/// An axis with N equally spaced, equal sized, bins between (low, high].
+/// An axis with N equally spaced, equal sized, bins between [low, high).
 /// Below (above) this range is an underflow (overflow) bin.
 /// Hence this axis has N+2 bins.
 ///
