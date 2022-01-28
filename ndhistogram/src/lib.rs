@@ -127,6 +127,8 @@
 //!
 //! User defined bin value types are possible by implementing the [Fill](Fill), [FillWith](FillWith) or [FillWithWeighted](FillWithWeighted) traits.
 
+Not valid rust. This should fail CI.
+
 #![doc(issue_tracker_base_url = "https://github.com/davehadley/rust-hist/issues")]
 #![doc(html_root_url = "https://docs.rs/ndhistogram/0.7.0")]
 #![cfg_attr(
