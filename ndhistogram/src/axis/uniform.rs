@@ -65,13 +65,13 @@ where
     /// Factory method to create an axis with num uniformly spaced bins in the range [low, low+num*step). Under/overflow bins cover values outside this range.
     ///
     /// # Panics
-    /// Panics if num bins == 0 or step < 0.
+    /// Panics if num bins == 0 or step <= 0.
     pub fn with_step_size(num: usize, low: T, step: T) -> Self {
         let high = T::from(num).expect("num bins can be converted to coordinate type") * step + low;
         if num == 0 {
             panic!("Invalid axis num bins ({})", num);
         }
-        if step < T::zero() {
+        if step <= T::zero() {
             panic!("Invalid negative step size");
         }
         let (low, high) = if low > high { (high, low) } else { (low, high) };
