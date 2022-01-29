@@ -34,3 +34,9 @@ fn test_uniform_integer_get_bin() {
 fn test_uniform_with_step_size_should_panic_on_negative_step() {
     Uniform::with_step_size(10, 20.0, -1.0);
 }
+
+#[test]
+#[should_panic]
+fn test_uniform_with_step_size_should_panic_on_zero_step() {
+    Uniform::with_step_size(10, 20.0, 0.0);
+}
