@@ -72,7 +72,7 @@ where
             panic!("Invalid axis num bins ({})", num);
         }
         if step <= T::zero() {
-            panic!("Invalid negative step size");
+            panic!("Invalid step size. Step size must be greater than zero.");
         }
         let (low, high) = if low > high { (high, low) } else { (low, high) };
         Self {
