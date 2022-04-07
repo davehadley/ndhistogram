@@ -8,7 +8,7 @@ use serde::{Deserialize, Serialize};
 
 /// An axis with equal sized bins.
 ///
-/// An axis with N equally spaced, equal sized, bins between (low, high].
+/// An axis with N equally spaced, equal sized, bins between [low, high).
 /// Below (above) this range is an underflow (overflow) bin.
 /// Hence this axis has N+2 bins.
 ///
@@ -65,14 +65,14 @@ where
     /// Factory method to create an axis with num uniformly spaced bins in the range [low, low+num*step). Under/overflow bins cover values outside this range.
     ///
     /// # Panics
-    /// Panics if num bins == 0 or step < 0.
+    /// Panics if num bins == 0 or step <= 0.
     pub fn with_step_size(num: usize, low: T, step: T) -> Self {
         let high = T::from(num).expect("num bins can be converted to coordinate type") * step + low;
         if num == 0 {
             panic!("Invalid axis num bins ({})", num);
         }
-        if step < T::zero() {
-            panic!("Invalid negative step size");
+        if step <= T::zero() {
+            panic!("Invalid step size. Step size must be greater than zero.");
         }
         let (low, high) = if low > high { (high, low) } else { (low, high) };
         Self {

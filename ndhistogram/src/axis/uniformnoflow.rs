@@ -6,7 +6,7 @@ use serde::{Deserialize, Serialize};
 
 /// An axis with equal sized bins and no under/overflow bins.
 ///
-/// An axis with N equally spaced, equal sized, bins between (low, high].
+/// An axis with N equally spaced, equal sized, bins between [low, high).
 /// Similar to [Uniform] but this axis has no over/underflow bins.
 /// Hence it has N bins.
 ///
