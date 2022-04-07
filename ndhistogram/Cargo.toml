@@ -25,7 +25,7 @@ bench = false
 
 [package]
 name = "ndhistogram"
-version = "0.7.0"
+version = "0.6.3"
 authors = [ "David Hadley <davehadley@users.noreply.github.com>",]
 edition = "2018"
 license = "MIT OR Apache-2.0"

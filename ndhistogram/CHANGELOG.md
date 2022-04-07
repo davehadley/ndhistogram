@@ -1,3 +1,8 @@
+# 0.6.3 (2022-04-07)
+- `Uniform::with_step_size` now panics when given a step size equal to zero (from [@jacg](https://github.com/jacg)).
+- Documentation and CI improvements from [@jacg](https://github.com/jacg).
+- Fix compiler/clippy warnings when building with the latest stable version (clippy 0.1.59, rustc 1.59.0).
+
 # 0.6.2 (2021-10-16)
 
 - Fix for compiler/clippy warnings when building with the latest stable version (clippy 0.1.55, rustc 1.55.0).
