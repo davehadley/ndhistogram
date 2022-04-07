@@ -41,7 +41,7 @@ fn test_variablenoflow_high() {
 #[test]
 fn test_variablenoflow_get_index() {
     let ax = VariableNoFlow::new(vec![0, 1, 4, 8]);
-    let actual: Vec<_> = (-1..10).map(|coord| ax.index(&coord)).flatten().collect();
+    let actual: Vec<_> = (-1..10).filter_map(|coord| ax.index(&coord)).collect();
     let expected = vec![0, 1, 1, 1, 2, 2, 2, 2];
     assert_eq!(actual, expected);
 }
@@ -108,7 +108,7 @@ fn test_variablenoflow_iterate_items() {
 #[test]
 fn test_negative_axis_index() {
     let axis = VariableNoFlow::new(vec![-3, -1, 0, 1]);
-    let actual: Vec<_> = (-4..3).map(|loc| axis.index(&loc)).flatten().collect();
+    let actual: Vec<_> = (-4..3).filter_map(|loc| axis.index(&loc)).collect();
     let expected = vec![0, 0, 1, 2];
     assert_eq!(actual, expected)
 }
