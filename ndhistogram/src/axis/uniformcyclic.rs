@@ -75,10 +75,12 @@ where
 
 impl<T> UniformCyclic<T> {
     /// Low edge of axis (excluding wrap-around)
+    #[inline]
     pub fn low(&self) -> &T {
         self.axis.low()
     }
     /// High edge of axis (excluding wrap-around)
+    #[inline]
     pub fn high(&self) -> &T {
         self.axis.high()
     }
@@ -89,6 +91,7 @@ impl<T: PartialOrd + Num + NumCast + NumOps + Copy> Axis for UniformCyclic<T> {
     type Coordinate = T;
     type BinInterval = BinInterval<T>;
 
+    #[inline]
     fn index(&self, coordinate: &Self::Coordinate) -> Option<usize> {
         let (mut x, hi, lo) = (*coordinate, *self.axis.high(), *self.axis.low());
         let range = hi - lo;
@@ -100,10 +103,12 @@ impl<T: PartialOrd + Num + NumCast + NumOps + Copy> Axis for UniformCyclic<T> {
         self.axis.index(&x).map(|n| n - 1)
     }
 
+    #[inline]
     fn num_bins(&self) -> usize {
         self.axis.num_bins() - 2
     }
 
+    #[inline]
     fn bin(&self, index: usize) -> Option<<Self as Axis>::BinInterval> {
         self.axis.bin(index + 1)
     }
