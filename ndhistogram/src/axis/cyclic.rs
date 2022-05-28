@@ -74,11 +74,11 @@ where
 }
 
 impl<T> Cyclic<T> {
-    /// Low edge of axis (excluding wrap-around) // TODO or should this be - infinity?
+    /// Low edge of axis (excluding wrap-around)
     pub fn low(&self) -> &T {
         self.axis.low()
     }
-    /// High edge of axis (excluding wrap-around) // TODO or should this be + infinity?
+    /// High edge of axis (excluding wrap-around)
     pub fn high(&self) -> &T {
         self.axis.high()
     }
