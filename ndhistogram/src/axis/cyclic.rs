@@ -85,20 +85,18 @@ impl<T> Cyclic<T> {
 }
 
 // TODO integers?
-impl<T: PartialOrd + NumCast + NumOps + Copy> Axis for Cyclic<T> {
+impl<T: PartialOrd + Num + NumCast + NumOps + Copy> Axis for Cyclic<T> {
     type Coordinate = T;
     type BinInterval = BinInterval<T>;
 
-    // TODO optimize by using division instead of looping?
     fn index(&self, coordinate: &Self::Coordinate) -> Option<usize> {
         let (mut x, hi, lo) = (*coordinate, *self.axis.high(), *self.axis.low());
         let range = hi - lo;
-        while x >= hi {
-            x = x - range
+        x = (x - lo) % range;
+        if x < T::zero() {
+            x = range + x;
         }
-        while x < lo {
-            x = x + range
-        }
+        x = x + lo;
         self.axis.index(&x).map(|n| n - 1)
     }
 
