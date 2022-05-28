@@ -143,8 +143,37 @@ mod test {
              case(-10.05, Some(9)),
              case(-10.1 , Some(8)),
     )]
-    fn index(coordinate: f32, expected_index: Option<usize>) {
+    fn float_index(coordinate: f32, expected_index: Option<usize>) {
         let axis = Cyclic::new(10, 0.0, 1.0);
+        assert_eq!(axis.index(&coordinate), expected_index);
+    }
+
+    #[rstest(/**/ nbins, low, step, coordinate, expected_index,
+             case(  2  ,  0 ,  10 ,      0    ,     Some(0)  ),
+             case(  2  ,  0 ,  10 ,      5    ,     Some(0)  ),
+             case(  2  ,  0 ,  10 ,     15    ,     Some(1)  ),
+             case(  2  ,  0 ,  10 ,     20    ,     Some(0)  ),
+             case(  2  ,  0 ,  10 ,     29    ,     Some(0)  ),
+             case(  2  ,  0 ,  10 ,     30    ,     Some(1)  ),
+             case(  2  ,  0 ,  10 ,     -1    ,     Some(1)  ),
+             case(  2  ,  0 ,  10 ,    -10    ,     Some(1)  ),
+             case(  2  ,  0 ,  10 ,    -11    ,     Some(0)  ),
+             case( 10  , 10 ,   9 ,     10    ,     Some(0)  ),
+             case( 10  , 10 ,   9 ,     18    ,     Some(0)  ),
+             case( 10  , 10 ,   9 ,     19    ,     Some(1)  ),
+             case( 10  , 10 ,   9 ,     27    ,     Some(1)  ),
+             case( 10  , 10 ,   9 ,     28    ,     Some(2)  ),
+             case( 10  , 10 ,   9 ,     99    ,     Some(9)  ),
+             case( 10  , 10 ,   9 ,    100    ,     Some(0)  ),
+    )]
+    fn integer_index(
+        nbins: usize,
+        low: i32,
+        step: i32,
+        coordinate: i32,
+        expected_index: Option<usize>,
+    ) {
+        let axis = Cyclic::with_step_size(nbins, low, step);
         assert_eq!(axis.index(&coordinate), expected_index);
     }
 
