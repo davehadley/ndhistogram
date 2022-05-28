@@ -7,7 +7,7 @@ mod bininterval;
 pub use bininterval::bininterval::BinInterval;
 pub use bininterval::singlevaluebininterval::SingleValueBinInterval;
 mod cyclic;
-pub use cyclic::Cyclic;
+pub use cyclic::UniformCyclic;
 mod uniform;
 pub use uniform::Uniform;
 mod uniformnoflow;

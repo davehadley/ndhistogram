@@ -14,8 +14,8 @@ use serde::{Deserialize, Serialize};
 /// 1D histogram with 4 bins distributed around a circle.
 /// ```
 /// use ndhistogram::{ndhistogram, Histogram};
-/// use ndhistogram::axis::{Axis, BinInterval, Cyclic};
-/// let mut hist = ndhistogram!(Cyclic::new(4, 0.0, 360.0));
+/// use ndhistogram::axis::{Axis, BinInterval, UniformCyclic};
+/// let mut hist = ndhistogram!(UniformCyclic::new(4, 0.0, 360.0));
 /// hist.fill(& 45.0         ); // Add entry at 45 degrees
 /// hist.fill(&(45.0 + 360.0)); // Add entry at 45 degrees + one whole turn
 /// hist.fill(&(45.0 - 360.0)); // Add entry at 45 degrees + one whole turn backwards
@@ -28,29 +28,29 @@ use serde::{Deserialize, Serialize};
 /// Time of day
 /// ```
 /// use ndhistogram::{ndhistogram, Histogram};
-/// use ndhistogram::axis::{Axis, BinInterval, Cyclic};
+/// use ndhistogram::axis::{Axis, BinInterval, UniformCyclic};
 /// let bins_per_day = 24;
 /// let hours_per_bin = 1;
 /// let start_at_zero = 0;
 /// let four_pm = 16;
-/// let mut hist = ndhistogram!(Cyclic::with_step_size(
+/// let mut hist = ndhistogram!(UniformCyclic::with_step_size(
 ///     bins_per_day, start_at_zero, hours_per_bin
 /// ));
 /// hist.fill(&40);                               // The 40th hour of the week ...
 /// assert_eq!(hist.value(&four_pm), Some(&1.0)); // ... is at 4 pm.
 /// ````
 #[derive(Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Serialize, Deserialize)]
-pub struct Cyclic<T = f64> {
+pub struct UniformCyclic<T = f64> {
     axis: Uniform<T>,
 }
 
-impl<T> Cyclic<T>
+impl<T> UniformCyclic<T>
 where
     T: PartialOrd + Num + NumCast + NumOps + Copy,
 {
     /// Create a wrap-around axis with `nbins` uniformly-spaced bins in the range `[low, high)`.
     ///
-    /// Only implemented for [Float]. Use [Cyclic::with_step_size] for integers.
+    /// Only implemented for [Float]. Use [UniformCyclic::with_step_size] for integers.
     ///
     /// # Panics
     /// Panics under the same conditions as [Uniform::new].
@@ -73,7 +73,7 @@ where
     }
 }
 
-impl<T> Cyclic<T> {
+impl<T> UniformCyclic<T> {
     /// Low edge of axis (excluding wrap-around)
     pub fn low(&self) -> &T {
         self.axis.low()
@@ -85,7 +85,7 @@ impl<T> Cyclic<T> {
 }
 
 // TODO integers?
-impl<T: PartialOrd + Num + NumCast + NumOps + Copy> Axis for Cyclic<T> {
+impl<T: PartialOrd + Num + NumCast + NumOps + Copy> Axis for UniformCyclic<T> {
     type Coordinate = T;
     type BinInterval = BinInterval<T>;
 
@@ -121,7 +121,7 @@ mod test {
              case(3    , Some(BinInterval::new(0.75, 1.00))),
     )]
     fn bin(bin_no: usize, expected_interval: Option<BinInterval<f32>>) {
-        let axis = Cyclic::new(4, 0.0, 1.0);
+        let axis = UniformCyclic::new(4, 0.0, 1.0);
         assert_eq!(axis.bin(bin_no), expected_interval);
     }
 
@@ -144,7 +144,7 @@ mod test {
              case(-10.1 , Some(8)),
     )]
     fn float_index(coordinate: f32, expected_index: Option<usize>) {
-        let axis = Cyclic::new(10, 0.0, 1.0);
+        let axis = UniformCyclic::new(10, 0.0, 1.0);
         assert_eq!(axis.index(&coordinate), expected_index);
     }
 
@@ -173,14 +173,14 @@ mod test {
         coordinate: i32,
         expected_index: Option<usize>,
     ) {
-        let axis = Cyclic::with_step_size(nbins, low, step);
+        let axis = UniformCyclic::with_step_size(nbins, low, step);
         assert_eq!(axis.index(&coordinate), expected_index);
     }
 
     #[test]
     fn indices() {
         let n = 7;
-        let axis = Cyclic::new(n, 23.4, 97.3);
+        let axis = UniformCyclic::new(n, 23.4, 97.3);
         let indices = axis.indices().collect::<Vec<_>>();
         assert_eq!(indices, (0..n).collect::<Vec<_>>());
     }
@@ -193,7 +193,7 @@ mod test_histogram {
 
     #[test]
     fn wrap_float_fill() {
-        let mut hist = ndhistogram!(Cyclic::new(4, 0.0, 360.0); u8);
+        let mut hist = ndhistogram!(UniformCyclic::new(4, 0.0, 360.0); u8);
         hist.fill(&45.0);
         hist.fill(&(45.0 + 360.0));
         hist.fill(&(45.0 - 360.0));
@@ -206,7 +206,7 @@ mod test_histogram {
         let bins_per_day = 24;
         let hours_per_bin = 1;
         let start_at_zero = 0;
-        let mut hist = ndhistogram!(Cyclic::with_step_size(
+        let mut hist = ndhistogram!(UniformCyclic::with_step_size(
             bins_per_day,
             start_at_zero,
             hours_per_bin
@@ -217,7 +217,7 @@ mod test_histogram {
 
     #[test]
     fn wrap_float_value() {
-        let mut hist = ndhistogram!(Cyclic::new(4, 0.0, 360.0); u8);
+        let mut hist = ndhistogram!(UniformCyclic::new(4, 0.0, 360.0); u8);
         hist.fill(&45.0);
         assert_eq!(hist.value(&45.0), Some(&1));
         assert_eq!(hist.value(&(45.0 + 360.0)), Some(&1));
