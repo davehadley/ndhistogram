@@ -39,7 +39,7 @@ where
     ///
     /// # Panics
     ///
-    /// Panics if errors less than 2 edges are provided or if it fails to sort the
+    /// Panics if less than 2 edges are provided or if it fails to sort the
     /// bin edges (for example if a NAN value is given).
     pub fn new<I: IntoIterator<Item = T>>(bin_edges: I) -> Self {
         let mut bin_edges: Vec<T> = bin_edges.into_iter().collect();

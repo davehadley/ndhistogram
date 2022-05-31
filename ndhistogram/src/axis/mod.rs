@@ -6,6 +6,10 @@
 mod bininterval;
 pub use bininterval::bininterval::BinInterval;
 pub use bininterval::singlevaluebininterval::SingleValueBinInterval;
+mod uniformcyclic;
+pub use uniformcyclic::UniformCyclic;
+mod variablecyclic;
+pub use variablecyclic::VariableCyclic;
 mod uniform;
 pub use uniform::Uniform;
 mod uniformnoflow;
