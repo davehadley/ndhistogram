@@ -100,3 +100,14 @@ where
         )
     }
 }
+
+impl<'a, T> IntoIterator for &'a VariableCyclic<T>
+where
+    VariableCyclic<T>: Axis,
+{
+    type Item = (usize, <VariableCyclic<T> as Axis>::BinInterval);
+    type IntoIter = Box<dyn Iterator<Item = Self::Item> + 'a>;
+    fn into_iter(self) -> Self::IntoIter {
+        self.iter()
+    }
+}

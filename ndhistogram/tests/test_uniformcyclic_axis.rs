@@ -107,3 +107,16 @@ fn wrap_float_value() {
     assert_eq!(hist.value(&(45.0 + 360.0)), Some(&1));
     assert_eq!(hist.value(&(45.0 - 360.0)), Some(&1));
 }
+
+#[test]
+fn into_iter() {
+    use ndhistogram::axis::BinInterval;
+    let axis = UniformCyclic::with_step_size(3, 15, 10);
+    let mut bins = vec![];
+    for x in &axis {
+        bins.push(x)
+    }
+    assert_eq!(bins[0], (0, BinInterval::new(15, 25)));
+    assert_eq!(bins[1], (1, BinInterval::new(25, 35)));
+    assert_eq!(bins[2], (2, BinInterval::new(35, 45)));
+}
