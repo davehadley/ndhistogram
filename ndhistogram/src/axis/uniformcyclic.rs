@@ -1,5 +1,5 @@
 use super::{Axis, BinInterval, Uniform};
-use std::fmt::Debug; // TODO Display
+use std::fmt::{Debug, Display};
 
 use num_traits::{Float, Num, NumCast, NumOps};
 use serde::{Deserialize, Serialize};
@@ -111,6 +111,22 @@ impl<T: PartialOrd + Num + NumCast + NumOps + Copy> Axis for UniformCyclic<T> {
     #[inline]
     fn bin(&self, index: usize) -> Option<<Self as Axis>::BinInterval> {
         self.axis.bin(index + 1)
+    }
+}
+
+impl<T> Display for UniformCyclic<T>
+where
+    T: PartialOrd + NumCast + NumOps + Copy + Display,
+{
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "Axis{{# bins={}, range=[{}, {}), class={}}}",
+            self.axis.num_bins(),
+            self.axis.low(),
+            self.axis.high(),
+            stringify!(UniformCyclic)
+        )
     }
 }
 
