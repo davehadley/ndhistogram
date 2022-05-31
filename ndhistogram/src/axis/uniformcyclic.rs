@@ -86,7 +86,6 @@ impl<T> UniformCyclic<T> {
     }
 }
 
-// TODO integers?
 impl<T: PartialOrd + Num + NumCast + NumOps + Copy> Axis for UniformCyclic<T> {
     type Coordinate = T;
     type BinInterval = BinInterval<T>;
