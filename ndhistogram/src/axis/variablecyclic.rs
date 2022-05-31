@@ -63,7 +63,6 @@ where
 
     #[inline]
     fn index(&self, coordinate: &Self::Coordinate) -> Option<usize> {
-        // TODO can we sensibly avoid copy-paste code reuse with UniformCyclic::index ?
         let (mut x, hi, lo) = (*coordinate, *self.axis.high(), *self.axis.low());
         let range = hi - lo;
         x = (x - lo) % range;
