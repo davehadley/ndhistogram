@@ -9,8 +9,17 @@ use serde::{Deserialize, Serialize};
 /// A wrap-around axis with variable-sized bins, constructed from a list of bin
 /// edges.
 ///
-/// TODO complete docs, including examples
-
+/// # Examples
+/// 1D histogram with cyclic variable sized azimuthal angle binning.
+/// ```
+/// use ndhistogram::{ndhistogram, Histogram};
+/// use ndhistogram::axis::{Axis, BinInterval, VariableCyclic};
+/// use std::f64::consts::PI;
+/// let mut hist = ndhistogram!(VariableCyclic::new(vec![0.0, PI/2.0, PI, 2.0*PI]); i32);
+/// let angle = 0.1;
+/// hist.fill(&angle); // fills the first bin
+/// hist.fill(&(angle + 2.0*PI)); // wraps around and fills the same first bin
+/// assert_eq!(hist.value(&angle), Some(&2));
 #[derive(Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Serialize, Deserialize)]
 pub struct VariableCyclic<T = f64> {
     axis: Variable<T>,
