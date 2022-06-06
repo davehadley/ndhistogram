@@ -1,3 +1,6 @@
+# 0.7.0 (2022-06-06)
+- New [UniformCyclic](https://docs.rs/ndhistogram/0.7.0/ndhistogram/axis/struct.UniformCyclic.html) and [VariableCyclic](https://docs.rs/ndhistogram/0.7.0/ndhistogram/axis/struct.VariableCyclic.html) and `VariableCyclic` axis types (from [@jacg](https://github.com/jacg)).
+
 # 0.6.3 (2022-04-07)
 - `Uniform::with_step_size` now panics when given a step size equal to zero (from [@jacg](https://github.com/jacg)).
 - Documentation and CI improvements from [@jacg](https://github.com/jacg).
