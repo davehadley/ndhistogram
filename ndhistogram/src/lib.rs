@@ -103,6 +103,7 @@
 //!
 //! - [Uniform](axis::Uniform)/[UniformNoFlow](axis::UniformNoFlow): equally sized bins in a some range with optional underflow/overflow bins.
 //! - [Variable](axis::Variable)/[VariableNoFlow](axis::VariableNoFlow): variable sized bins with optional underflow/overflow bins.
+//! - [UniformCyclic](axis::UniformCyclic)/[VariableCyclic](axis::VariableCyclic): cyclic or periodic versions of the Uniform and Variable axes.
 //! - [Category](axis::Category)/[CategoryNoFlow](axis::CategoryNoFlow): a finite set of discrete values with optional overflow bin.
 //!
 //! User defined axes types are possible by implementing the [Axis](axis::Axis) trait.
