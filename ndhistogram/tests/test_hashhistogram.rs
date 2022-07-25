@@ -263,3 +263,34 @@ impl_binary_op_with_owned! {test_sparsehistogram_1d_elementwise_add_with_owned, 
 impl_binary_op_with_owned! {test_sparsehistogram_1d_elementwise_sub_with_owned, -}
 impl_binary_op_with_owned! {test_sparsehistogram_1d_elementwise_div_with_owned, /}
 impl_binary_op_with_owned! {test_sparsehistogram_1d_elementwise_mul_with_owned, *}
+
+macro_rules! impl_binary_op_assign {
+    ($fnname:tt, $mathsymbol:tt) => {
+        #[test]
+        fn $fnname() {
+            let (mut leftvec, mut leftsparse) = generate_normal_hist_1d(1);
+            let (rightvec, rightsparse) = generate_normal_hist_1d(2);
+            leftvec $mathsymbol &rightvec;
+            leftsparse $mathsymbol &rightsparse;
+            let mut actual: Vec<_> = leftsparse
+                .iter()
+                .map(|it| Item{index:it.index, bin:it.bin, value:it.value})
+                .filter(|item| !item.value.is_nan())
+                .filter(|item| *item.value!=0.0)
+                .collect();
+            let mut expected: Vec<_> = leftvec
+                .iter()
+                .filter(|item| !item.value.is_nan())
+                .filter(|item| *item.value!=0.0)
+                .collect();
+            actual.sort_by_key(|item| item.index);
+            expected.sort_by_key(|item| item.index);
+            assert_eq!(actual, expected)
+        }
+    }
+}
+
+impl_binary_op_assign! {test_sparsehistogram_1d_elementwise_add_assign, +=}
+impl_binary_op_assign! {test_sparsehistogram_1d_elementwise_sub_assign, -=}
+impl_binary_op_assign! {test_sparsehistogram_1d_elementwise_div_assign, /=}
+impl_binary_op_assign! {test_sparsehistogram_1d_elementwise_mul_assign, *=}

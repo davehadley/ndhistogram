@@ -235,3 +235,30 @@ impl_binary_op_with_owned! {Add, add, AddAssign, +=}
 impl_binary_op_with_owned! {Sub, sub, SubAssign, -=}
 impl_binary_op_with_owned! {Mul, mul, MulAssign, *=}
 impl_binary_op_with_owned! {Div, div, DivAssign, /=}
+
+macro_rules! impl_binary_op_assign {
+    ($Trait:tt, $method:tt, $ValueAssignTrait:tt, $mathsymbol:tt) => {
+        impl<A: Axis + PartialEq, V> $Trait<&HashHistogram<A, V>> for HashHistogram<A, V>
+        where
+            HashHistogram<A, V>: Histogram<A, V>,
+            V: Default,
+            for<'a> V: $ValueAssignTrait<&'a V>,
+        {
+
+            fn $method(&mut self, rhs: &HashHistogram<A, V>) {
+                if self.axes() != rhs.axes() {
+                    panic!("Cannot combine HashHistograms with incompatible axes.");
+                }
+                for (index, rhs_value) in rhs.values.iter() {
+                    let lhs_value = self.values.entry(*index).or_default();
+                    *lhs_value $mathsymbol rhs_value
+                }
+            }
+        }
+    };
+}
+
+impl_binary_op_assign! {AddAssign, add_assign, AddAssign, +=}
+impl_binary_op_assign! {SubAssign, sub_assign, SubAssign, -=}
+impl_binary_op_assign! {MulAssign, mul_assign, MulAssign, *=}
+impl_binary_op_assign! {DivAssign, div_assign, DivAssign, /=}
