@@ -216,3 +216,30 @@ impl_binary_op_with_owned! {test_ndhistogram_1d_add_owned, +}
 impl_binary_op_with_owned! {test_ndhistogram_1d_mul_owned, *}
 impl_binary_op_with_owned! {test_ndhistogram_1d_sub_owned, -}
 impl_binary_op_with_owned! {test_ndhistogram_1d_div_owned, /}
+
+macro_rules! impl_op_assign {
+    ($fnname:tt, $mathsymbol:tt, $testmathsymbol:tt) => {
+        #[test]
+        fn $fnname() {
+            let mut left = generate_normal_hist_1d(1);
+            let right = generate_normal_hist_1d(2);
+            let left_copy = left.clone();
+            left $mathsymbol &right;
+            let actual: Vec<_> = left
+                .iter()
+                .map(|it| (it.index, it.bin, *it.value))
+                .collect();
+            let expected: Vec<_> = left_copy
+                .iter()
+                .zip(right.into_iter())
+                .map(|(l, r)| (l.index, l.bin, l.value $testmathsymbol r.value))
+                .collect();
+            assert_eq!(actual, expected)
+        }
+    }
+}
+
+impl_op_assign! {test_add_assign, +=, +}
+impl_op_assign! {test_mul_assign, *=, *}
+impl_op_assign! {test_div_assign, /=, /}
+impl_op_assign! {test_sub_assign, -=, -}

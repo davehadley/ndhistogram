@@ -240,3 +240,27 @@ impl_binary_op_with_owned! {Add, add, AddAssign, +=}
 impl_binary_op_with_owned! {Sub, sub, SubAssign, -=}
 impl_binary_op_with_owned! {Mul, mul, MulAssign, *=}
 impl_binary_op_with_owned! {Div, div, DivAssign, /=}
+
+macro_rules! impl_binary_op_assign {
+    ($Trait:tt, $method:tt, $ValueAssignTrait:tt, $mathsymbol:tt) => {
+        impl<A: Axis + PartialEq, V> $Trait<&VecHistogram<A, V>> for VecHistogram<A, V>
+        where
+            for<'a> V: $ValueAssignTrait<&'a V>,
+        {
+            fn $method(&mut self, rhs: &VecHistogram<A, V>) {
+                if self.axes() != rhs.axes() {
+                    panic!("Cannot combine VecHistograms with incompatible axes.");
+                }
+                self.values
+                    .iter_mut()
+                    .zip(rhs.values.iter())
+                    .for_each(|(l, r)| *l $mathsymbol &r);
+            }
+        }
+    };
+}
+
+impl_binary_op_assign! {AddAssign, add_assign, AddAssign, +=}
+impl_binary_op_assign! {SubAssign, sub_assign, SubAssign, -=}
+impl_binary_op_assign! {MulAssign, mul_assign, MulAssign, *=}
+impl_binary_op_assign! {DivAssign, div_assign, DivAssign, /=}
