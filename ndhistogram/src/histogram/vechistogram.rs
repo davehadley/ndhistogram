@@ -2,7 +2,7 @@ use std::{
     cmp::Ordering,
     f64::INFINITY,
     fmt::Display,
-    ops::{Add, Div, Mul, Sub},
+    ops::{Add, AddAssign, Div, Mul, Sub},
 };
 
 use crate::{axis::Axis, error::BinaryOperationError};
@@ -213,3 +213,30 @@ impl_binary_op_with_scalar! {Add, add, +}
 impl_binary_op_with_scalar! {Sub, sub, -}
 impl_binary_op_with_scalar! {Mul, mul, *}
 impl_binary_op_with_scalar! {Div, div, /}
+
+macro_rules! impl_binary_op_with_owned {
+    ($Trait:tt, $method:tt, $ValueAssignTrait:tt, $mathsymbol:tt) => {
+        impl<A: Axis + PartialEq + Clone, V> $Trait<&VecHistogram<A, V>> for VecHistogram<A, V>
+        where
+            for<'a> V: $ValueAssignTrait<&'a V>,
+        {
+            type Output = Result<VecHistogram<A, V>, BinaryOperationError>;
+
+            fn $method(mut self, rhs: &VecHistogram<A, V>) -> Self::Output {
+                if self.axes() != rhs.axes() {
+                    return Err(BinaryOperationError);
+                }
+                self.values
+                    .iter_mut()
+                    .zip(rhs.values.iter())
+                    .for_each(|(l, r)| *l += &r);
+                Ok(self)
+            }
+        }
+    };
+}
+
+impl_binary_op_with_owned! {Add, add, AddAssign, +=}
+// impl_binary_op_with_owned! {Sub, sub, -}
+// impl_binary_op_with_owned! {Mul, mul, *}
+// impl_binary_op_with_owned! {Div, div, /}

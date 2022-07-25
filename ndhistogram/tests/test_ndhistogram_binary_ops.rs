@@ -38,7 +38,7 @@ fn generate_normal_hist_3d(seed: u64) -> Hist3D {
 }
 
 #[test]
-fn test_ndhistogram_add_1d_elementwise() {
+fn test_ndhistogram_add_1d_elementwise_with_copy() {
     let left = generate_normal_hist_1d(1);
     let right = generate_normal_hist_1d(2);
     let hadd = (&left + &right).unwrap();
@@ -47,6 +47,24 @@ fn test_ndhistogram_add_1d_elementwise() {
         .map(|it| (it.index, it.bin, *it.value))
         .collect();
     let expected: Vec<_> = left
+        .iter()
+        .zip(right.into_iter())
+        .map(|(l, r)| (l.index, l.bin, l.value + r.value))
+        .collect();
+    assert_eq!(actual, expected)
+}
+
+#[test]
+fn test_ndhistogram_add_1d_elementwise_with_move() {
+    let left = generate_normal_hist_1d(1);
+    let right = generate_normal_hist_1d(2);
+    let left_copy = left.clone();
+    let hadd = (left + &right).unwrap();
+    let actual: Vec<_> = hadd
+        .iter()
+        .map(|it| (it.index, it.bin, *it.value))
+        .collect();
+    let expected: Vec<_> = left_copy
         .iter()
         .zip(right.into_iter())
         .map(|(l, r)| (l.index, l.bin, l.value + r.value))

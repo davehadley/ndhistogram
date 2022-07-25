@@ -80,6 +80,7 @@
 //!
 //! ## Overview
 //!
+//! A deliberately broken link [Bistogram](Bistogram).
 //! A [Histogram](Histogram) is composed of two components:
 //! - The [Axes](Axes) which is a set of [Axis](axis::Axis) corresponding to each dimension of the histogram.
 //! The [Axes](Axes) and [Axis](axis::Axis) define the binning of the histogram and are responsible for mapping from coordinate space (eg \[x,y,z\]) to an integer bin number.
