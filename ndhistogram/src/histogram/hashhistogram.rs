@@ -2,7 +2,7 @@ use std::{
     collections::HashMap,
     collections::HashSet,
     fmt::Display,
-    ops::{Add, Div, Mul, Sub},
+    ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign},
 };
 
 use serde::{Deserialize, Serialize};
@@ -167,7 +167,7 @@ where
     }
 }
 
-macro_rules! impl_binary_op {
+macro_rules! impl_binary_op_with_immutable_borrow {
     ($Trait:tt, $method:tt, $mathsymbol:tt) => {
         impl<A: Axis + PartialEq + Clone, V> $Trait<&HashHistogram<A, V>> for &HashHistogram<A, V>
         where
@@ -202,7 +202,36 @@ macro_rules! impl_binary_op {
     };
 }
 
-impl_binary_op! {Add, add, +}
-impl_binary_op! {Sub, sub, -}
-impl_binary_op! {Mul, mul, *}
-impl_binary_op! {Div, div, /}
+impl_binary_op_with_immutable_borrow! {Add, add, +}
+impl_binary_op_with_immutable_borrow! {Sub, sub, -}
+impl_binary_op_with_immutable_borrow! {Mul, mul, *}
+impl_binary_op_with_immutable_borrow! {Div, div, /}
+
+macro_rules! impl_binary_op_with_owned {
+    ($Trait:tt, $method:tt, $ValueAssignTrait:tt, $mathsymbol:tt) => {
+        impl<A: Axis + PartialEq + Clone, V> $Trait<&HashHistogram<A, V>> for HashHistogram<A, V>
+        where
+            HashHistogram<A, V>: Histogram<A, V>,
+            V: Clone + Default,
+            for<'a> V: $ValueAssignTrait<&'a V>,
+        {
+            type Output = Result<HashHistogram<A, V>, BinaryOperationError>;
+
+            fn $method(mut self, rhs: &HashHistogram<A, V>) -> Self::Output {
+                if self.axes() != rhs.axes() {
+                    return Err(BinaryOperationError);
+                }
+                for (index, rhs_value) in rhs.values.iter() {
+                    let lhs_value = self.values.entry(*index).or_default();
+                    *lhs_value $mathsymbol rhs_value
+                }
+                Ok(self)
+            }
+        }
+    };
+}
+
+impl_binary_op_with_owned! {Add, add, AddAssign, +=}
+impl_binary_op_with_owned! {Sub, sub, SubAssign, -=}
+impl_binary_op_with_owned! {Mul, mul, MulAssign, *=}
+impl_binary_op_with_owned! {Div, div, DivAssign, /=}
