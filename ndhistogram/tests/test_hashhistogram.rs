@@ -189,8 +189,8 @@ macro_rules! impl_binary_op {
 
         #[test]
         fn $fnnamefails() {
-            let left = ndhistogram!(Uniform::new(10, -5.0, 5.0));
-            let right = ndhistogram!(Uniform::new(10, -5.0, 6.0));
+            let left = sparsehistogram!(Uniform::new(10, -5.0, 5.0));
+            let right = sparsehistogram!(Uniform::new(10, -5.0, 6.0));
             let hadd = &left $mathsymbol &right;
             assert!(hadd.is_err())
         }
