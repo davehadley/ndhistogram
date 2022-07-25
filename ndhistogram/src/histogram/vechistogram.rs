@@ -2,7 +2,7 @@ use std::{
     cmp::Ordering,
     f64::INFINITY,
     fmt::Display,
-    ops::{Add, AddAssign, Div, Mul, Sub},
+    ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign},
 };
 
 use crate::{axis::Axis, error::BinaryOperationError};
@@ -154,7 +154,7 @@ where
     }
 }
 
-macro_rules! impl_binary_op {
+macro_rules! impl_binary_op_with_immutable_borrow {
     ($Trait:tt, $method:tt, $mathsymbol:tt) => {
         impl<A: Axis + PartialEq + Clone, V> $Trait<&VecHistogram<A, V>> for &VecHistogram<A, V>
 where
@@ -181,10 +181,10 @@ where
     };
 }
 
-impl_binary_op! {Add, add, +}
-impl_binary_op! {Sub, sub, -}
-impl_binary_op! {Mul, mul, *}
-impl_binary_op! {Div, div, /}
+impl_binary_op_with_immutable_borrow! {Add, add, +}
+impl_binary_op_with_immutable_borrow! {Sub, sub, -}
+impl_binary_op_with_immutable_borrow! {Mul, mul, *}
+impl_binary_op_with_immutable_borrow! {Div, div, /}
 
 macro_rules! impl_binary_op_with_scalar {
     ($Trait:tt, $method:tt, $mathsymbol:tt) => {
@@ -216,7 +216,7 @@ impl_binary_op_with_scalar! {Div, div, /}
 
 macro_rules! impl_binary_op_with_owned {
     ($Trait:tt, $method:tt, $ValueAssignTrait:tt, $mathsymbol:tt) => {
-        impl<A: Axis + PartialEq + Clone, V> $Trait<&VecHistogram<A, V>> for VecHistogram<A, V>
+        impl<A: Axis + PartialEq, V> $Trait<&VecHistogram<A, V>> for VecHistogram<A, V>
         where
             for<'a> V: $ValueAssignTrait<&'a V>,
         {
@@ -229,7 +229,7 @@ macro_rules! impl_binary_op_with_owned {
                 self.values
                     .iter_mut()
                     .zip(rhs.values.iter())
-                    .for_each(|(l, r)| *l += &r);
+                    .for_each(|(l, r)| *l $mathsymbol &r);
                 Ok(self)
             }
         }
@@ -237,6 +237,6 @@ macro_rules! impl_binary_op_with_owned {
 }
 
 impl_binary_op_with_owned! {Add, add, AddAssign, +=}
-// impl_binary_op_with_owned! {Sub, sub, -}
-// impl_binary_op_with_owned! {Mul, mul, *}
-// impl_binary_op_with_owned! {Div, div, /}
+impl_binary_op_with_owned! {Sub, sub, SubAssign, -=}
+impl_binary_op_with_owned! {Mul, mul, MulAssign, *=}
+impl_binary_op_with_owned! {Div, div, DivAssign, /=}

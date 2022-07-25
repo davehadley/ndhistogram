@@ -186,3 +186,33 @@ fn test_ndhistogram_3d_inequality() {
     right.fill(&(1.0, 2.0, 3.0));
     assert_ne!(left, right)
 }
+
+macro_rules! impl_binary_op_with_owned {
+    ($fnname1d:tt, $mathsymbol:tt) => {
+
+        #[test]
+        fn $fnname1d() {
+            let left = generate_normal_hist_1d(1);
+            let left_copy = left.clone();
+            let right = generate_normal_hist_1d(2);
+            let hadd = (left $mathsymbol &right).unwrap();
+            let actual: Vec<_> = hadd
+                .iter()
+                .map(|it| (it.index, it.bin, *it.value))
+                .filter(|(_,_, v)| !v.is_nan())
+                .collect();
+            let expected: Vec<_> = left_copy
+                .iter()
+                .zip(right.into_iter())
+                .map(|(l, r)| (l.index, l.bin, l.value $mathsymbol r.value))
+                .filter(|(_,_, v)| !v.is_nan())
+                .collect();
+            assert_eq!(actual, expected)
+        }
+    }
+}
+
+impl_binary_op_with_owned! {test_ndhistogram_1d_add_owned, +}
+impl_binary_op_with_owned! {test_ndhistogram_1d_mul_owned, *}
+impl_binary_op_with_owned! {test_ndhistogram_1d_sub_owned, -}
+impl_binary_op_with_owned! {test_ndhistogram_1d_div_owned, /}
