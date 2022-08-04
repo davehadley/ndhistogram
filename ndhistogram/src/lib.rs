@@ -83,7 +83,7 @@
 //! A [Histogram](Histogram) is composed of two components:
 //! - The [Axes](Axes) which is a set of [Axis](axis::Axis) corresponding to each dimension of the histogram.
 //! The [Axes](Axes) and [Axis](axis::Axis) define the binning of the histogram and are responsible for mapping from coordinate space (eg \[x,y,z\]) to an integer bin number.
-//! - The histogram bin value storage. Valid bin value types including any integer and floating number type as well as user defined types that implement [Fill](Fill), [FillWith](FillWith) or [FillWithWeighted](FillWithWeighted).
+//! - The histogram bin value storage. Valid bin value types include any integer and floating number type as well as user defined types that implement [Fill](Fill), [FillWith](FillWith) or [FillWithWeighted](FillWithWeighted).
 //!
 //! ### Histogram Implementations
 //!
@@ -117,7 +117,7 @@
 //! - All types that implement [FillWith](FillWith)
 //! - All types that implement [FillWithWeighted](FillWithWeighted)
 //! - All types that implement [AddAssign](std::ops::AddAssign) (as they are also [FillWith](FillWith)).
-//! - All types that implement [AddAssign](std::ops::AddAssign) and [One](num_traits::One) ( as they are also [Fill](Fill)).
+//! - All types that implement [AddAssign](std::ops::AddAssign) and [One](num_traits::One) (as they are also [Fill](Fill)).
 //!
 //! This crate defines the following bin value types:
 //!
