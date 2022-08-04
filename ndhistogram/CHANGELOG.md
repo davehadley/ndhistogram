@@ -1,3 +1,8 @@
+# 0.8.0 (2022-08-04)
+
+- Improved histogram merging. [VecHistogram](https://docs.rs/ndhistogram/0.8.0/ndhistogram/struct.VecHistogram.html) and [HashHistogram](https://docs.rs/ndhistogram/0.8.0/ndhistogram/struct.HashHistogram.html) now implement the [AddAssign] trait and implement the [Add] trait on owned values (where merging can be done without copying).
+- Improvements to documentation.
+
 # 0.7.0 (2022-06-06)
 - New [UniformCyclic](https://docs.rs/ndhistogram/0.7.0/ndhistogram/axis/struct.UniformCyclic.html) and [VariableCyclic](https://docs.rs/ndhistogram/0.7.0/ndhistogram/axis/struct.VariableCyclic.html) axis types (from [@jacg](https://github.com/jacg)).
 
