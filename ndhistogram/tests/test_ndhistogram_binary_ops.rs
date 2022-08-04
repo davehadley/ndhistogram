@@ -38,7 +38,7 @@ fn generate_normal_hist_3d(seed: u64) -> Hist3D {
 }
 
 #[test]
-fn test_ndhistogram_add_1d_elementwise() {
+fn test_ndhistogram_add_1d_elementwise_with_copy() {
     let left = generate_normal_hist_1d(1);
     let right = generate_normal_hist_1d(2);
     let hadd = (&left + &right).unwrap();
@@ -168,3 +168,60 @@ fn test_ndhistogram_3d_inequality() {
     right.fill(&(1.0, 2.0, 3.0));
     assert_ne!(left, right)
 }
+
+macro_rules! impl_binary_op_with_owned {
+    ($fnname1d:tt, $mathsymbol:tt) => {
+
+        #[test]
+        fn $fnname1d() {
+            let left = generate_normal_hist_1d(1);
+            let left_copy = left.clone();
+            let right = generate_normal_hist_1d(2);
+            let hadd = (left $mathsymbol &right).unwrap();
+            let actual: Vec<_> = hadd
+                .iter()
+                .map(|it| (it.index, it.bin, *it.value))
+                .filter(|(_,_, v)| !v.is_nan())
+                .collect();
+            let expected: Vec<_> = left_copy
+                .iter()
+                .zip(right.into_iter())
+                .map(|(l, r)| (l.index, l.bin, l.value $mathsymbol r.value))
+                .filter(|(_,_, v)| !v.is_nan())
+                .collect();
+            assert_eq!(actual, expected)
+        }
+    }
+}
+
+impl_binary_op_with_owned! {test_ndhistogram_1d_add_owned, +}
+impl_binary_op_with_owned! {test_ndhistogram_1d_mul_owned, *}
+impl_binary_op_with_owned! {test_ndhistogram_1d_sub_owned, -}
+impl_binary_op_with_owned! {test_ndhistogram_1d_div_owned, /}
+
+macro_rules! impl_op_assign {
+    ($fnname:tt, $mathsymbol:tt, $testmathsymbol:tt) => {
+        #[test]
+        fn $fnname() {
+            let mut left = generate_normal_hist_1d(1);
+            let right = generate_normal_hist_1d(2);
+            let left_copy = left.clone();
+            left $mathsymbol &right;
+            let actual: Vec<_> = left
+                .iter()
+                .map(|it| (it.index, it.bin, *it.value))
+                .collect();
+            let expected: Vec<_> = left_copy
+                .iter()
+                .zip(right.into_iter())
+                .map(|(l, r)| (l.index, l.bin, l.value $testmathsymbol r.value))
+                .collect();
+            assert_eq!(actual, expected)
+        }
+    }
+}
+
+impl_op_assign! {test_add_assign, +=, +}
+impl_op_assign! {test_mul_assign, *=, *}
+impl_op_assign! {test_div_assign, /=, /}
+impl_op_assign! {test_sub_assign, -=, -}
