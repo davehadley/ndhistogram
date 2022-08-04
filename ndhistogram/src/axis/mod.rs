@@ -33,10 +33,13 @@ type Bins<'a, BinInterval> = Box<dyn Iterator<Item = BinInterval> + 'a>;
 /// For examples see:
 /// - [Uniform](crate::axis::Uniform),
 /// - [UniformNoFlow](crate::axis::UniformNoFlow),
+/// - [UniformCyclic](crate::axis::UniformCyclic),
 /// - [Variable](crate::axis::Variable),
 /// - [VariableNoFlow](crate::axis::VariableNoFlow),
+/// - [VariableCyclic](crate::axis::VariableCyclic),
 /// - [Category](crate::axis::Category)
 /// - and [CategoryNoFlow](crate::axis::CategoryNoFlow).
+///
 /// Most use cases should be covered by the builtin Axis implementations.
 /// However, you may implement the Axis trait if you have specialist needs.
 ///
