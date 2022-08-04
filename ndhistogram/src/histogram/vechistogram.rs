@@ -155,13 +155,29 @@ where
 }
 
 macro_rules! impl_binary_op_with_immutable_borrow {
-    ($Trait:tt, $method:tt, $mathsymbol:tt) => {
+    ($Trait:tt, $method:tt, $mathsymbol:tt, $testresult:tt) => {
         impl<A: Axis + PartialEq + Clone, V> $Trait<&VecHistogram<A, V>> for &VecHistogram<A, V>
 where
     for<'a> &'a V: $Trait<Output = V>,
 {
     type Output = Result<VecHistogram<A, V>, BinaryOperationError>;
 
+    /// Combine the right-hand histogram with the left-hand histogram,
+    /// returning a copy, and leaving the original histograms intact.
+    ///
+    /// If the input histograms have incompatible axes, this operation
+    /// will return a [BinaryOperationError].
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// use ndhistogram::{Histogram, ndhistogram, axis::Uniform};
+    /// let mut hist1 = ndhistogram!(Uniform::<f64>::new(10, -5.0, 5.0));
+    /// let mut hist2 = ndhistogram!(Uniform::<f64>::new(10, -5.0, 5.0));
+    /// hist1.fill_with(&0.0, 2.0);
+    /// hist2.fill(&0.0);
+    #[doc=concat!("let combined_hist = (&hist1 ", stringify!($mathsymbol), " &hist2).expect(\"Axes are compatible\");")]
+    #[doc=concat!("assert_eq!(combined_hist.value(&0.0).unwrap(), &", stringify!($testresult), ");")]
     fn $method(self, rhs: &VecHistogram<A, V>) -> Self::Output {
         if self.axes() != rhs.axes() {
             return Err(BinaryOperationError);
@@ -181,10 +197,10 @@ where
     };
 }
 
-impl_binary_op_with_immutable_borrow! {Add, add, +}
-impl_binary_op_with_immutable_borrow! {Sub, sub, -}
-impl_binary_op_with_immutable_borrow! {Mul, mul, *}
-impl_binary_op_with_immutable_borrow! {Div, div, /}
+impl_binary_op_with_immutable_borrow! {Add, add, +, 3.0}
+impl_binary_op_with_immutable_borrow! {Sub, sub, -, 1.0}
+impl_binary_op_with_immutable_borrow! {Mul, mul, *, 2.0}
+impl_binary_op_with_immutable_borrow! {Div, div, /, 2.0}
 
 macro_rules! impl_binary_op_with_scalar {
     ($Trait:tt, $method:tt, $mathsymbol:tt) => {
@@ -215,13 +231,31 @@ impl_binary_op_with_scalar! {Mul, mul, *}
 impl_binary_op_with_scalar! {Div, div, /}
 
 macro_rules! impl_binary_op_with_owned {
-    ($Trait:tt, $method:tt, $ValueAssignTrait:tt, $mathsymbol:tt) => {
+    ($Trait:tt, $method:tt, $ValueAssignTrait:tt, $mathsymbol:tt, $assignmathsymbol:tt, $testresult:tt) => {
         impl<A: Axis + PartialEq, V> $Trait<&VecHistogram<A, V>> for VecHistogram<A, V>
         where
             for<'a> V: $ValueAssignTrait<&'a V>,
         {
             type Output = Result<VecHistogram<A, V>, BinaryOperationError>;
 
+            /// Combine the right-hand histogram with the left-hand histogram,
+            /// consuming the left-hand histogram and returning a new value.
+            /// As this avoids making copies of the histograms, this is the
+            /// recommended method to merge histograms.
+            ///
+            /// If the input histograms have incompatible axes, this operation
+            /// will return a [BinaryOperationError].
+            ///
+            /// # Examples
+            ///
+            /// ```rust
+            /// use ndhistogram::{Histogram, ndhistogram, axis::Uniform};
+            /// let mut hist1 = ndhistogram!(Uniform::<f64>::new(10, -5.0, 5.0));
+            /// let mut hist2 = ndhistogram!(Uniform::<f64>::new(10, -5.0, 5.0));
+            /// hist1.fill_with(&0.0, 2.0);
+            /// hist2.fill(&0.0);
+            #[doc=concat!("let combined_hist = (hist1 ", stringify!($mathsymbol), " &hist2).expect(\"Axes are compatible\");")]
+            #[doc=concat!("assert_eq!(combined_hist.value(&0.0).unwrap(), &", stringify!($testresult), ");")]
             fn $method(mut self, rhs: &VecHistogram<A, V>) -> Self::Output {
                 if self.axes() != rhs.axes() {
                     return Err(BinaryOperationError);
@@ -229,24 +263,44 @@ macro_rules! impl_binary_op_with_owned {
                 self.values
                     .iter_mut()
                     .zip(rhs.values.iter())
-                    .for_each(|(l, r)| *l $mathsymbol &r);
+                    .for_each(|(l, r)| *l $assignmathsymbol &r);
                 Ok(self)
             }
         }
     };
 }
 
-impl_binary_op_with_owned! {Add, add, AddAssign, +=}
-impl_binary_op_with_owned! {Sub, sub, SubAssign, -=}
-impl_binary_op_with_owned! {Mul, mul, MulAssign, *=}
-impl_binary_op_with_owned! {Div, div, DivAssign, /=}
+impl_binary_op_with_owned! {Add, add, AddAssign, +, +=, 3.0}
+impl_binary_op_with_owned! {Sub, sub, SubAssign, -, -=, 1.0}
+impl_binary_op_with_owned! {Mul, mul, MulAssign, *, *=, 2.0}
+impl_binary_op_with_owned! {Div, div, DivAssign, /, /=, 2.0}
 
 macro_rules! impl_binary_op_assign {
-    ($Trait:tt, $method:tt, $ValueAssignTrait:tt, $mathsymbol:tt) => {
+    ($Trait:tt, $method:tt, $ValueAssignTrait:tt, $mathsymbol:tt, $testresult:tt) => {
         impl<A: Axis + PartialEq, V> $Trait<&VecHistogram<A, V>> for VecHistogram<A, V>
         where
             for<'a> V: $ValueAssignTrait<&'a V>,
         {
+            /// Combine the right-hand histogram with the left-hand histogram,
+            /// mutating the left-hand histogram.
+            ///
+            /// # Panics
+            ///
+            /// Panics if the histograms have incompatible axes.
+            /// To handle this failure mode at runtime, use the non-assign
+            /// version of this operation, which returns an Result.
+            ///
+            /// # Examples
+            ///
+            /// ```rust
+            /// use ndhistogram::{Histogram, ndhistogram, axis::Uniform};
+            /// let mut hist1 = ndhistogram!(Uniform::<f64>::new(10, -5.0, 5.0));
+            /// let mut hist2 = ndhistogram!(Uniform::<f64>::new(10, -5.0, 5.0));
+            /// hist1.fill_with(&0.0, 2.0);
+            /// hist2.fill(&0.0);
+            #[doc=concat!("hist1 ", stringify!($mathsymbol), " &hist2;")]
+            #[doc=concat!("assert_eq!(hist1.value(&0.0).unwrap(), &", stringify!($testresult), ");")]
+            /// ```
             fn $method(&mut self, rhs: &VecHistogram<A, V>) {
                 if self.axes() != rhs.axes() {
                     panic!("Cannot combine VecHistograms with incompatible axes.");
@@ -260,7 +314,7 @@ macro_rules! impl_binary_op_assign {
     };
 }
 
-impl_binary_op_assign! {AddAssign, add_assign, AddAssign, +=}
-impl_binary_op_assign! {SubAssign, sub_assign, SubAssign, -=}
-impl_binary_op_assign! {MulAssign, mul_assign, MulAssign, *=}
-impl_binary_op_assign! {DivAssign, div_assign, DivAssign, /=}
+impl_binary_op_assign! {AddAssign, add_assign, AddAssign, +=, 3.0}
+impl_binary_op_assign! {SubAssign, sub_assign, SubAssign, -=, 1.0}
+impl_binary_op_assign! {MulAssign, mul_assign, MulAssign, *=, 2.0}
+impl_binary_op_assign! {DivAssign, div_assign, DivAssign, /=, 2.0}

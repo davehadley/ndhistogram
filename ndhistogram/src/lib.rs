@@ -74,6 +74,14 @@
 //! hist.fill_with(&1.0, 3.0);
 //! assert_eq!(hist.value(&1.0).unwrap().mean(), 2.0);
 //!
+//! // Merge two histograms
+//! let mut hist1 = ndhistogram!(Uniform::new(10, -5.0, 5.0));
+//! let mut hist2 = ndhistogram!(Uniform::new(10, -5.0, 5.0));
+//! hist1.fill(&0.0);
+//! hist2.fill(&0.0);
+//! let merged_hist = (hist1 + &hist2).unwrap();
+//! assert_eq!(merged_hist.value(&0.0).unwrap(), &2.0);
+//!
 //! // user defined value types are possible by implementing Fill, FillWith or FillWithWeighted traits
 //!
 //! ```
