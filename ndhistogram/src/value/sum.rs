@@ -1,14 +1,12 @@
 use num_traits::Float;
 
 use crate::Fill;
-use serde::{Deserialize, Serialize};
 
 /// ndhistogram bin value type for filling unweighted values.
 /// Analogous to [WeightedSum](crate::value::WeightedSum). Methods returning variance and standard
 /// deviation assume Poisson statistics.
-#[derive(
-    Copy, Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Serialize, Deserialize,
-)]
+#[derive(Copy, Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct Sum<T = f64> {
     sum: T,
 }

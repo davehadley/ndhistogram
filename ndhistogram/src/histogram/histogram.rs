@@ -2,8 +2,6 @@ use crate::{axis::Axis, FillWith};
 
 use super::fill::{Fill, FillWithWeighted};
 
-use serde::{Deserialize, Serialize};
-
 // TODO: Using generic associated types would give a cleaner interface and avoid boxing the iterators
 // https://github.com/rust-lang/rfcs/blob/master/text/1598-generic_associated_types.md
 pub(crate) type Values<'a, V> = Box<dyn Iterator<Item = &'a V> + 'a>;
@@ -100,9 +98,8 @@ pub trait Histogram<A: Axis, V> {
 }
 
 /// Struct to be returned when iterating over [Histogram]s bins.
-#[derive(
-    Copy, Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Serialize, Deserialize,
-)]
+#[derive(Copy, Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct Item<T, V> {
     /// Bin number
     pub index: usize,

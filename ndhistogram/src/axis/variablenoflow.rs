@@ -1,5 +1,5 @@
 use super::{Axis, BinInterval, Variable};
-use serde::{Deserialize, Serialize};
+
 use std::fmt::{Debug, Display};
 
 /// An axis with variable sized bins and no overflow bins.
@@ -22,7 +22,8 @@ use std::fmt::{Debug, Display};
 ///    );
 ///
 /// ```
-#[derive(Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Serialize, Deserialize)]
+#[derive(Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct VariableNoFlow<T = f64> {
     axis: Variable<T>,
 }

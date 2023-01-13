@@ -8,6 +8,7 @@ num-traits = "0.2.14"
 [dependencies.serde]
 version = "1.0.120"
 features = [ "derive",]
+optional = true
 
 [dev-dependencies]
 rand = "0.8.0"
@@ -35,3 +36,6 @@ repository = "https://github.com/davehadley/ndhistogram"
 readme = "README.md"
 keywords = [ "histogram", "statistics", "data", "analysis", "multidimensional",]
 categories = [ "science", "mathematics", "data-structures",]
+
+[features]
+default = []

@@ -20,8 +20,10 @@ jobs:
         profile: minimal
         toolchain: stable
         override: true
-    - name: cargo check
+    - name: cargo check (default features)
       run: RUSTFLAGS="-D warnings" cargo check
+    - name: cargo check (all features)
+      run: RUSTFLAGS="-D warnings" cargo check --all-features
 
   test:
     name: Test Suite
@@ -37,7 +39,7 @@ jobs:
         override: true
     - uses: actions-rs/cargo@v1
       with:
-        command: test
+        command: test --all-features
     - name: publish dry-run
       working-directory: ./ndhistogram
       run: cargo publish --locked --dry-run
