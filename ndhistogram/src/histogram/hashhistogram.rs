@@ -14,7 +14,7 @@ use crate::{axis::Axis, error::BinaryOperationError, Item};
 /// This makes high-dimensional, many-binned (but mostly empty) histograms
 ///  possible. If memory usage is not a concern, see [VecHistogram](crate::VecHistogram).
 ///
-/// See [sparsehistogram] for examples of its use.
+/// See [crate::sparsehistogram] for examples of its use.
 #[derive(Default, Clone, PartialEq, Eq, Debug)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct HashHistogram<A, V> {

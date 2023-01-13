@@ -18,7 +18,7 @@ pub(crate) type IterMut<'a, A, V> =
 /// and provide methods to fill and read those values.
 ///
 /// The most commonly used implementation is [VecHistogram](crate::VecHistogram).
-/// See [ndhistogram] for examples of its use.
+/// See [crate::ndhistogram] for examples of its use.
 pub trait Histogram<A: Axis, V> {
     /// The histogram [Axes](crate::Axes) that map coordinates to bin numbers.
     fn axes(&self) -> &A;
