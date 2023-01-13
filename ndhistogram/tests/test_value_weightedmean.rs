@@ -71,7 +71,7 @@ fn test_weightedmean_int_value_stddev_samples() {
     let binvalue = hist.value(&0.0).unwrap();
     assert_float_eq(binvalue.variance_of_samples(), 2.0 / 3.0);
     assert_float_eq(
-        binvalue.standard_deviation_of_samples() as f64,
+        binvalue.standard_deviation_of_samples(),
         (2.0f64 / 3.0).sqrt(),
     );
 }
