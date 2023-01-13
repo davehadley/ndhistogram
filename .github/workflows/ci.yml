@@ -2,14 +2,15 @@ name: ci
 
 on:
   push:
-    branches: [main, develop]
+    branches: [develop]
   pull_request:
-    branches: [main, develop]
+    branches: [develop]
 
 
 jobs:
   check:
     name: Check
+    if: github.event.pull_request.merged == false
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -24,6 +25,7 @@ jobs:
 
   test:
     name: Test Suite
+    if: github.event.pull_request.merged == false
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -42,6 +44,7 @@ jobs:
 
   fmt:
     name: Lints
+    if: github.event.pull_request.merged == false
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
