@@ -2,7 +2,6 @@ use super::{Axis, BinInterval, Variable};
 use std::fmt::{Debug, Display};
 
 use num_traits::Num;
-use serde::{Deserialize, Serialize};
 
 /// A wrap-around axis with variable-sized bins.
 ///
@@ -20,7 +19,8 @@ use serde::{Deserialize, Serialize};
 /// hist.fill(&angle); // fills the first bin
 /// hist.fill(&(angle + 2.0*PI)); // wraps around and fills the same first bin
 /// assert_eq!(hist.value(&angle), Some(&2));
-#[derive(Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Serialize, Deserialize)]
+#[derive(Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct VariableCyclic<T = f64> {
     axis: Variable<T>,
 }

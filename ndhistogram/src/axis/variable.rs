@@ -2,8 +2,6 @@ use std::fmt::Display;
 
 use super::{Axis, BinInterval};
 
-use serde::{Deserialize, Serialize};
-
 /// An axis with variable sized bins.
 ///
 /// An axis with variable sized bins.
@@ -26,7 +24,8 @@ use serde::{Deserialize, Serialize};
 ///    );
 ///
 /// ```
-#[derive(Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Serialize, Deserialize)]
+#[derive(Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct Variable<T = f64> {
     bin_edges: Vec<T>,
 }

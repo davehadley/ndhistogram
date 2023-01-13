@@ -2,7 +2,6 @@ use super::{Axis, BinInterval, Uniform};
 use std::fmt::{Debug, Display};
 
 use num_traits::{Float, Num, NumCast, NumOps};
-use serde::{Deserialize, Serialize};
 
 /// A wrap-around axis with equal-sized bins.
 ///
@@ -39,7 +38,8 @@ use serde::{Deserialize, Serialize};
 /// hist.fill(&40);                               // The 40th hour of the week ...
 /// assert_eq!(hist.value(&four_pm), Some(&1.0)); // ... is at 4 pm.
 /// ````
-#[derive(Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Serialize, Deserialize)]
+#[derive(Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct UniformCyclic<T = f64> {
     axis: Uniform<T>,
 }

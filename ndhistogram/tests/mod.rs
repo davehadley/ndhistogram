@@ -12,6 +12,8 @@ mod test_ndhistogram_binary_ops;
 mod test_ndhistogram_display;
 mod test_ndhistogram_macro;
 mod test_noflow_axis;
+
+#[cfg(feature = "serde")]
 mod test_serialization;
 mod test_trait_object_safety;
 mod test_uniform_axis;

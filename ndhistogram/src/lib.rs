@@ -241,7 +241,6 @@
     warn(
         missing_docs,
         rustdoc::missing_crate_level_docs,
-        rustdoc::missing_doc_code_examples,
         rustdoc::broken_intra_doc_links,
     )
 )]

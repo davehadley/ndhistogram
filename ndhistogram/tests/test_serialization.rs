@@ -10,6 +10,7 @@ macro_rules! test_serialize_empty_impl {
     ($fnname:ident; $Type:ty; $construct:expr) => {
         #[allow(clippy::type_complexity)]
         #[test]
+        #[cfg(feature = "serde")]
         fn $fnname() {
             let hist: $Type = $construct;
             let serialized = serde_json::to_string(&hist).unwrap();
@@ -42,6 +43,7 @@ test_serialize_empty_impl! {
 macro_rules! test_serialize_filled_value_impl {
     ($fnname:ident; $Type:ty; $hist:ident; $rng:ident; $fillexpr:expr) => {
         #[test]
+        #[cfg(feature = "serde")]
         fn $fnname() {
             let mut $hist: Hist1D<Uniform, $Type> = ndhistogram!(Uniform::new(10, -5.0, 5.0); $Type);
             let mut $rng = StdRng::seed_from_u64(123);

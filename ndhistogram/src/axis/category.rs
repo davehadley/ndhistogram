@@ -4,7 +4,6 @@ use std::{collections::HashMap, fmt::Display};
 use super::Axis;
 use super::SingleValueBinInterval;
 
-use serde::{Deserialize, Serialize};
 // Type-bound alias
 pub trait Value: Eq + Hash + Clone {}
 impl<T: Eq + Hash + Clone> Value for T {}
@@ -25,7 +24,8 @@ impl<T: Eq + Hash + Clone> Value for T {}
 /// assert_eq!(colors.bin(1), Some(SingleValueBinInterval::new("blue")));
 /// assert_eq!(colors.bin(5), Some(SingleValueBinInterval::overflow()));
 /// ```
-#[derive(Default, Clone, PartialEq, Eq, Debug, Serialize, Deserialize)]
+#[derive(Default, Clone, PartialEq, Eq, Debug)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct Category<T>
 where
     T: Eq + Hash,

@@ -7,14 +7,13 @@ use std::{
 
 use crate::{axis::Axis, error::BinaryOperationError};
 
-use serde::{Deserialize, Serialize};
-
 use super::histogram::{Histogram, Item, Iter, IterMut, ValuesMut};
 
 /// A [Histogram] that stores its values in a [Vec].
 ///
-/// See [ndhistogram] for examples of its use.
-#[derive(Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Serialize, Deserialize)]
+/// See [crate::ndhistogram] for examples of its use.
+#[derive(Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct VecHistogram<A, V> {
     axes: A,
     values: Vec<V>,

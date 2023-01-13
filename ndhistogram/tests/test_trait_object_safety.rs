@@ -25,7 +25,7 @@ fn test_trait_object_fill_with() {
 
 #[test]
 fn test_trait_object_fill_with_weighted() {
-    let datum = Box::new(WeightedMean::<f64>::default());
+    let datum = Box::<ndhistogram::value::WeightedMean>::default();
     let _vec: Vec<Box<dyn FillWithWeighted<f64, f64>>> = vec![datum];
 }
 

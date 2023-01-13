@@ -2,31 +2,35 @@ name: ci
 
 on:
   push:
-    branches: [main, develop]
+    branches: [develop]
   pull_request:
-    branches: [main, develop]
+    branches: [develop]
 
 
 jobs:
   check:
     name: Check
+    if: github.event.pull_request.merged == false
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - uses: Swatinem/rust-cache@v1
+    - uses: actions/checkout@v3
+    - uses: Swatinem/rust-cache@v2
     - uses: actions-rs/toolchain@v1
       with:
         profile: minimal
         toolchain: stable
         override: true
-    - name: cargo check
+    - name: cargo check (default features)
       run: RUSTFLAGS="-D warnings" cargo check
+    - name: cargo check (all features)
+      run: RUSTFLAGS="-D warnings" cargo check --all-features
 
   test:
     name: Test Suite
+    if: github.event.pull_request.merged == false
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - uses: Swatinem/rust-cache@v1
     - uses: actions-rs/toolchain@v1
       with:
@@ -36,15 +40,17 @@ jobs:
     - uses: actions-rs/cargo@v1
       with:
         command: test
+        args: --all-features
     - name: publish dry-run
       working-directory: ./ndhistogram
       run: cargo publish --locked --dry-run
 
   fmt:
     name: Lints
+    if: github.event.pull_request.merged == false
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - uses: Swatinem/rust-cache@v1
     - uses: actions-rs/toolchain@v1
       with:
