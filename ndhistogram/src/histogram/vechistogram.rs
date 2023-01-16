@@ -317,3 +317,18 @@ impl_binary_op_assign! {AddAssign, add_assign, AddAssign, +=, 3.0}
 impl_binary_op_assign! {SubAssign, sub_assign, SubAssign, -=, 1.0}
 impl_binary_op_assign! {MulAssign, mul_assign, MulAssign, *=, 2.0}
 impl_binary_op_assign! {DivAssign, div_assign, DivAssign, /=, 2.0}
+
+#[cfg(feature = "rayon")]
+mod parallel_iterators {
+    use rayon::prelude::IntoParallelIterator;
+
+    use crate::VecHistogram;
+
+    impl<'data, A, V: Sync> IntoParallelIterator for &'data VecHistogram<A, V> {
+        type Item = &'data V;
+        type Iter = rayon::slice::Iter<'data, V>;
+        fn into_par_iter(self) -> Self::Iter {
+            self.values.into_par_iter()
+        }
+    }
+}

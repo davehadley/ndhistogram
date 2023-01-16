@@ -4,6 +4,7 @@ harness = false
 
 [dependencies]
 num-traits = "0.2.14"
+rayon = {version="1.6.1", optional = true}
 
 [dependencies.serde]
 version = "1.0.120"
@@ -39,4 +40,4 @@ keywords = [ "histogram", "statistics", "data", "analysis", "multidimensional",]
 categories = [ "science", "mathematics", "data-structures",]
 
 [features]
-default = []
+default = ["rayon"]
