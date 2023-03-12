@@ -14,12 +14,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
+    - uses: dtolnay/rust-toolchain@stable
     - uses: Swatinem/rust-cache@v2
-    - uses: actions-rs/toolchain@v1
-      with:
-        profile: minimal
-        toolchain: stable
-        override: true
     - name: cargo check (default features)
       run: RUSTFLAGS="-D warnings" cargo check
     - name: cargo check (all features)
@@ -31,16 +27,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - uses: Swatinem/rust-cache@v1
-    - uses: actions-rs/toolchain@v1
-      with:
-        profile: minimal
-        toolchain: stable
-        override: true
-    - uses: actions-rs/cargo@v1
-      with:
-        command: test
-        args: --all-features
+    - uses: dtolnay/rust-toolchain@stable
+    - uses: Swatinem/rust-cache@v2
+    - name: Run unit/integration tests
+      run: cargo test --all-features
     - name: publish dry-run
       working-directory: ./ndhistogram
       run: cargo publish --locked --dry-run
@@ -51,28 +41,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - uses: Swatinem/rust-cache@v1
-    - uses: actions-rs/toolchain@v1
+    - uses: dtolnay/rust-toolchain@stable
       with:
-        profile: minimal
-        toolchain: stable
-        override: true
-    - run: rustup component add rustfmt
-    - uses: actions-rs/cargo@v1
-      with:
-        command: fmt
-        args: --all -- --check
-    - run: rustup component add clippy
-    - uses: actions-rs/cargo@v1
-      with:
-        command: clippy
-        args: -- -D warnings
+        components: rustfmt clippy cargo-sync-readme
+    - uses: Swatinem/rust-cache@v2
+    - name: rustfmt
+      run: cargo fmt --all -- --check
+    - name: clippy
+      run: cargo clippy -- -D warnings
     - name: cargo doc
       run: RUSTDOCFLAGS="-D warnings" cargo doc
     - name: cargo sync-readme
-      run: cargo install cargo-sync-readme && cd ndhistogram && cargo sync-readme --check
+      working-directory: ./ndhistogram
+      run: cargo sync-readme --check
     - name: Setup python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
     - name: Run pre-commit hooks
       run: |
         pip install pre-commit \
