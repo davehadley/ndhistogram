@@ -347,10 +347,6 @@ impl<A, V> VecHistogram<A, V> {
         V: Sync,
         <A as Axis>::BinInterval: Send,
     {
-        //let iter = self.iter();
-        //let num_bins: usize = self.axes.num_bins();
-        // let mut bin_range = (0..num_bins).into_par_iter().map(|index| Item {index, bin:self.axes.bin(index)
-        //     .expect("indices() should only produce valid indices")});
         self.values
             .par_iter()
             .enumerate()
