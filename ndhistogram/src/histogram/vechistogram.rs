@@ -318,17 +318,82 @@ impl_binary_op_assign! {SubAssign, sub_assign, SubAssign, -=, 1.0}
 impl_binary_op_assign! {MulAssign, mul_assign, MulAssign, *=, 2.0}
 impl_binary_op_assign! {DivAssign, div_assign, DivAssign, /=, 2.0}
 
+// #[cfg(feature = "rayon")]
+// mod parallel_iterators {
+//     use rayon::prelude::*;
+//     use rayon::prelude::{IntoParallelIterator, ParallelIterator};
+
+//     use crate::{VecHistogram, Histogram};
+//     use crate::axis::Axis;
+
+//     // impl<'data, A, V: Sync> IntoParallelIterator for &'data VecHistogram<A, V> {
+//     //     type Item = &'data V;
+//     //     type Iter = rayon::slice::Iter<'data, V>;
+//     //     fn into_par_iter(self) -> Self::Iter {
+//     //         self.values.into_par_iter()
+//     //     }
+//     // }
+
+//     impl<'data, A, V: Sync> IntoParallelIterator for &'data VecHistogram<A, V> where VecHistogram<A, V>: crate::Histogram<A, V>, A: Axis, &'data A: IntoParallelIterator {
+//         type Item = &'data V;
+//         type Iter = Box<dyn Iterator<Item = crate::Item<<A as Axis>::BinInterval, &'data V>> + 'data>;
+//         fn into_par_iter(self) -> Self::Iter {
+//             // self.values.into_par_iter()
+//             let it = self.axes().into_par_iter().map(move |(index, binrange)| {
+//                 crate::Item {
+//                     index,
+//                     bin: binrange,
+//                     value: self
+//                         .value_at_index(index)
+//                         .expect("iter() indices are always in range"),
+//                 }
+//             });
+//             Box::new(it)
+//         }
+//     }
+
+// }
+
 #[cfg(feature = "rayon")]
-mod parallel_iterators {
-    use rayon::prelude::IntoParallelIterator;
+use rayon::prelude::*;
 
-    use crate::VecHistogram;
+impl<A, V> VecHistogram<A, V> {
+    #[cfg(feature = "rayon")]
+    pub fn par_values(&self) -> impl ParallelIterator<Item = &V>
+    where
+        V: Sync,
+    {
+        self.values.par_iter()
+    }
 
-    impl<'data, A, V: Sync> IntoParallelIterator for &'data VecHistogram<A, V> {
-        type Item = &'data V;
-        type Iter = rayon::slice::Iter<'data, V>;
-        fn into_par_iter(self) -> Self::Iter {
-            self.values.into_par_iter()
-        }
+    #[cfg(feature = "rayon")]
+    pub fn par_values_mut(&mut self) -> impl ParallelIterator<Item = &mut V>
+    where
+        V: Send,
+    {
+        self.values.par_iter_mut()
+    }
+
+    #[cfg(feature = "rayon")]
+    pub fn par_iter<'a>(
+        &'a self,
+    ) -> impl ParallelIterator<Item = Item<<A as Axis>::BinInterval, &V>>
+    where
+        A: Axis + Sync,
+        V: Sync,
+        <A as Axis>::BinInterval: Send,
+    {
+        //let iter = self.iter();
+        //let num_bins: usize = self.axes.num_bins();
+        // let mut bin_range = (0..num_bins).into_par_iter().map(|index| Item {index, bin:self.axes.bin(index)
+        //     .expect("indices() should only produce valid indices")});
+        self.values
+            .par_iter()
+            .enumerate()
+            .map(move |(index, value)| Item {
+                index,
+                bin: self.axes.bin(index).unwrap(),
+                value,
+            })
     }
 }

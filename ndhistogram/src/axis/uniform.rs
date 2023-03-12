@@ -164,3 +164,53 @@ where
         self.iter()
     }
 }
+
+mod parallel_iterators {
+    use std::ops::Range;
+
+    use rayon::prelude::*;
+
+    use crate::axis::{Axis, BinInterval};
+
+    use super::Uniform;
+
+    // impl<'data, T> IntoParallelIterator for &'data Uniform<T>
+    // where
+    //     Uniform<T>: Axis,
+    //     T: Send,
+    //     <Uniform<T> as Axis>::BinInterval: Send,
+    // {
+    //     type Iter = Box<dyn ParallelIterator<Item = Self::Item>>;
+    //     type Item = <Uniform<T> as Axis>::BinInterval;
+
+    //     fn into_par_iter(self) -> Self::Iter {
+    //         let it = (0..self.num).into_par_iter().map(move |it| {
+    //             (
+    //                 it,
+    //                 self.bin(it)
+    //                     .expect("indices() should only produce valid indices"),
+    //             )
+    //         });
+    //         Box::new(it)
+    //     }
+    // }
+
+    struct UniformParallelIterator<'a, T> {
+        range: Range<usize>,
+        uniform: &'a T,
+    }
+
+    impl<'a, T> ParallelIterator for UniformParallelIterator<'a, T>
+    where
+        &'a T: Send,
+    {
+        type Item = &'a T;
+
+        fn drive_unindexed<C>(self, consumer: C) -> C::Result
+        where
+            C: rayon::iter::plumbing::UnindexedConsumer<Self::Item>,
+        {
+            todo!()
+        }
+    }
+}
