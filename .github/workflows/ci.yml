@@ -50,7 +50,7 @@ jobs:
     - name: clippy
       run: cargo clippy -- -D warnings
     - name: cargo doc
-      run: RUSTDOCFLAGS="-D warnings" cargo doc
+      run: RUSTDOCFLAGS="-D warnings" cargo doc --all-features
     - name: cargo sync-readme
       working-directory: ./ndhistogram
       run: cargo install cargo-sync-readme && cargo sync-readme --check
