@@ -63,3 +63,14 @@ jobs:
         pip install pre-commit \
         && pre-commit run --all-files
 
+  msrv:
+    name: Check minimum supported rust version
+    if: github.event.pull_request.merged == false
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: dtolnay/rust-toolchain@1.54.0
+    - name: cargo check (default features)
+      run: cargo check
+    - name: cargo check (all features)
+      run: cargo check --all-features

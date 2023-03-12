@@ -30,6 +30,7 @@ name = "ndhistogram"
 version = "0.8.0"
 authors = [ "David Hadley <davehadley@users.noreply.github.com>",]
 edition = "2018"
+rust = "1.54.0"
 license = "MIT OR Apache-2.0"
 description = "multi-dimensional histogramming for Rust"
 repository = "https://github.com/davehadley/ndhistogram"
