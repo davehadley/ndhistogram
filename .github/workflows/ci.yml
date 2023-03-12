@@ -75,3 +75,16 @@ jobs:
       run: cargo check
     - name: cargo check (all features)
       run: cargo check --all-features
+
+  minimaldependencyversion:
+    name: Test Suite (minimum dependency versions)
+    if: github.event.pull_request.merged == false
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: dtolnay/rust-toolchain@nightly
+    - uses: Swatinem/rust-cache@v2
+    - name: Switch to minimal versions
+      run: cargo update -Zminimal-versions
+    - name: Run unit/integration tests
+      run: cargo test --all-features
