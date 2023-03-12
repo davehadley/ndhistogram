@@ -20,6 +20,8 @@ jobs:
       run: RUSTFLAGS="-D warnings" cargo check
     - name: cargo check (all features)
       run: RUSTFLAGS="-D warnings" cargo check --all-features
+    - name: cargo check (all combinations of feature flags)
+      run: cargo install cargo-hack && cargo hack check --feature-powerset --no-dev-deps
 
   test:
     name: Test Suite
