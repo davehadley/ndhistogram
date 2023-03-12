@@ -359,7 +359,7 @@ use rayon::prelude::*;
 
 impl<A, V> VecHistogram<A, V> {
     #[cfg(feature = "rayon")]
-    pub fn par_values(&self) -> impl ParallelIterator<Item = &V>
+    pub fn par_values(&self) -> impl IndexedParallelIterator<Item = &V>
     where
         V: Sync,
     {
@@ -367,7 +367,7 @@ impl<A, V> VecHistogram<A, V> {
     }
 
     #[cfg(feature = "rayon")]
-    pub fn par_values_mut(&mut self) -> impl ParallelIterator<Item = &mut V>
+    pub fn par_values_mut(&mut self) -> impl IndexedParallelIterator<Item = &mut V>
     where
         V: Send,
     {
@@ -375,9 +375,9 @@ impl<A, V> VecHistogram<A, V> {
     }
 
     #[cfg(feature = "rayon")]
-    pub fn par_iter<'a>(
-        &'a self,
-    ) -> impl ParallelIterator<Item = Item<<A as Axis>::BinInterval, &V>>
+    pub fn par_iter(
+        &self,
+    ) -> impl IndexedParallelIterator<Item = Item<<A as Axis>::BinInterval, &V>>
     where
         A: Axis + Sync,
         V: Sync,
@@ -392,8 +392,28 @@ impl<A, V> VecHistogram<A, V> {
             .enumerate()
             .map(move |(index, value)| Item {
                 index,
-                bin: self.axes.bin(index).unwrap(),
+                bin: self
+                    .axes
+                    .bin(index)
+                    .expect("We only iterate over valid indices."),
                 value,
             })
+    }
+
+    #[cfg(feature = "rayon")]
+    pub fn par_iter_mut(
+        &mut self,
+    ) -> impl IndexedParallelIterator<Item = Item<<A as Axis>::BinInterval, &mut V>>
+    where
+        A: Axis + Sync + Send,
+        V: Send + Sync,
+        <A as Axis>::BinInterval: Send,
+    {
+        let axes = &self.axes;
+        self.values.par_iter_mut().enumerate().map(move |it| Item {
+            index: it.0,
+            bin: axes.bin(it.0).expect("We only iterate over valid indices."),
+            value: it.1,
+        })
     }
 }
