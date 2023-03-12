@@ -40,4 +40,4 @@ keywords = [ "histogram", "statistics", "data", "analysis", "multidimensional",]
 categories = [ "science", "mathematics", "data-structures",]
 
 [features]
-default = ["rayon"]
+default = []
