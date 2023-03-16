@@ -3,6 +3,7 @@ use ndhistogram::{axis::Uniform, ndhistogram, sparsehistogram, Hist1D, Histogram
 #[cfg(feature = "rayon")]
 use rayon::prelude::*;
 
+#[cfg(feature = "rayon")]
 fn example_filled_vec_histogram() -> Hist1D<Uniform> {
     let mut hist = ndhistogram!(Uniform::new(100, 0.0, 100.0));
     (-1..=101).for_each(|it| hist.fill_with(&(it as f64), it as f64));
@@ -49,6 +50,7 @@ fn test_vec_histogram_par_iter_mut() {
     assert_eq!(double_original_values, new_values);
 }
 
+#[cfg(feature = "rayon")]
 fn example_filled_hash_histogram() -> SparseHist1D<Uniform, i64> {
     let mut hist = sparsehistogram!(Uniform::new(100, 0.0, 100.0); i64);
     (-1..=101).for_each(|it| hist.fill_with(&(it as f64), it));
