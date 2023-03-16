@@ -314,3 +314,79 @@ impl_binary_op_assign! {AddAssign, add_assign, AddAssign, +=, 3.0}
 impl_binary_op_assign! {SubAssign, sub_assign, SubAssign, -=, 1.0}
 impl_binary_op_assign! {MulAssign, mul_assign, MulAssign, *=, 2.0}
 impl_binary_op_assign! {DivAssign, div_assign, DivAssign, /=, 2.0}
+
+#[cfg(feature = "rayon")]
+use rayon::prelude::*;
+
+// TODO: It would be better to implement rayon::iter::IntoParallelIterator
+// See comments on vechistogram for more info.
+
+impl<A, V> HashHistogram<A, V> {
+    /// An [immutable rayon parallel iterator](rayon::iter::ParallelIterator) over the histogram values.
+    ///
+    /// It only iterates over filled bins in the sparse histogram.
+    /// This requires the "rayon" [crate feature](index.html#crate-feature-flags) to be enabled.
+    #[cfg(feature = "rayon")]
+    pub fn par_values(&self) -> impl ParallelIterator<Item = &V>
+    where
+        V: Sync,
+    {
+        self.values.par_iter().map(|it| it.1)
+    }
+
+    /// A [mutable rayon parallel iterator](rayon::iter::ParallelIterator) over the histogram values.
+    ///
+    /// It only iterates over filled bins in the sparse histogram.
+    /// This requires the "rayon" [crate feature](index.html#crate-feature-flags) to be enabled.
+    #[cfg(feature = "rayon")]
+    pub fn par_values_mut(&mut self) -> impl ParallelIterator<Item = &mut V>
+    where
+        V: Send,
+    {
+        self.values.par_iter_mut().map(|it| it.1)
+    }
+
+    /// An [immutable rayon parallel iterator](rayon::iter::ParallelIterator) over bin indices, bin interval and bin values.
+    ///
+    /// It only iterates over filled bins in the sparse histogram.
+    /// This requires the "rayon" [crate feature](index.html#crate-feature-flags) to be enabled.
+    #[cfg(feature = "rayon")]
+    pub fn par_iter(&self) -> impl ParallelIterator<Item = Item<<A as Axis>::BinInterval, &V>>
+    where
+        A: Axis + Sync,
+        V: Sync,
+        <A as Axis>::BinInterval: Send,
+    {
+        self.values.par_iter().map(move |(index, value)| Item {
+            index: *index,
+            bin: self
+                .axes
+                .bin(*index)
+                .expect("We only iterate over valid indices."),
+            value,
+        })
+    }
+
+    /// An [mutable rayon parallel iterator](rayon::iter::ParallelIterator) over bin indices, bin interval and bin values.
+    ///
+    /// It only iterates over filled bins in the sparse histogram.
+    /// This requires the "rayon" [crate feature](index.html#crate-feature-flags) to be enabled.
+    #[cfg(feature = "rayon")]
+    pub fn par_iter_mut(
+        &mut self,
+    ) -> impl ParallelIterator<Item = Item<<A as Axis>::BinInterval, &mut V>>
+    where
+        A: Axis + Sync + Send,
+        V: Send + Sync,
+        <A as Axis>::BinInterval: Send,
+    {
+        let axes = &self.axes;
+        self.values.par_iter_mut().map(move |it| Item {
+            index: *it.0,
+            bin: axes
+                .bin(*it.0)
+                .expect("We only iterate over valid indices."),
+            value: it.1,
+        })
+    }
+}

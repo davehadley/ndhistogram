@@ -20,7 +20,7 @@ pub struct VecHistogram<A, V> {
 }
 
 impl<A: Axis, V: Default + Clone> VecHistogram<A, V> {
-    /// Factor method for VecHistogram. It is recommended to use the
+    /// Factory method for VecHistogram. It is recommended to use the
     /// [ndhistogram](crate::ndhistogram) macro instead.
     pub fn new(axes: A) -> Self {
         let size = axes.num_bins();
@@ -317,3 +317,97 @@ impl_binary_op_assign! {AddAssign, add_assign, AddAssign, +=, 3.0}
 impl_binary_op_assign! {SubAssign, sub_assign, SubAssign, -=, 1.0}
 impl_binary_op_assign! {MulAssign, mul_assign, MulAssign, *=, 2.0}
 impl_binary_op_assign! {DivAssign, div_assign, DivAssign, /=, 2.0}
+
+#[cfg(feature = "rayon")]
+use rayon::prelude::*;
+
+// TODO: It would be better to implement rayon::iter::IntoParallelIterator
+// but this isn't possible with the current closure based implementation
+// as rayon traits are not object safe, we can't return a Box<dyn ParallelIterator>
+// With nightly feature type_alias_impl_trait
+// https://rust-lang.github.io/rfcs/2515-type_alias_impl_trait.html
+// we could implement this as:
+//
+// #[cfg(feature = "rayon")]
+// impl <'a, A, V> rayon::iter::IntoParallelIterator for &'a VecHistogram<A, V>
+// where V: Sync, A: Axis + Sync, <A as Axis>::BinInterval: Send
+// {
+//     type Iter = impl ParallelIterator<Item=Self::Item>;
+//
+//     type Item = Item<<A as Axis>::BinInterval, &'a V>;
+//
+//     fn into_par_iter(self) -> Self::Iter {
+//         self.par_iter()
+//     }
+// }
+//
+// However we want to crate to build on stable.
+
+impl<A, V> VecHistogram<A, V> {
+    /// An [immutable rayon parallel iterator](rayon::iter::IndexedParallelIterator) over the histogram values.
+    ///
+    /// This requires the "rayon" [crate feature](index.html#crate-feature-flags) to be enabled.
+    #[cfg(feature = "rayon")]
+    pub fn par_values(&self) -> impl IndexedParallelIterator<Item = &V>
+    where
+        V: Sync,
+    {
+        self.values.par_iter()
+    }
+
+    /// A [mutable rayon parallel iterator](rayon::iter::IndexedParallelIterator) over the histogram values.
+    ///
+    /// This requires the "rayon" [crate feature](index.html#crate-feature-flags) to be enabled.
+    #[cfg(feature = "rayon")]
+    pub fn par_values_mut(&mut self) -> impl IndexedParallelIterator<Item = &mut V>
+    where
+        V: Send,
+    {
+        self.values.par_iter_mut()
+    }
+
+    /// An [immutable rayon parallel iterator](rayon::iter::IndexedParallelIterator) over bin indices, bin interval and bin values.
+    ///
+    /// This requires the "rayon" [crate feature](index.html#crate-feature-flags) to be enabled.
+    #[cfg(feature = "rayon")]
+    pub fn par_iter(
+        &self,
+    ) -> impl IndexedParallelIterator<Item = Item<<A as Axis>::BinInterval, &V>>
+    where
+        A: Axis + Sync,
+        V: Sync,
+        <A as Axis>::BinInterval: Send,
+    {
+        self.values
+            .par_iter()
+            .enumerate()
+            .map(move |(index, value)| Item {
+                index,
+                bin: self
+                    .axes
+                    .bin(index)
+                    .expect("We only iterate over valid indices."),
+                value,
+            })
+    }
+
+    /// An [mutable rayon parallel iterator](rayon::iter::IndexedParallelIterator) over bin indices, bin interval and bin values.
+    ///
+    /// This requires the "rayon" [crate feature](index.html#crate-feature-flags) to be enabled.
+    #[cfg(feature = "rayon")]
+    pub fn par_iter_mut(
+        &mut self,
+    ) -> impl IndexedParallelIterator<Item = Item<<A as Axis>::BinInterval, &mut V>>
+    where
+        A: Axis + Sync + Send,
+        V: Send + Sync,
+        <A as Axis>::BinInterval: Send,
+    {
+        let axes = &self.axes;
+        self.values.par_iter_mut().enumerate().map(move |it| Item {
+            index: it.0,
+            bin: axes.bin(it.0).expect("We only iterate over valid indices."),
+            value: it.1,
+        })
+    }
+}
