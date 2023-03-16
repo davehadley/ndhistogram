@@ -1,7 +1,10 @@
 # ndhistogram : multi-dimensional histogramming for Rust
 
-[![Main Build status](https://img.shields.io/github/workflow/status/davehadley/ndhistogram/ci/main?label=main)](https://github.com/davehadley/ndhistogram)
-[![Develop status](https://img.shields.io/github/workflow/status/davehadley/ndhistogram/ci/main?label=develop)](https://github.com/davehadley/ndhistogram)
+[![Main Build status](https://img.shields.io/github/actions/workflow/status/davehadley/ndhistogram/ci.yml?branch=main&label=main)](https://github.com/davehadley/ndhistogram)
+[![Develop status](https://img.shields.io/github/actions/workflow/status/davehadley/ndhistogram/ci.yml?branch=develop&label=develop)](https://github.com/davehadley/ndhistogram)
+[![Documentation](https://docs.rs/ndhistogram/badge.svg)](https://docs.rs/ndhistogram/)
+[![Codecov](https://codecov.io/github/davehadley/ndhistogram/coverage.svg?branch=main)](https://codecov.io/gh/davehadley/ndhistogram)
+[![Dependency status](https://deps.rs/repo/github/davehadley/ndhistogram/status.svg)](https://deps.rs/repo/github/davehadley/ndhistogram)
 [![Crate](https://img.shields.io/crates/v/ndhistogram.svg)](https://crates.io/crates/ndhistogram)
 [![License](https://img.shields.io/crates/l/ndhistogram)](https://crates.io/crates/ndhistogram)
 [![Last commit](https://img.shields.io/github/last-commit/davehadley/ndhistogram/develop)](https://github.com/davehadley/ndhistogram)
