@@ -28,7 +28,7 @@ bench = false
 
 [package]
 name = "ndhistogram"
-version = "0.8.0"
+version = "0.9.0"
 authors = [ "David Hadley <davehadley@users.noreply.github.com>",]
 edition = "2018"
 rust-version = "1.54.0"
@@ -41,3 +41,10 @@ categories = [ "science", "mathematics", "data-structures",]
 
 [features]
 default = []
+
+[package.metadata.docs.rs]
+
+# have docs.rs document all features
+# see: https://docs.rs/about/metadata
+all-features = true
+

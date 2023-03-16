@@ -318,7 +318,14 @@ impl_binary_op_assign! {DivAssign, div_assign, DivAssign, /=, 2.0}
 #[cfg(feature = "rayon")]
 use rayon::prelude::*;
 
+// TODO: It would be better to implement rayon::iter::IntoParallelIterator
+// See comments on vechistogram for more info.
+
 impl<A, V> HashHistogram<A, V> {
+    /// An [immutable rayon parallel iterator](rayon::iter::ParallelIterator) over the histogram values.
+    ///
+    /// It only iterates over filled bins in the sparse histogram.
+    /// This requires the "rayon" [crate feature](index.html#crate-feature-flags) to be enabled.
     #[cfg(feature = "rayon")]
     pub fn par_values(&self) -> impl ParallelIterator<Item = &V>
     where
@@ -327,6 +334,10 @@ impl<A, V> HashHistogram<A, V> {
         self.values.par_iter().map(|it| it.1)
     }
 
+    /// A [mutable rayon parallel iterator](rayon::iter::ParallelIterator) over the histogram values.
+    ///
+    /// It only iterates over filled bins in the sparse histogram.
+    /// This requires the "rayon" [crate feature](index.html#crate-feature-flags) to be enabled.
     #[cfg(feature = "rayon")]
     pub fn par_values_mut(&mut self) -> impl ParallelIterator<Item = &mut V>
     where
@@ -335,6 +346,10 @@ impl<A, V> HashHistogram<A, V> {
         self.values.par_iter_mut().map(|it| it.1)
     }
 
+    /// An [immutable rayon parallel iterator](rayon::iter::ParallelIterator) over bin indices, bin interval and bin values.
+    ///
+    /// It only iterates over filled bins in the sparse histogram.
+    /// This requires the "rayon" [crate feature](index.html#crate-feature-flags) to be enabled.
     #[cfg(feature = "rayon")]
     pub fn par_iter(&self) -> impl ParallelIterator<Item = Item<<A as Axis>::BinInterval, &V>>
     where
@@ -352,6 +367,10 @@ impl<A, V> HashHistogram<A, V> {
         })
     }
 
+    /// An [mutable rayon parallel iterator](rayon::iter::ParallelIterator) over bin indices, bin interval and bin values.
+    ///
+    /// It only iterates over filled bins in the sparse histogram.
+    /// This requires the "rayon" [crate feature](index.html#crate-feature-flags) to be enabled.
     #[cfg(feature = "rayon")]
     pub fn par_iter_mut(
         &mut self,
