@@ -1,6 +1,7 @@
 use num_traits::Float;
 
 use crate::Fill;
+use crate::FillWith;
 
 /// ndhistogram bin value type for filling unweighted values.
 /// Analogous to [WeightedSum](crate::value::WeightedSum). Methods returning variance and standard
@@ -49,5 +50,16 @@ impl<T: Copy + Fill> Fill for Sum<T> {
     #[inline]
     fn fill(&mut self) {
         self.sum.fill();
+    }
+}
+
+impl<T, W> FillWith<W> for Sum<T>
+where
+    T: FillWith<W> + Copy,
+    W: Copy,
+{
+    #[inline]
+    fn fill_with(&mut self, weight: W) {
+        self.sum.fill_with(weight);
     }
 }
