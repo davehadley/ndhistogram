@@ -1,4 +1,4 @@
-use ndhistogram::{axis::Uniform, ndhistogram, value::Sum, Histogram, FillWith};
+use ndhistogram::{axis::Uniform, ndhistogram, value::Sum, FillWith, Histogram};
 #[test]
 fn test_sum_value_fill() {
     let mut hist = ndhistogram!(Uniform::new(1, 0.0, 1.0); Sum<i32>);
