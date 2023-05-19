@@ -253,7 +253,7 @@
 //!
 //! ## How to contribute
 //!
-//! If you discover a bug or mistake in the documentation please either
+//! If you discover a bug in this crate or a mistake in the documentation please either
 //! [open an issue](https://github.com/davehadley/ndhistogram/issues) or
 //! [submit a pull request](https://github.com/davehadley/ndhistogram/pulls).
 //!
