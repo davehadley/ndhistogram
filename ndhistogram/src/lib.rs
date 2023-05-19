@@ -31,6 +31,7 @@
 //!    7. [Merge Histograms](#merge-histograms)
 //!    8. [Iterate over Histogram Bins in Parallel](#iterate-over-histogram-bins-in-parallel)
 //! 5. [Crate Feature Flags](#crate-feature-flags)
+//! 6. [How to contribute](#how-to-contribute)
 //!
 //! ## Usage
 //!
@@ -249,6 +250,15 @@
 //! The following features can be enabled in your `Cargo.toml`:
 //!   - [serde] : enable support for histogram serialization and deserialization.
 //!   - [rayon] : enable parallel iteration over histograms.
+//!
+//! ## How to contribute
+//!
+//! If you discover a bug or mistake in the documentation please either
+//! [open an issue](https://github.com/davehadley/ndhistogram/issues) or
+//! [submit a pull request](https://github.com/davehadley/ndhistogram/pulls).
+//!
+//! If you want to request or add a new feature please
+//! [open an issue](https://github.com/davehadley/ndhistogram/issues).
 //!
 
 #![doc(issue_tracker_base_url = "https://github.com/davehadley/ndhistogram/issues")]
