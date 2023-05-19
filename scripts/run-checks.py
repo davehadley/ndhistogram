@@ -12,13 +12,14 @@ def env(**kwargs):
     return {**environ, **kwargs}
 
 
-run(["cargo", "check"], check=True, cwd=packagedirectory)
+run(["cargo", "check", "--all-features"], check=True, cwd=packagedirectory)
 run(["cargo", "fmt"], check=True, cwd=packagedirectory)
-run(["cargo", "clippy"], check=True, cwd=packagedirectory)
+run(["cargo", "clippy", "--all-features"], check=True, cwd=packagedirectory)
 run(
     [
         "cargo",
         "doc",
+        "--all-features",
     ],
     env=env(RUSTDOCFLAGS="-D warnings"),
     check=True,
