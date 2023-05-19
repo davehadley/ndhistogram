@@ -1,3 +1,12 @@
+# 0.9.0 (2023-03-19)
+
+- Make serde an optional dependency. This is a breaking change. If you were using serde with this crate's types you will have to enable the "serde" feature flag in your `Cargo/toml`.
+- Implement rayon support for parallel iteration over histogram bins. For example see: [VecHistogram::par_iter](https://docs.rs/ndhistogram/0.9.0/struct.VecHistogram.html#method.par_iter) and [HashHistogram::par_iter](https://docs.rs/ndhistogram/0.9.0/struct.HashHistogram.html#method.par_iter). These features are enabled with the "rayon" crate feature flag.
+- Minimum supported rust version is now specified.
+- Improvements to continuous integration.
+- Implement `FillWith` trait for `Sum` value type (from [@rfoxkendo](https://github.com/rfoxkendo)).
+- Fix some broken documentation links.
+
 # 0.8.0 (2022-08-04)
 
 - Improved histogram merging. [VecHistogram](https://docs.rs/ndhistogram/0.8.0/ndhistogram/struct.VecHistogram.html) and [HashHistogram](https://docs.rs/ndhistogram/0.8.0/ndhistogram/struct.HashHistogram.html) now implement the [AddAssign] trait and implement the [Add] trait on owned values (where merging can be done without copying).

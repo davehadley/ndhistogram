@@ -2,73 +2,107 @@ name: ci
 
 on:
   push:
-    branches: [main, develop]
+    branches: [develop]
   pull_request:
-    branches: [main, develop]
+    branches: [develop]
 
 
 jobs:
   check:
     name: Check
+    if: github.event.pull_request.merged == false
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - uses: Swatinem/rust-cache@v1
-    - uses: actions-rs/toolchain@v1
-      with:
-        profile: minimal
-        toolchain: stable
-        override: true
-    - name: cargo check
+    - uses: actions/checkout@v3
+    - uses: dtolnay/rust-toolchain@stable
+    - uses: Swatinem/rust-cache@v2
+    - name: cargo check (default features)
       run: RUSTFLAGS="-D warnings" cargo check
+    - name: cargo check (all features)
+      run: RUSTFLAGS="-D warnings" cargo check --all-features
+    - name: cargo check (all combinations of feature flags)
+      run: cargo install cargo-hack && cargo hack check --feature-powerset --no-dev-deps
 
   test:
     name: Test Suite
+    if: github.event.pull_request.merged == false
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - uses: Swatinem/rust-cache@v1
-    - uses: actions-rs/toolchain@v1
-      with:
-        profile: minimal
-        toolchain: stable
-        override: true
-    - uses: actions-rs/cargo@v1
-      with:
-        command: test
+    - uses: actions/checkout@v3
+    - uses: dtolnay/rust-toolchain@stable
+    - uses: Swatinem/rust-cache@v2
+    - name: Run unit/integration tests
+      run: cargo test --all-features
     - name: publish dry-run
       working-directory: ./ndhistogram
       run: cargo publish --locked --dry-run
 
   fmt:
     name: Lints
+    if: github.event.pull_request.merged == false
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - uses: Swatinem/rust-cache@v1
-    - uses: actions-rs/toolchain@v1
+    - uses: actions/checkout@v3
+    - uses: dtolnay/rust-toolchain@stable
       with:
-        profile: minimal
-        toolchain: stable
-        override: true
-    - run: rustup component add rustfmt
-    - uses: actions-rs/cargo@v1
-      with:
-        command: fmt
-        args: --all -- --check
-    - run: rustup component add clippy
-    - uses: actions-rs/cargo@v1
-      with:
-        command: clippy
-        args: -- -D warnings
+        components: rustfmt clippy
+    - uses: Swatinem/rust-cache@v2
+    - name: rustfmt
+      run: cargo fmt --all -- --check
+    - name: clippy
+      run: cargo clippy -- -D warnings
     - name: cargo doc
-      run: RUSTDOCFLAGS="-D warnings" cargo doc
+      run: RUSTDOCFLAGS="-D warnings" cargo doc --all-features
     - name: cargo sync-readme
-      run: cargo install cargo-sync-readme && cd ndhistogram && cargo sync-readme --check
+      working-directory: ./ndhistogram
+      run: cargo install cargo-sync-readme && cargo sync-readme --check
     - name: Setup python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
     - name: Run pre-commit hooks
       run: |
         pip install pre-commit \
         && pre-commit run --all-files
 
+  msrv:
+    name: Check minimum supported rust version
+    if: github.event.pull_request.merged == false
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: dtolnay/rust-toolchain@1.59.0
+    - uses: Swatinem/rust-cache@v2
+    - name: cargo check (default features)
+      run: cargo check
+    - name: cargo check (all features)
+      run: cargo check --all-features
+
+  minimaldependencyversion:
+    name: Test Suite (minimum dependency versions)
+    if: github.event.pull_request.merged == false
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: dtolnay/rust-toolchain@nightly
+    - uses: Swatinem/rust-cache@v2
+    - name: Switch to minimal versions
+      run: cargo update -Zminimal-versions
+    - name: Run unit/integration tests
+      run: cargo test --all-features
+
+  coverage:
+    runs-on: ubuntu-latest
+    name: Code coverage
+    steps:
+    - uses: actions/checkout@v3
+    - uses: dtolnay/rust-toolchain@stable
+      with:
+        components: llvm-tools-preview
+    - uses: Swatinem/rust-cache@v2
+    - name: cargo install cargo-llvm-cov
+      uses: taiki-e/install-action@cargo-llvm-cov
+    - name: Run tests with coverage enabled
+      run: cargo llvm-cov --all-features --lcov --output-path lcov.info
+    - name: Upload to codecov.io
+      uses: codecov/codecov-action@v3
+      with:
+        fail_ci_if_error: true

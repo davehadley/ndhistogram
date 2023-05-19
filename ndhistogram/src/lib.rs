@@ -29,6 +29,8 @@
 //!    5. [Create a Histogram with a Periodic or Cyclic Axis](#create-a-histogram-with-a-periodic-or-cyclic-axis)
 //!    6. [Create a Sparse Histogram](#create-a-sparse-histogram)
 //!    7. [Merge Histograms](#merge-histograms)
+//!    8. [Iterate over Histogram Bins in Parallel](#iterate-over-histogram-bins-in-parallel)
+//! 5. [Crate Feature Flags](#crate-feature-flags)
 //!
 //! ## Usage
 //!
@@ -36,7 +38,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! ndhistogram = "0.8.0"
+//! ndhistogram = "0.9.0"
 //! ```
 //!
 //! See the [change log](https://github.com/davehadley/ndhistogram/blob/main/ndhistogram/CHANGELOG.md)
@@ -226,9 +228,31 @@
 //! let combined_hist = (hist1 + &hist2).expect("Axes are compatible");
 //! # assert_eq!(combined_hist.value(&0.0).unwrap(), &5.0);
 //! ```
+//!
+//! ### Iterate over Histogram Bins in Parallel
+//!
+//! ```rust
+//! # #[cfg(feature = "rayon")]
+//! # {
+//! use rayon::prelude::*;
+//! use ndhistogram::{Histogram, ndhistogram, axis::Uniform};
+//! let mut histogram = ndhistogram!(Uniform::<f64>::new(10, -5.0, 5.0));
+//! let sum: f64 = histogram.par_iter().map(|bin| bin.value).sum();
+//! // see also: par_iter_mut, par_values, par_values_mut.
+//! assert_eq!(sum, 0.0);
+//! # }
+//! ```
+//! Requires "rayon" feature enabled.
+//!
+//! ## Crate Feature Flags
+//! All cargo features of this crate are off by default.
+//! The following features can be enabled in your `Cargo.toml`:
+//!   - [serde] : enable support for histogram serialization and deserialization.
+//!   - [rayon] : enable parallel iteration over histograms.
+//!
 
 #![doc(issue_tracker_base_url = "https://github.com/davehadley/ndhistogram/issues")]
-#![doc(html_root_url = "https://docs.rs/ndhistogram/0.8.0")]
+#![doc(html_root_url = "https://docs.rs/ndhistogram/0.9.0")]
 #![cfg_attr(
     debug_assertions,
     warn(
@@ -241,7 +265,6 @@
     warn(
         missing_docs,
         rustdoc::missing_crate_level_docs,
-        rustdoc::missing_doc_code_examples,
         rustdoc::broken_intra_doc_links,
     )
 )]

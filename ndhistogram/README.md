@@ -1,7 +1,10 @@
 # ndhistogram : multi-dimensional histogramming for Rust
 
-[![Main Build status](https://img.shields.io/github/workflow/status/davehadley/ndhistogram/ci/main?label=main)](https://github.com/davehadley/ndhistogram)
-[![Develop status](https://img.shields.io/github/workflow/status/davehadley/ndhistogram/ci/main?label=develop)](https://github.com/davehadley/ndhistogram)
+[![Main Build status](https://img.shields.io/github/actions/workflow/status/davehadley/ndhistogram/ci.yml?branch=main&label=main)](https://github.com/davehadley/ndhistogram)
+[![Develop status](https://img.shields.io/github/actions/workflow/status/davehadley/ndhistogram/ci.yml?branch=develop&label=develop)](https://github.com/davehadley/ndhistogram)
+[![Documentation](https://docs.rs/ndhistogram/badge.svg)](https://docs.rs/ndhistogram/)
+[![Codecov](https://codecov.io/github/davehadley/ndhistogram/coverage.svg?branch=main)](https://codecov.io/gh/davehadley/ndhistogram)
+[![Dependency status](https://deps.rs/repo/github/davehadley/ndhistogram/status.svg)](https://deps.rs/repo/github/davehadley/ndhistogram)
 [![Crate](https://img.shields.io/crates/v/ndhistogram.svg)](https://crates.io/crates/ndhistogram)
 [![License](https://img.shields.io/crates/l/ndhistogram)](https://crates.io/crates/ndhistogram)
 [![Last commit](https://img.shields.io/github/last-commit/davehadley/ndhistogram/develop)](https://github.com/davehadley/ndhistogram)
@@ -40,6 +43,8 @@ Features include:
    5. [Create a Histogram with a Periodic or Cyclic Axis](#create-a-histogram-with-a-periodic-or-cyclic-axis)
    6. [Create a Sparse Histogram](#create-a-sparse-histogram)
    7. [Merge Histograms](#merge-histograms)
+   8. [Iterate over Histogram Bins in Parallel](#iterate-over-histogram-bins-in-parallel)
+5. [Crate Feature Flags](#crate-feature-flags)
 
 ## Usage
 
@@ -47,7 +52,7 @@ Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-ndhistogram = "0.8.0"
+ndhistogram = "0.9.0"
 ```
 
 See the [change log](https://github.com/davehadley/ndhistogram/blob/main/ndhistogram/CHANGELOG.md)
@@ -236,6 +241,25 @@ hist1.fill_with(&0.0, 2.0);
 hist2.fill_with(&0.0, 3.0);
 let combined_hist = (hist1 + &hist2).expect("Axes are compatible");
 ```
+
+### Iterate over Histogram Bins in Parallel
+
+```rust
+use rayon::prelude::*;
+use ndhistogram::{Histogram, ndhistogram, axis::Uniform};
+let mut histogram = ndhistogram!(Uniform::<f64>::new(10, -5.0, 5.0));
+let sum: f64 = histogram.par_iter().map(|bin| bin.value).sum();
+// see also: par_iter_mut, par_values, par_values_mut.
+assert_eq!(sum, 0.0);
+```
+Requires "rayon" feature enabled.
+
+## Crate Feature Flags
+All cargo features of this crate are off by default.
+The following features can be enabled in your `Cargo.toml`:
+  - [serde] : enable support for histogram serialization and deserialization.
+  - [rayon] : enable parallel iteration over histograms.
+
 
 <!-- cargo-sync-readme end -->
 

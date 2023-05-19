@@ -4,7 +4,6 @@ use std::{
 };
 
 use num_traits::{Float, NumOps, One, Signed};
-use serde::{Deserialize, Serialize};
 
 use crate::FillWithWeighted;
 
@@ -36,9 +35,8 @@ use crate::FillWithWeighted;
 /// let weightedmean = hist.value(&0.0);
 /// assert_eq!(weightedmean.unwrap().get(), 3.0);
 /// ```
-#[derive(
-    Copy, Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Serialize, Deserialize,
-)]
+#[derive(Copy, Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct WeightedMean<T = f64, W = f64, O = f64, C = u32> {
     sumwt: T,
     sumwt2: T,

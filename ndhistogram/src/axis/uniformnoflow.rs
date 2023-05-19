@@ -2,7 +2,6 @@ use super::{Axis, BinInterval, Uniform};
 use std::fmt::{Debug, Display};
 
 use num_traits::{Float, Num, NumCast, NumOps};
-use serde::{Deserialize, Serialize};
 
 /// An axis with equal sized bins and no under/overflow bins.
 ///
@@ -21,7 +20,8 @@ use serde::{Deserialize, Serialize};
 ///    assert_eq!(axis.bin(10), None);
 ///
 /// ```
-#[derive(Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Serialize, Deserialize)]
+#[derive(Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct UniformNoFlow<T = f64> {
     axis: Uniform<T>,
 }
