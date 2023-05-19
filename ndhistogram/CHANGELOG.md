@@ -1,4 +1,4 @@
-# 0.9.0 (2023-03-19)
+# 0.9.0 (2023-05-19)
 
 - Make serde an optional dependency. This is a breaking change. If you were using serde with this crate's types you will have to enable the "serde" feature flag in your `Cargo/toml`.
 - Implement rayon support for parallel iteration over histogram bins. For example see: [VecHistogram::par_iter](https://docs.rs/ndhistogram/0.9.0/struct.VecHistogram.html#method.par_iter) and [HashHistogram::par_iter](https://docs.rs/ndhistogram/0.9.0/struct.HashHistogram.html#method.par_iter). These features are enabled with the "rayon" crate feature flag.
