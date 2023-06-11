@@ -1,7 +1,11 @@
 use super::axis::Axis;
 
 /// Axes provided an interface for a set of ND dimensional set of histograms.
-pub trait Axes: Axis {}
+pub trait Axes: Axis + private::Sealed {}
+
+mod private {
+    pub trait Sealed {}
+}
 
 /// Container for a set of [Axis] that implements [Axes].
 
@@ -41,6 +45,8 @@ macro_rules! impl_axes {
         impl<X: Axis> Axes for AxesTuple<(X,)> {
         }
 
+        impl<X: Axis> private::Sealed for AxesTuple<(X,)> {}
+
         impl<X:Axis> From<(X,)> for AxesTuple<(X,)> {
             fn from(item: (X,)) -> Self {
                 let shape = vec![item.0.num_bins()];
@@ -73,6 +79,8 @@ macro_rules! impl_axes {
         ( $($nth_type_parameter:ident: $nth_index:tt, )+ ) => {
         impl<$($nth_type_parameter: Axis),*> Axes for AxesTuple<($($nth_type_parameter),*)> {
         }
+
+        impl<$($nth_type_parameter: Axis),*> private::Sealed for AxesTuple<($($nth_type_parameter),*)> {}
 
         impl<$($nth_type_parameter: Axis),*> From<($($nth_type_parameter),*)> for AxesTuple<($($nth_type_parameter),*)> {
             fn from(item: ($($nth_type_parameter),*)) -> Self {
