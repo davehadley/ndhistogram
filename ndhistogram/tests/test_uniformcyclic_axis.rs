@@ -1,5 +1,7 @@
 use ndhistogram::axis::{Axis, BinInterval, UniformCyclic};
 
+use ndhistogram::{ndhistogram, Histogram};
+
 use rstest::rstest;
 
 #[rstest(/**/bin_no,      expected_interval,
@@ -73,9 +75,7 @@ fn indices() {
     assert_eq!(indices, (0..n).collect::<Vec<_>>());
 }
 
-use ndhistogram::{ndhistogram, Histogram};
-
-#[test]
+#[rstest]
 fn wrap_float_fill() {
     let mut hist = ndhistogram!(UniformCyclic::new(4, 0.0, 360.0); u8);
     hist.fill(&45.0);
@@ -85,7 +85,7 @@ fn wrap_float_fill() {
     assert_eq!(hist.value_at_index(0), Some(&3));
 }
 
-#[test]
+#[rstest]
 fn wrap_int_fill() {
     let bins_per_day = 24;
     let hours_per_bin = 1;
@@ -99,7 +99,7 @@ fn wrap_int_fill() {
     assert_eq!(hist.value(&16), Some(&1.0)); // ... is at 4 pm.
 }
 
-#[test]
+#[rstest]
 fn wrap_float_value() {
     let mut hist = ndhistogram!(UniformCyclic::new(4, 0.0, 360.0); u8);
     hist.fill(&45.0);
@@ -108,9 +108,8 @@ fn wrap_float_value() {
     assert_eq!(hist.value(&(45.0 - 360.0)), Some(&1));
 }
 
-#[test]
+#[rstest]
 fn into_iter() {
-    use ndhistogram::axis::BinInterval;
     let axis = UniformCyclic::with_step_size(3, 15, 10);
     let mut bins = vec![];
     for x in &axis {
