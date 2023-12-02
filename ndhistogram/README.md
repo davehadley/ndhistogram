@@ -85,24 +85,24 @@ println!("{}", hist);
 
 ## Overview
 
-A [Histogram](Histogram) is composed of two components:
-- The [Axes](Axes) which is a set of [Axis](axis::Axis) corresponding to each dimension of the histogram.
-The [Axes](Axes) and [Axis](axis::Axis) define the binning of the histogram and are responsible for mapping from coordinate space (eg \[x,y,z\]) to an integer bin number.
-- The histogram bin value storage. Valid bin value types include any integer and floating number type as well as user defined types that implement [Fill](Fill), [FillWith](FillWith) or [FillWithWeighted](FillWithWeighted).
+A [Histogram] is composed of two components:
+- The [Axes] which is a set of [Axis](axis::Axis) corresponding to each dimension of the histogram.
+The [Axes] and [Axis](axis::Axis) define the binning of the histogram and are responsible for mapping from coordinate space (eg \[x,y,z\]) to an integer bin number.
+- The histogram bin value storage. Valid bin value types include any integer and floating number type as well as user defined types that implement [Fill], [FillWith] or [FillWithWeighted].
 
 ### Histogram Implementations
 
-- [VecHistogram](VecHistogram): bin values are stored in a [Vec](std::vec::Vec).
-Created with the [ndhistogram](ndhistogram) macro.
+- [VecHistogram]: bin values are stored in a [Vec].
+Created with the [ndhistogram] macro.
 This is the recommended implementation for most use cases.
 However, as memory is allocated even for empty bins,
 this may not be practical for very high dimension histograms.
-- [HashHistogram](HashHistogram): bin values are stored in a [HashMap](std::collections::HashMap).
-Created with the [sparsehistogram](sparsehistogram) macro.
+- [HashHistogram]: bin values are stored in a [HashMap](std::collections::HashMap).
+Created with the [sparsehistogram] macro.
 Useful for high dimension, mostly empty, histograms as empty bins
 take up no memory.
 
-Alternative implementations are possible by implementing the [Histogram](Histogram) trait.
+Alternative implementations are possible by implementing the [Histogram] trait.
 
 ### Axis Implementations
 
@@ -118,11 +118,11 @@ User defined axes types are possible by implementing the [Axis](axis::Axis) trai
 Histograms may be filled with values of the following types:
 
 - Primitive floating point and integer number types.
-- All types that implement [Fill](Fill)
-- All types that implement [FillWith](FillWith)
-- All types that implement [FillWithWeighted](FillWithWeighted)
-- All types that implement [AddAssign](std::ops::AddAssign) (as they are also [FillWith](FillWith)).
-- All types that implement [AddAssign](std::ops::AddAssign) and [One](num_traits::One) (as they are also [Fill](Fill)).
+- All types that implement [Fill]
+- All types that implement [FillWith]
+- All types that implement [FillWithWeighted]
+- All types that implement [AddAssign](std::ops::AddAssign) (as they are also [FillWith]).
+- All types that implement [AddAssign](std::ops::AddAssign) and [One](num_traits::One) (as they are also [Fill]).
 
 This crate defines the following bin value types:
 
@@ -131,7 +131,7 @@ This crate defines the following bin value types:
 - [Mean](value::Mean) : computes the mean of the values it is filled with.
 - [WeightedMean](value::WeightedMean) : as Mean but with weighted fills.
 
-User defined bin value types are possible by implementing the [Fill](Fill), [FillWith](FillWith) or [FillWithWeighted](FillWithWeighted) traits.
+User defined bin value types are possible by implementing the [Fill], [FillWith] or [FillWithWeighted] traits.
 
 ## How to Guide
 
