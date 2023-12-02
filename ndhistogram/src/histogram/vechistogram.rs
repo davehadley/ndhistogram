@@ -411,3 +411,10 @@ impl<A, V> VecHistogram<A, V> {
         })
     }
 }
+
+// #[cfg(feature = "ndarray")]
+// impl <A, V> VecHistogram<A, V> where Self: Histogram<A, V>, A: Axis {
+//     fn into_array(self) -> ArrayBase<V, D> {
+//         Array::from_shape_vec(self.axes().shape(), self.values).unwrap()
+//     }
+// }
