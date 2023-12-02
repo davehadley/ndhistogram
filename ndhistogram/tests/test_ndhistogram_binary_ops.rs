@@ -48,7 +48,7 @@ fn test_ndhistogram_add_1d_elementwise_with_copy() {
         .collect();
     let expected: Vec<_> = left
         .iter()
-        .zip(right.into_iter())
+        .zip(right.iter())
         .map(|(l, r)| (l.index, l.bin, l.value + r.value))
         .collect();
     assert_eq!(actual, expected)

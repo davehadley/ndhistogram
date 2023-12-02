@@ -1,8 +1,6 @@
 use ndhistogram::{
     axis::{Axis, Uniform},
-    ndhistogram,
-    value::WeightedMean,
-    Axes, AxesTuple, Fill, FillWith, FillWithWeighted, Histogram,
+    ndhistogram, Axes, AxesTuple, Fill, FillWith, FillWithWeighted, Histogram,
 };
 
 #[test]

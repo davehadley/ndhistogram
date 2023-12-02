@@ -79,7 +79,7 @@ fn indices(edges: &[f32]) {
 
 use ndhistogram::{ndhistogram, Histogram};
 
-#[test]
+#[rstest]
 fn wrap_float_fill() {
     let mut hist = ndhistogram!(VariableCyclic::new(vec![8.0, 0.0, 4.0, 2.0]); u8);
     let v = &5.0;
@@ -91,7 +91,7 @@ fn wrap_float_fill() {
     assert_eq!(hist.value_at_index(2), Some(&3));
 }
 
-#[test]
+#[rstest]
 fn wrap_int_fill() {
     let mut hist = ndhistogram!(VariableCyclic::new(vec![8, 0, 4, 2]); u8);
     let v = &5;
@@ -103,7 +103,7 @@ fn wrap_int_fill() {
     assert_eq!(hist.value_at_index(2), Some(&3));
 }
 
-#[test]
+#[rstest]
 fn wrap_float_value() {
     let mut hist = ndhistogram!(VariableCyclic::new(vec![4.0, 8.0, 2.0, 1.0]); u8);
     let v = &2.3;
@@ -114,9 +114,8 @@ fn wrap_float_value() {
     assert_eq!(hist.value(&(v + r)), Some(&1));
 }
 
-#[test]
+#[rstest]
 fn into_iter() {
-    use ndhistogram::axis::BinInterval;
     let axis = VariableCyclic::new([0, 1, 10, 100]);
     let mut bins = vec![];
     for x in &axis {

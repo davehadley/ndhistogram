@@ -18,7 +18,7 @@ fn test_histogram_display_blank() {
 #[test]
 fn test_histogram_display_filled_positive() {
     let mut hist = ndhistogram!(Uniform::new(4, 0.0, 2.0));
-    vec![
+    [
         (-1.0, 2.0),
         (0.1, 0.9),
         (0.6, 4.0),
