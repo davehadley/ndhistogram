@@ -109,12 +109,7 @@ impl<T: PartialOrd + NumCast + NumOps + Copy> Axis for Uniform<T> {
             return Some(self.num + 1);
         }
         let steps = (*coordinate - self.low) / (self.step);
-        Some(
-            (steps
-                .to_usize()
-                .expect("bin number can always be converted to a valid usize"))
-                + 1,
-        )
+        Some(steps.to_usize()? + 1)
     }
 
     fn num_bins(&self) -> usize {
