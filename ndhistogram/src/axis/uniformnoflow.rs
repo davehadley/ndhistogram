@@ -9,6 +9,8 @@ use num_traits::{Float, Num, NumCast, NumOps};
 /// Similar to [Uniform] but this axis has no over/underflow bins.
 /// Hence it has N bins.
 ///
+/// For floating point types, infinities and NaN do not map to any bin.
+///
 /// # Example
 /// Create a 1D histogram with 10 uniformly spaced bins between -5.0 and 5.0.
 /// ```rust

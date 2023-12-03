@@ -8,6 +8,8 @@ use num_traits::Num;
 /// A wrap-around axis with variable-sized bins, constructed from a list of bin
 /// edges.
 ///
+/// For floating point types, infinities and NaN do not map to any bin.
+///
 /// # Examples
 /// 1D histogram with cyclic variable sized azimuthal angle binning.
 /// ```

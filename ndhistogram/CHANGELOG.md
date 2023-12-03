@@ -1,3 +1,9 @@
+# 0.10.0 (2023-12-03)
+
+- Fix issue 33: Filling a histogram where the axis value is NaN not longer panics. NaN is mapped to no bin so those values are not filled in histograms.
+- Fix new clippy and compiler warnings.
+- Minimum supported rust version is increased to 1.63.0.
+
 # 0.9.0 (2023-05-19)
 
 - Make serde an optional dependency. This is a breaking change. If you were using serde with this crate's types you will have to enable the "serde" feature flag in your `Cargo/toml`.

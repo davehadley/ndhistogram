@@ -10,6 +10,9 @@ use super::{Axis, BinInterval};
 /// Below (above) this range is an underflow (overflow) bin.
 /// Hence this axis has N+2 bins.
 ///
+/// For floating point types, positive and negative infinities map to overflow
+/// and underflow bins respectively. NaN does not map to any bin.
+///
 /// # Example
 /// Create a 1D histogram with 10 uniform bins between -5.0 and 5.0, plus overflow and underflow bins.
 /// ```rust

@@ -7,6 +7,8 @@ use std::fmt::{Debug, Display};
 /// An axis with variable sized bins constructed with a list of bin edges.
 /// This axis has (num edges - 1) bins.
 ///
+/// For floating point types, infinities and NaN do not map to any bin.
+///
 /// # Example
 /// Create a 1D histogram with 3 variable width bins between 0.0 and 7.0.
 /// ```rust

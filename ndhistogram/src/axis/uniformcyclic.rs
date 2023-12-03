@@ -52,6 +52,8 @@ where
     ///
     /// Only implemented for [Float]. Use [UniformCyclic::with_step_size] for integers.
     ///
+    /// For floating point types, infinities and NaN do not map to any bin.
+    ///
     /// # Panics
     /// Panics under the same conditions as [Uniform::new].
     pub fn new(nbins: usize, low: T, high: T) -> Self
