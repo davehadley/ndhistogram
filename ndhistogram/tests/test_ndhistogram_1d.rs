@@ -37,6 +37,16 @@ fn test_histogram_uniform_1d_weighted_fill_once() {
 
 #[test]
 #[allow(clippy::float_cmp)]
+fn test_histogram_uniform_1d_unweighted_fill_nan() {
+    let mut hist = ndhistogram!(Uniform::new(5, 0.0, 0.5));
+    hist.fill(&f32::NAN);
+    let actual = *hist.value(&0.1).unwrap();
+    let expected = 0.0;
+    assert_eq!(expected, actual);
+}
+
+#[test]
+#[allow(clippy::float_cmp)]
 fn test_histogram_uniform_1d_unweighted_fill_bin_edges() {
     let mut hist = ndhistogram!(Uniform::new(2, 0.0, 2.0));
     hist.fill(&-1.0);
