@@ -18,6 +18,8 @@ mod test_parallel_iterators;
 #[cfg(feature = "serde")]
 mod test_serialization;
 
+mod test_axis_nan_and_inf_value;
+mod test_fill_overflow;
 mod test_trait_object_safety;
 mod test_uniform_axis;
 mod test_uniform_axis_integer;
