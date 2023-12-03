@@ -73,11 +73,21 @@ where
 
     #[inline]
     fn index(&self, coordinate: &Self::Coordinate) -> Option<usize> {
-        match self.bin_edges.binary_search_by(|probe| {
-            probe
-                .partial_cmp(coordinate)
-                .expect("incomparable values. NAN bin edges?")
-        }) {
+        // the comparison operator can fail for example if the coordinate is NAN.
+        // there is no try_binary_search_by in the standard library that let's
+        // us return early if the comparison fails.
+        // instead we use binary_search_by and check for failure afterwards.
+        let mut has_failure = false;
+        let search_result = self.bin_edges.binary_search_by(|probe| {
+            probe.partial_cmp(coordinate).unwrap_or_else(|| {
+                has_failure = true;
+                std::cmp::Ordering::Less
+            })
+        });
+        if has_failure {
+            return None;
+        }
+        match search_result {
             Ok(index) => Some(index + 1),
             Err(index) => Some(index),
         }
