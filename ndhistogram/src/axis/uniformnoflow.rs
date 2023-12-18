@@ -57,7 +57,9 @@ where
             axis: Uniform::with_step_size(num, low, step),
         }
     }
+}
 
+impl<T> UniformNoFlow<T> {
     /// Return the lowest bin edge.
     pub fn low(&self) -> &T {
         self.axis.low()

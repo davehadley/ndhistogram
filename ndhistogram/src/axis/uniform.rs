@@ -11,7 +11,7 @@ use super::{Axis, BinInterval};
 /// Hence this axis has N+2 bins.
 ///
 /// For floating point types, positive and negative infinities map to overflow
-/// and underflow bins respectively. NaN does not map to any bin.
+/// and underflow bins respectively. NaN maps to the overflow bin.
 ///
 /// # Example
 /// Create a 1D histogram with 10 uniform bins between -5.0 and 5.0, plus overflow and underflow bins.
@@ -112,7 +112,7 @@ impl<T: PartialOrd + NumCast + NumOps + Copy> Axis for Uniform<T> {
             return Some(self.num + 1);
         }
         let steps = (*coordinate - self.low) / (self.step);
-        Some(steps.to_usize()? + 1)
+        Some(steps.to_usize().unwrap_or(self.num) + 1)
     }
 
     fn num_bins(&self) -> usize {

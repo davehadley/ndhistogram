@@ -1,4 +1,4 @@
-use super::{Axis, BinInterval, Uniform};
+use super::{Axis, BinInterval, UniformNoFlow};
 use std::fmt::{Debug, Display};
 
 use num_traits::{Float, Num, NumCast, NumOps};
@@ -41,7 +41,8 @@ use num_traits::{Float, Num, NumCast, NumOps};
 #[derive(Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct UniformCyclic<T = f64> {
-    axis: Uniform<T>,
+    #[cfg_attr(feature = "serde", serde(flatten))]
+    axis: UniformNoFlow<T>,
 }
 
 impl<T> UniformCyclic<T>
@@ -55,22 +56,22 @@ where
     /// For floating point types, infinities and NaN do not map to any bin.
     ///
     /// # Panics
-    /// Panics under the same conditions as [Uniform::new].
+    /// Panics under the same conditions as [UniformNoFlow::new].
     pub fn new(nbins: usize, low: T, high: T) -> Self
     where
         T: Float,
     {
         Self {
-            axis: Uniform::new(nbins, low, high),
+            axis: UniformNoFlow::new(nbins, low, high),
         }
     }
 
     /// Create a wrap-around axis with `nbins` uniformly-spaced bins in the range `[low, low+num*step)`.
     /// # Panics
-    /// Panics under the same conditions as [Uniform::new].
+    /// Panics under the same conditions as [UniformNoFlow::new].
     pub fn with_step_size(nbins: usize, low: T, step: T) -> Self {
         Self {
-            axis: Uniform::with_step_size(nbins, low, step),
+            axis: UniformNoFlow::with_step_size(nbins, low, step),
         }
     }
 }
@@ -101,17 +102,17 @@ impl<T: PartialOrd + Num + NumCast + NumOps + Copy> Axis for UniformCyclic<T> {
             x = range + x;
         }
         x = x + lo;
-        self.axis.index(&x).map(|n| n - 1)
+        self.axis.index(&x)
     }
 
     #[inline]
     fn num_bins(&self) -> usize {
-        self.axis.num_bins() - 2
+        self.axis.num_bins()
     }
 
     #[inline]
     fn bin(&self, index: usize) -> Option<<Self as Axis>::BinInterval> {
-        self.axis.bin(index + 1)
+        self.axis.bin(index)
     }
 }
 

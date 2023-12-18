@@ -1,4 +1,4 @@
-use super::{Axis, BinInterval, Variable};
+use super::{Axis, BinInterval, VariableNoFlow};
 use std::fmt::{Debug, Display};
 
 use num_traits::Num;
@@ -24,7 +24,8 @@ use num_traits::Num;
 #[derive(Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct VariableCyclic<T = f64> {
-    axis: Variable<T>,
+    #[cfg_attr(feature = "serde", serde(flatten))]
+    axis: VariableNoFlow<T>,
 }
 
 impl<T> VariableCyclic<T>
@@ -39,7 +40,7 @@ where
     /// sorted (for example when given NAN).
     pub fn new<I: IntoIterator<Item = T>>(bin_edges: I) -> Self {
         Self {
-            axis: Variable::new(bin_edges),
+            axis: VariableNoFlow::new(bin_edges),
         }
     }
 
@@ -72,17 +73,17 @@ where
             x = range + x;
         }
         x = x + lo;
-        self.axis.index(&x).map(|n| n - 1)
+        self.axis.index(&x)
     }
 
     #[inline]
     fn num_bins(&self) -> usize {
-        self.axis.num_bins() - 2
+        self.axis.num_bins()
     }
 
     #[inline]
     fn bin(&self, index: usize) -> Option<Self::BinInterval> {
-        self.axis.bin(index + 1)
+        self.axis.bin(index)
     }
 }
 

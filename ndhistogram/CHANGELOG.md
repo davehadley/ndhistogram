@@ -1,6 +1,6 @@
 # 0.10.0 (2023-12-03)
 
-- Fix issue 33: Filling a histogram where the axis value is NaN not longer panics. NaN is mapped to no bin so those values are not filled in histograms.
+- Fix issue 33: Filling a histogram where the axis value is NaN not longer panics. NaN is mapped to the overflow bin where one exists or to no bin on axes without overflow bins.
 - Fix new clippy and compiler warnings.
 - Minimum supported rust version is increased to 1.63.0.
 

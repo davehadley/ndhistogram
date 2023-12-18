@@ -10,7 +10,7 @@ use super::{Axis, BinInterval};
 /// Hence this axis has num edges + 1 bins.
 ///
 /// For floating point types, positive and negative infinities map to overflow
-/// and underflow bins respectively. NaN does not map to any bin.
+/// and underflow bins respectively. NaN map to the overflow bin.
 ///
 /// # Example
 /// Create a 1D histogram with 3 variable width bins between 0.0 and 7.0, plus overflow and underflow bins.
@@ -76,20 +76,11 @@ where
 
     #[inline]
     fn index(&self, coordinate: &Self::Coordinate) -> Option<usize> {
-        // the comparison operator can fail for example if the coordinate is NAN.
-        // there is no try_binary_search_by in the standard library that let's
-        // us return early if the comparison fails.
-        // instead we use binary_search_by and check for failure afterwards.
-        let mut has_failure = false;
         let search_result = self.bin_edges.binary_search_by(|probe| {
-            probe.partial_cmp(coordinate).unwrap_or_else(|| {
-                has_failure = true;
-                std::cmp::Ordering::Less
-            })
+            probe
+                .partial_cmp(coordinate)
+                .unwrap_or(std::cmp::Ordering::Less)
         });
-        if has_failure {
-            return None;
-        }
         match search_result {
             Ok(index) => Some(index + 1),
             Err(index) => Some(index),

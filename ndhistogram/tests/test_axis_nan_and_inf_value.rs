@@ -3,12 +3,12 @@ use ndhistogram::axis::{
 };
 
 macro_rules! test_get_index_of_nan {
-    ($fnname:ident, $constructor:expr) => {
+    ($fnname:ident, $constructor:expr, $expected:expr) => {
         #[test]
         fn $fnname() {
             let ax = $constructor;
             let actual = ax.index(&std::f64::NAN);
-            let expected = None;
+            let expected = $expected;
             assert_eq!(expected, actual)
         }
     };
@@ -38,28 +38,37 @@ macro_rules! test_get_index_of_neg_inf {
     };
 }
 
-test_get_index_of_nan!(test_uniform_get_index_of_nan, Uniform::new(5, 0.0, 1.0));
+test_get_index_of_nan!(
+    test_uniform_get_index_of_nan,
+    Uniform::new(5, 0.0, 1.0),
+    Some(6)
+);
 test_get_index_of_nan!(
     test_uniformnoflow_get_index_of_nan,
-    UniformNoFlow::new(5, 0.0, 1.0)
+    UniformNoFlow::new(5, 0.0, 1.0),
+    None
 );
 
 test_get_index_of_nan!(
     test_uniformcyclic_get_index_of_nan,
-    UniformCyclic::new(5, 0.0, 1.0)
+    UniformCyclic::new(5, 0.0, 1.0),
+    None
 );
 test_get_index_of_nan!(
     test_variable_get_index_of_nan,
-    Variable::new(vec![0.0, 1.0])
+    Variable::new(vec![0.0, 1.0]),
+    Some(2)
 );
 test_get_index_of_nan!(
     test_variablenoflow_get_index_of_nan,
-    VariableNoFlow::new(vec![0.0, 1.0])
+    VariableNoFlow::new(vec![0.0, 1.0]),
+    None
 );
 
 test_get_index_of_nan!(
     test_variablecyclic_get_index_of_nan,
-    VariableCyclic::new(vec![0.0, 1.0])
+    VariableCyclic::new(vec![0.0, 1.0]),
+    None
 );
 
 test_get_index_of_inf!(
