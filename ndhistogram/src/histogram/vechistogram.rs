@@ -5,7 +5,7 @@ use std::{
     ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign},
 };
 
-use crate::{axis::Axis, error::BinaryOperationError};
+use crate::{axis::Axis, error::Error};
 
 use super::histogram::{Histogram, Item, Iter, IterMut, ValuesMut};
 
@@ -159,13 +159,13 @@ macro_rules! impl_binary_op_with_immutable_borrow {
 where
     for<'a> &'a V: $Trait<Output = V>,
 {
-    type Output = Result<VecHistogram<A, V>, BinaryOperationError>;
+    type Output = Result<VecHistogram<A, V>, Error>;
 
     /// Combine the right-hand histogram with the left-hand histogram,
     /// returning a copy, and leaving the original histograms intact.
     ///
     /// If the input histograms have incompatible axes, this operation
-    /// will return a [BinaryOperationError].
+    /// will return a [Error::BinaryOperationError].
     ///
     /// # Examples
     ///
@@ -179,7 +179,7 @@ where
     #[doc=concat!("assert_eq!(combined_hist.value(&0.0).unwrap(), &", stringify!($testresult), ");")]
     fn $method(self, rhs: &VecHistogram<A, V>) -> Self::Output {
         if self.axes() != rhs.axes() {
-            return Err(BinaryOperationError);
+            return Err(Error::BinaryOperationError);
         }
         let values = self
             .values
@@ -235,7 +235,7 @@ macro_rules! impl_binary_op_with_owned {
         where
             for<'a> V: $ValueAssignTrait<&'a V>,
         {
-            type Output = Result<VecHistogram<A, V>, BinaryOperationError>;
+            type Output = Result<VecHistogram<A, V>, Error>;
 
             /// Combine the right-hand histogram with the left-hand histogram,
             /// consuming the left-hand histogram and returning a new value.
@@ -243,7 +243,7 @@ macro_rules! impl_binary_op_with_owned {
             /// recommended method to merge histograms.
             ///
             /// If the input histograms have incompatible axes, this operation
-            /// will return a [BinaryOperationError].
+            /// will return a [Error::BinaryOperationError].
             ///
             /// # Examples
             ///
@@ -257,7 +257,7 @@ macro_rules! impl_binary_op_with_owned {
             #[doc=concat!("assert_eq!(combined_hist.value(&0.0).unwrap(), &", stringify!($testresult), ");")]
             fn $method(mut self, rhs: &VecHistogram<A, V>) -> Self::Output {
                 if self.axes() != rhs.axes() {
-                    return Err(BinaryOperationError);
+                    return Err(Error::BinaryOperationError);
                 }
                 self.values
                     .iter_mut()

@@ -1,15 +1,10 @@
-use std::{error::Error, fmt::Display};
+use thiserror::Error;
 
-/// Returned if a Histogram binary operation fails (such as h1 + h2).
-/// for example because the two histograms have incompatible binning.
-#[derive(Default, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
+#[derive(Error, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct BinaryOperationError;
-
-impl Display for BinaryOperationError {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "histogram binary operation failed (check binning?)")
-    }
+pub enum Error {
+    /// Returned if a Histogram binary operation fails (such as h1 + h2).
+    /// for example because the two histograms have incompatible binning.
+    #[error("histogram binary operation failed (check binning?)")]
+    BinaryOperationError,
 }
-
-impl Error for BinaryOperationError {}
