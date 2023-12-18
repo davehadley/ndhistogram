@@ -32,7 +32,7 @@ impl<T> VariableCyclic<T>
 where
     T: PartialOrd + Copy,
 {
-    /// Create a wrap-around axis with [Variable] binning given a set of bin edges.
+    /// Create a wrap-around axis with variable binning given a set of bin edges.
     ///
     /// # Panics
     ///
