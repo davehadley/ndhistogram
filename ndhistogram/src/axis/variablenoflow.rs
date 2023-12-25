@@ -1,3 +1,5 @@
+use crate::Error;
+
 use super::{Axis, BinInterval, Variable};
 
 use std::fmt::{Debug, Display};
@@ -36,10 +38,10 @@ impl<T: PartialOrd + Copy> VariableNoFlow<T> {
     ///
     /// # Panics
     /// Panics under the same conditions as [Variable::new].
-    pub fn new<I: IntoIterator<Item = T>>(bin_edges: I) -> Self {
-        Self {
-            axis: Variable::new(bin_edges),
-        }
+    pub fn new<I: IntoIterator<Item = T>>(bin_edges: I) -> Result<Self, Error> {
+        Ok(Self {
+            axis: Variable::new(bin_edges)?,
+        })
     }
 
     /// Return the lowest bin edge.

@@ -1,3 +1,5 @@
+use crate::Error;
+
 use super::{Axis, BinInterval, Uniform};
 use std::fmt::{Debug, Display};
 
@@ -36,26 +38,26 @@ where
     ///
     /// # Panics
     /// Panics under the same conditions as [Uniform::new].
-    pub fn new(num: usize, low: T, high: T) -> Self
+    pub fn new(num: usize, low: T, high: T) -> Result<Self, Error>
     where
         T: Float,
     {
-        Self {
-            axis: Uniform::new(num, low, high),
-        }
+        Ok(Self {
+            axis: Uniform::new(num, low, high)?,
+        })
     }
 
     /// Factory method to create an axis with num uniformly spaced bins in the range [low, low+num*step) with no under/overflow bins.
     ///
     /// # Panics
     /// Panics under the same conditions as [Uniform::with_step_size].
-    pub fn with_step_size(num: usize, low: T, step: T) -> Self
+    pub fn with_step_size(num: usize, low: T, step: T) -> Result<Self, Error>
     where
         T: Num,
     {
-        Self {
-            axis: Uniform::with_step_size(num, low, step),
-        }
+        Ok(Self {
+            axis: Uniform::with_step_size(num, low, step)?,
+        })
     }
 }
 

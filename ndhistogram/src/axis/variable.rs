@@ -1,4 +1,6 @@
-use std::fmt::Display;
+use std::{cmp::Ordering, fmt::Display};
+
+use crate::Error;
 
 use super::{Axis, BinInterval};
 
@@ -43,13 +45,22 @@ where
     ///
     /// Panics if less than 2 edges are provided or if it fails to sort the
     /// bin edges (for example if a NAN value is given).
-    pub fn new<I: IntoIterator<Item = T>>(bin_edges: I) -> Self {
+    pub fn new<I: IntoIterator<Item = T>>(bin_edges: I) -> Result<Self, Error> {
         let mut bin_edges: Vec<T> = bin_edges.into_iter().collect();
         if bin_edges.len() < 2 {
-            panic!("Invalid axis number of bin edges ({})", bin_edges.len());
+            return Err(Error::InvalidNumberOfBinEdges);
         }
-        bin_edges.sort_by(|a, b| a.partial_cmp(b).expect("failed to sort bin_edges."));
-        Self { bin_edges }
+        let mut sort_failed = false;
+        bin_edges.sort_by(|a, b| {
+            a.partial_cmp(b).unwrap_or_else(|| {
+                sort_failed = true;
+                Ordering::Less
+            })
+        });
+        if (sort_failed) {
+            return Err(Error::FailedToSortBinEdges);
+        }
+        Ok(Self { bin_edges })
     }
 
     /// Low edge of axis (excluding underflow bin).

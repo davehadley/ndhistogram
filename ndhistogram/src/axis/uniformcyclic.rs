@@ -1,3 +1,5 @@
+use crate::Error;
+
 use super::{Axis, BinInterval, UniformNoFlow};
 use std::fmt::{Debug, Display};
 
@@ -57,22 +59,22 @@ where
     ///
     /// # Panics
     /// Panics under the same conditions as [UniformNoFlow::new].
-    pub fn new(nbins: usize, low: T, high: T) -> Self
+    pub fn new(nbins: usize, low: T, high: T) -> Result<Self, Error>
     where
         T: Float,
     {
-        Self {
-            axis: UniformNoFlow::new(nbins, low, high),
-        }
+        Ok(Self {
+            axis: UniformNoFlow::new(nbins, low, high)?,
+        })
     }
 
     /// Create a wrap-around axis with `nbins` uniformly-spaced bins in the range `[low, low+num*step)`.
     /// # Panics
     /// Panics under the same conditions as [UniformNoFlow::new].
-    pub fn with_step_size(nbins: usize, low: T, step: T) -> Self {
-        Self {
-            axis: UniformNoFlow::with_step_size(nbins, low, step),
-        }
+    pub fn with_step_size(nbins: usize, low: T, step: T) -> Result<Self, Error> {
+        Ok(Self {
+            axis: UniformNoFlow::with_step_size(nbins, low, step)?,
+        })
     }
 }
 

@@ -2,6 +2,8 @@ use std::fmt::{Debug, Display};
 
 use num_traits::{Float, Num, NumCast, NumOps};
 
+use crate::error::Error;
+
 use super::{Axis, BinInterval};
 
 /// An axis with equal sized bins.
@@ -42,47 +44,45 @@ where
     ///
     /// Only implemented for [Float]. Use [Uniform::with_step_size] for integers.
     ///
-    /// # Panics
-    /// Panics if num bins == 0 or low == high.
-    pub fn new(num: usize, low: T, high: T) -> Self
+    pub fn new(num: usize, low: T, high: T) -> Result<Self, Error>
     where
         T: Float,
     {
         if num == 0 {
-            panic!("Invalid axis num bins ({})", num);
+            return Err(Error::InvalidNumberOfBins);
         }
         if low == high {
-            panic!("Invalid axis range (low == high)");
+            return Err(Error::InvalidAxisRange);
         }
         let (low, high) = if low > high { (high, low) } else { (low, high) };
         let step = (high - low) / T::from(num).expect("");
-        Self {
+        Ok(Self {
             num,
             low,
             high,
             step,
-        }
+        })
     }
 
     /// Factory method to create an axis with num uniformly spaced bins in the range [low, low+num*step). Under/overflow bins cover values outside this range.
     ///
     /// # Panics
     /// Panics if num bins == 0 or step <= 0.
-    pub fn with_step_size(num: usize, low: T, step: T) -> Self {
+    pub fn with_step_size(num: usize, low: T, step: T) -> Result<Self, Error> {
         let high = T::from(num).expect("num bins can be converted to coordinate type") * step + low;
         if num == 0 {
-            panic!("Invalid axis num bins ({})", num);
+            return Err(Error::InvalidNumberOfBins);
         }
         if step <= T::zero() {
-            panic!("Invalid step size. Step size must be greater than zero.");
+            return Err(Error::InvalidStepSize);
         }
         let (low, high) = if low > high { (high, low) } else { (low, high) };
-        Self {
+        Ok(Self {
             num,
             low,
             high,
             step,
-        }
+        })
     }
 }
 

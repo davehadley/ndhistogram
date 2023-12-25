@@ -1,3 +1,5 @@
+use crate::Error;
+
 use super::{Axis, BinInterval, VariableNoFlow};
 use std::fmt::{Debug, Display};
 
@@ -38,10 +40,10 @@ where
     ///
     /// Panics if fewer than 2 edges are provided, or if the edges cannot be
     /// sorted (for example when given NAN).
-    pub fn new<I: IntoIterator<Item = T>>(bin_edges: I) -> Self {
-        Self {
-            axis: VariableNoFlow::new(bin_edges),
-        }
+    pub fn new<I: IntoIterator<Item = T>>(bin_edges: I) -> Result<Self, Error> {
+        Ok(Self {
+            axis: VariableNoFlow::new(bin_edges)?,
+        })
     }
 
     /// Low edge of axis (excluding wrap-around)

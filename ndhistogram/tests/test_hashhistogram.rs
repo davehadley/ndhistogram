@@ -2,7 +2,7 @@ use ndhistogram::{
     axis::{Category, Uniform, Variable},
     ndhistogram, sparsehistogram,
     value::WeightedMean,
-    Hist1D, Hist2D, Hist3D, Histogram, Item, SparseHist1D, SparseHist2D, SparseHist3D,
+    Error, Hist1D, Hist2D, Hist3D, Histogram, Item, SparseHist1D, SparseHist2D, SparseHist3D,
 };
 use num_traits::Float;
 use rand::{prelude::StdRng, Rng, SeedableRng};
@@ -10,7 +10,7 @@ use rand_distr::{Distribution, Normal, StandardNormal};
 
 #[test]
 fn test_hashhistogram_fill() {
-    let mut hist = sparsehistogram!(Uniform::new(10, 0.0, 10.0); i64);
+    let mut hist = sparsehistogram!(Uniform::new(10, 0.0, 10.0).unwrap(); i64);
     hist.fill(&0.5);
     hist.fill_with(&0.5, 2);
     assert_eq!(hist.value(&0.5), Some(&3))
@@ -27,7 +27,7 @@ fn assert_float_eq(left: f64, right: f64) {
 
 #[test]
 fn test_hashhistogram_fill_with_weighted() {
-    let mut hist = sparsehistogram!(Uniform::new(10, 0.0, 10.0); WeightedMean<i32, i32>);
+    let mut hist = sparsehistogram!(Uniform::new(10, 0.0, 10.0).unwrap(); WeightedMean<i32, i32>);
     hist.fill_with_weighted(&0.5, 1, 1);
     hist.fill_with_weighted(&0.5, 2, 2);
     hist.fill_with_weighted(&0.5, 3, 3);
@@ -35,21 +35,22 @@ fn test_hashhistogram_fill_with_weighted() {
 }
 
 #[test]
-fn test_hashhistogram_axes() {
-    let x = Uniform::new(10, 0.0, 10.0);
-    let y = Variable::new(vec![1.0, 2.0, 10.0]);
+fn test_hashhistogram_axes() -> Result<(), Error> {
+    let x = Uniform::new(10, 0.0, 10.0)?;
+    let y = Variable::new(vec![1.0, 2.0, 10.0])?;
     let z = Category::new(vec!["A", "B", "C"]);
     let sparsehist = sparsehistogram!(x.clone(), y.clone(), z.clone());
     let vechist = ndhistogram!(x, y, z);
-    assert_eq!(sparsehist.axes(), vechist.axes())
+    assert_eq!(sparsehist.axes(), vechist.axes());
+    Ok(())
 }
 
 fn random_2d_vec_and_sparse_hist() -> (
     Hist2D<Uniform, Variable, i32>,
     SparseHist2D<Uniform, Variable, i32>,
 ) {
-    let x = Uniform::new(10, 0.0, 10.0);
-    let y = Variable::new(vec![0.0, 2.0, 5.0, 10.0]);
+    let x = Uniform::new(10, 0.0, 10.0).unwrap();
+    let y = Variable::new(vec![0.0, 2.0, 5.0, 10.0]).unwrap();
     let mut sparsehist = sparsehistogram!(x.clone(), y.clone(); i32);
     let mut vechist = ndhistogram!(x, y; i32);
 
@@ -115,20 +116,20 @@ fn test_hashhistogram_values_mut() {
 
 #[test]
 fn test_hashhistogram_display() {
-    let hist = sparsehistogram!(Uniform::new(4, 0.0, 2.0));
+    let hist = sparsehistogram!(Uniform::new(4, 0.0, 2.0).unwrap());
     format!("{}", hist);
 }
 
 #[test]
 fn test_hashhistogram_clone() {
-    let hist = sparsehistogram!(Uniform::new(4, 0.0, 2.0));
+    let hist = sparsehistogram!(Uniform::new(4, 0.0, 2.0).unwrap());
     let clone = hist.clone();
     assert_eq!(hist, clone);
 }
 
 fn generate_normal_hist_1d(seed: u64) -> (Hist1D<Uniform>, SparseHist1D<Uniform>) {
-    let mut vechist = ndhistogram!(Uniform::new(10, -5.0, 5.0));
-    let mut sparsehist = sparsehistogram!(Uniform::new(10, -5.0, 5.0));
+    let mut vechist = ndhistogram!(Uniform::new(10, -5.0, 5.0).unwrap());
+    let mut sparsehist = sparsehistogram!(Uniform::new(10, -5.0, 5.0).unwrap());
     generate_nomal(-1.0, 2.0, seed).take(1000).for_each(|it| {
         vechist.fill(&it);
         sparsehist.fill(&it);
@@ -143,14 +144,14 @@ fn generate_normal_hist_3d(
     SparseHist3D<Uniform, Uniform, Uniform>,
 ) {
     let mut vechist = ndhistogram!(
-        Uniform::new(10, -5.0, 5.0),
-        Uniform::new(10, -5.0, 5.0),
-        Uniform::new(10, -5.0, 5.0),
+        Uniform::new(10, -5.0, 5.0).unwrap(),
+        Uniform::new(10, -5.0, 5.0).unwrap(),
+        Uniform::new(10, -5.0, 5.0).unwrap(),
     );
     let mut sparsehist = sparsehistogram!(
-        Uniform::new(10, -5.0, 5.0),
-        Uniform::new(10, -5.0, 5.0),
-        Uniform::new(10, -5.0, 5.0),
+        Uniform::new(10, -5.0, 5.0).unwrap(),
+        Uniform::new(10, -5.0, 5.0).unwrap(),
+        Uniform::new(10, -5.0, 5.0).unwrap(),
     );
     let x = generate_nomal(-1.0, 2.0, seed + 1);
     let y = generate_nomal(0.0, 2.0, seed + 2);
@@ -189,8 +190,8 @@ macro_rules! impl_binary_op {
 
         #[test]
         fn $fnnamefails() {
-            let left = sparsehistogram!(Uniform::new(10, -5.0, 5.0));
-            let right = sparsehistogram!(Uniform::new(10, -5.0, 6.0));
+            let left = sparsehistogram!(Uniform::new(10, -5.0, 5.0).unwrap());
+            let right = sparsehistogram!(Uniform::new(10, -5.0, 6.0).unwrap());
             let hadd = &left $mathsymbol &right;
             assert!(hadd.is_err())
         }

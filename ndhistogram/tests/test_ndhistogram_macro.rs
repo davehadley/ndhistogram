@@ -5,39 +5,49 @@ use ndhistogram::{ndhistogram, AxesTuple};
 
 #[test]
 fn test_ndhistogram_1d_uniform_constructor() {
-    let hist = ndhistogram!(Uniform::new(5, 0.0, 1.0));
+    let hist = ndhistogram!(Uniform::new(5, 0.0, 1.0).unwrap());
     assert_eq!(
         hist.type_id(),
-        VecHistogram::<AxesTuple<_>, f64>::new((Uniform::new(5, 0.0, 1.0),).into()).type_id()
+        VecHistogram::<AxesTuple<_>, f64>::new((Uniform::new(5, 0.0, 1.0).unwrap(),).into())
+            .type_id()
     )
 }
 
 #[test]
 fn test_ndhistogram_1d_uniform_constructor_with_explicittype() {
-    let hist = ndhistogram!(Uniform::new(5, 0.0, 1.0); f64);
+    let hist = ndhistogram!(Uniform::new(5, 0.0, 1.0).unwrap(); f64);
     assert_eq!(
         hist.type_id(),
-        VecHistogram::<AxesTuple<_>, f64>::new((Uniform::new(5, 0.0, 1.0),).into()).type_id()
+        VecHistogram::<AxesTuple<_>, f64>::new((Uniform::new(5, 0.0, 1.0).unwrap(),).into())
+            .type_id()
     )
 }
 
 #[test]
 fn test_ndhistogram_1d_uniform_constructor_with_ident() {
-    let ax = Uniform::new(5, 0.0, 1.0);
+    let ax = Uniform::new(5, 0.0, 1.0).unwrap();
     let hist = ndhistogram!(ax);
     assert_eq!(
         hist.type_id(),
-        VecHistogram::<AxesTuple<_>, f64>::new((Uniform::new(5, 0.0, 1.0),).into()).type_id()
+        VecHistogram::<AxesTuple<_>, f64>::new((Uniform::new(5, 0.0, 1.0).unwrap(),).into())
+            .type_id()
     )
 }
 
 #[test]
 fn test_ndhistogram_2d_uniform_constructor() {
-    let hist = ndhistogram!(Uniform::new(5, 0.0, 1.0), Uniform::new(5, 0.0, 1.0));
+    let hist = ndhistogram!(
+        Uniform::new(5, 0.0, 1.0).unwrap(),
+        Uniform::new(5, 0.0, 1.0).unwrap()
+    );
     assert_eq!(
         hist.type_id(),
         VecHistogram::<AxesTuple<_>, f64>::new(
-            (Uniform::new(5, 0.0, 1.0), Uniform::new(5, 0.0, 1.0)).into()
+            (
+                Uniform::new(5, 0.0, 1.0).unwrap(),
+                Uniform::new(5, 0.0, 1.0).unwrap()
+            )
+                .into()
         )
         .type_id()
     )
@@ -45,11 +55,16 @@ fn test_ndhistogram_2d_uniform_constructor() {
 
 #[test]
 fn test_ndhistogram_2d_uniform_constructor_with_explicit_type() {
-    let hist = ndhistogram!(Uniform::new(5, 0.0, 1.0), Uniform::new(5, 0.0, 1.0); f64);
+    let hist =
+        ndhistogram!(Uniform::new(5, 0.0, 1.0).unwrap(), Uniform::new(5, 0.0, 1.0).unwrap(); f64);
     assert_eq!(
         hist.type_id(),
         VecHistogram::<AxesTuple<_>, f64>::new(
-            (Uniform::new(5, 0.0, 1.0), Uniform::new(5, 0.0, 1.0)).into()
+            (
+                Uniform::new(5, 0.0, 1.0).unwrap(),
+                Uniform::new(5, 0.0, 1.0).unwrap()
+            )
+                .into()
         )
         .type_id()
     )
@@ -57,13 +72,17 @@ fn test_ndhistogram_2d_uniform_constructor_with_explicit_type() {
 
 #[test]
 fn test_ndhistogram_2d_uniform_constructor_with_ident() {
-    let x = Uniform::new(5, 0.0, 1.0);
-    let y = Uniform::new(5, 0.0, 1.0);
+    let x = Uniform::new(5, 0.0, 1.0).unwrap();
+    let y = Uniform::new(5, 0.0, 1.0).unwrap();
     let hist = ndhistogram!(x, y);
     assert_eq!(
         hist.type_id(),
         VecHistogram::<AxesTuple<_>, f64>::new(
-            (Uniform::new(5, 0.0, 1.0), Uniform::new(5, 0.0, 1.0)).into()
+            (
+                Uniform::new(5, 0.0, 1.0).unwrap(),
+                Uniform::new(5, 0.0, 1.0).unwrap()
+            )
+                .into()
         )
         .type_id()
     )
