@@ -174,7 +174,7 @@ macro_rules! impl_binary_op_with_immutable_borrow {
             V: Clone + Default,
             for<'a> &'a V: $Trait<Output = V>,
         {
-            type Output = Result<HashHistogram<A, V>, Error>;
+            type Output = Result<HashHistogram<A, V>, crate::error::BinaryOperationError>;
 
             /// Combine the right-hand histogram with the left-hand histogram,
             /// returning a copy, and leaving the original histograms intact.
@@ -197,7 +197,7 @@ macro_rules! impl_binary_op_with_immutable_borrow {
             /// ```
             fn $method(self, rhs: &HashHistogram<A, V>) -> Self::Output {
                 if self.axes() != rhs.axes() {
-                    return Err(Error::BinaryOperationError);
+                    return Err(crate::error::BinaryOperationError);
                 }
                 let indices: HashSet<usize> = self.values.keys().chain(rhs.values.keys()).copied().collect();
                 let values: HashMap<usize, V> = indices.into_iter().map(|index| {
@@ -233,7 +233,7 @@ macro_rules! impl_binary_op_with_owned {
             V: Clone + Default,
             for<'a> V: $ValueAssignTrait<&'a V>,
         {
-            type Output = Result<HashHistogram<A, V>, Error>;
+            type Output = Result<HashHistogram<A, V>, crate::error::BinaryOperationError>;
 
             /// Combine the right-hand histogram with the left-hand histogram,
             /// consuming the left-hand histogram and returning a new value.
@@ -258,7 +258,7 @@ macro_rules! impl_binary_op_with_owned {
             /// ```
             fn $method(mut self, rhs: &HashHistogram<A, V>) -> Self::Output {
                 if self.axes() != rhs.axes() {
-                    return Err(Error::BinaryOperationError);
+                    return Err(crate::error::BinaryOperationError);
                 }
                 for (index, rhs_value) in rhs.values.iter() {
                     let lhs_value = self.values.entry(*index).or_default();

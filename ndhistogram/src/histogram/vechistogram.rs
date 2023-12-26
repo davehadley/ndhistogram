@@ -159,13 +159,13 @@ macro_rules! impl_binary_op_with_immutable_borrow {
 where
     for<'a> &'a V: $Trait<Output = V>,
 {
-    type Output = Result<VecHistogram<A, V>, Error>;
+    type Output = Result<VecHistogram<A, V>, crate::error::BinaryOperationError>;
 
     /// Combine the right-hand histogram with the left-hand histogram,
     /// returning a copy, and leaving the original histograms intact.
     ///
     /// If the input histograms have incompatible axes, this operation
-    /// will return a [Error::BinaryOperationError].
+    /// will return a [error::BinaryOperationError].
     ///
     /// # Examples
     ///
@@ -182,7 +182,7 @@ where
     /// ```
     fn $method(self, rhs: &VecHistogram<A, V>) -> Self::Output {
         if self.axes() != rhs.axes() {
-            return Err(Error::BinaryOperationError);
+            return Err(crate::error::BinaryOperationError);
         }
         let values = self
             .values
@@ -238,7 +238,7 @@ macro_rules! impl_binary_op_with_owned {
         where
             for<'a> V: $ValueAssignTrait<&'a V>,
         {
-            type Output = Result<VecHistogram<A, V>, Error>;
+            type Output = Result<VecHistogram<A, V>, crate::error::BinaryOperationError>;
 
             /// Combine the right-hand histogram with the left-hand histogram,
             /// consuming the left-hand histogram and returning a new value.
@@ -263,7 +263,7 @@ macro_rules! impl_binary_op_with_owned {
             /// ```
             fn $method(mut self, rhs: &VecHistogram<A, V>) -> Self::Output {
                 if self.axes() != rhs.axes() {
-                    return Err(Error::BinaryOperationError);
+                    return Err(crate::error::BinaryOperationError);
                 }
                 self.values
                     .iter_mut()

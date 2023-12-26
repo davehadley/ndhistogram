@@ -2,7 +2,7 @@ use std::fmt::{Debug, Display};
 
 use num_traits::{Float, Num, NumCast, NumOps};
 
-use crate::error::Error;
+use crate::error::{AxisError, Error};
 
 use super::{Axis, BinInterval};
 
@@ -45,15 +45,15 @@ where
     ///
     /// Only implemented for [Float]. Use [Uniform::with_step_size] for integers.
     ///
-    pub fn new(num: usize, low: T, high: T) -> Result<Self, Error>
+    pub fn new(num: usize, low: T, high: T) -> Result<Self, AxisError>
     where
         T: Float,
     {
         if num == 0 {
-            return Err(Error::InvalidNumberOfBins);
+            return Err(AxisError::InvalidNumberOfBins);
         }
         if low == high {
-            return Err(Error::InvalidAxisRange);
+            return Err(AxisError::InvalidAxisRange);
         }
         let (low, high) = if low > high { (high, low) } else { (low, high) };
         let step = (high - low) / T::from(num).expect("");
@@ -69,13 +69,13 @@ where
     ///
     /// # Panics
     /// Panics if num bins == 0 or step <= 0.
-    pub fn with_step_size(num: usize, low: T, step: T) -> Result<Self, Error> {
+    pub fn with_step_size(num: usize, low: T, step: T) -> Result<Self, AxisError> {
         let high = T::from(num).expect("num bins can be converted to coordinate type") * step + low;
         if num == 0 {
-            return Err(Error::InvalidNumberOfBins);
+            return Err(AxisError::InvalidNumberOfBins);
         }
         if step <= T::zero() {
-            return Err(Error::InvalidStepSize);
+            return Err(AxisError::InvalidStepSize);
         }
         let (low, high) = if low > high { (high, low) } else { (low, high) };
         Ok(Self {

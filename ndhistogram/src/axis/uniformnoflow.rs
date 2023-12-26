@@ -1,4 +1,4 @@
-use crate::Error;
+use crate::{error::AxisError, Error};
 
 use super::{Axis, BinInterval, Uniform};
 use std::fmt::{Debug, Display};
@@ -39,7 +39,7 @@ where
     ///
     /// # Panics
     /// Panics under the same conditions as [Uniform::new].
-    pub fn new(num: usize, low: T, high: T) -> Result<Self, Error>
+    pub fn new(num: usize, low: T, high: T) -> Result<Self, AxisError>
     where
         T: Float,
     {
@@ -52,7 +52,7 @@ where
     ///
     /// # Panics
     /// Panics under the same conditions as [Uniform::with_step_size].
-    pub fn with_step_size(num: usize, low: T, step: T) -> Result<Self, Error>
+    pub fn with_step_size(num: usize, low: T, step: T) -> Result<Self, AxisError>
     where
         T: Num,
     {

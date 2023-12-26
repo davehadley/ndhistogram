@@ -1,4 +1,4 @@
-use crate::Error;
+use crate::{error::AxisError, Error};
 
 use super::{Axis, BinInterval, Variable};
 
@@ -39,7 +39,7 @@ impl<T: PartialOrd + Copy> VariableNoFlow<T> {
     ///
     /// # Panics
     /// Panics under the same conditions as [Variable::new].
-    pub fn new<I: IntoIterator<Item = T>>(bin_edges: I) -> Result<Self, Error> {
+    pub fn new<I: IntoIterator<Item = T>>(bin_edges: I) -> Result<Self, AxisError> {
         Ok(Self {
             axis: Variable::new(bin_edges)?,
         })

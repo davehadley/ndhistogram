@@ -336,7 +336,7 @@ pub type SparseHist3D<X, Y, Z, V = f64> = HashHistogram<AxesTuple<(X, Y, Z)>, V>
 pub type SparseHistND<A, V = f64> = HashHistogram<AxesTuple<A>, V>;
 
 /// Provides errors that may be returned by [Histogram]s.
-mod error;
+pub mod error;
 
 pub use error::Error;
 
