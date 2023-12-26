@@ -19,7 +19,8 @@ use super::{Axis, BinInterval};
 /// ```rust
 ///    use ndhistogram::{ndhistogram, Histogram};
 ///    use ndhistogram::axis::{Axis, Variable, BinInterval};
-///    let mut hist = ndhistogram!(Variable::new(vec![0.0, 1.0, 3.0, 7.0]); i32);
+///    # fn main() -> Result<(), ndhistogram::Error> {
+///    let mut hist = ndhistogram!(Variable::new(vec![0.0, 1.0, 3.0, 7.0])?; i32);
 ///    hist.fill(&0.0);
 ///    hist.fill(&1.0);
 ///    hist.fill(&2.0);
@@ -27,7 +28,7 @@ use super::{Axis, BinInterval};
 ///        hist.values().copied().collect::<Vec<_>>(),
 ///        vec![0, 1, 2, 0, 0],
 ///    );
-///
+///    # Ok(()) }
 /// ```
 #[derive(Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]

@@ -18,11 +18,12 @@ use num_traits::{Float, Num, NumCast, NumOps};
 /// ```rust
 ///    use ndhistogram::{ndhistogram, Histogram};
 ///    use ndhistogram::axis::{Axis, UniformNoFlow, BinInterval};
-///    let hist = ndhistogram!(UniformNoFlow::new(10, -5.0, 5.0));
+///    # fn main() -> Result<(), ndhistogram::Error> {
+///    let hist = ndhistogram!(UniformNoFlow::new(10, -5.0, 5.0)?);
 ///    let axis = &hist.axes().as_tuple().0;
 ///    assert_eq!(axis.bin(0), Some(BinInterval::new(-5.0, -4.0)));
 ///    assert_eq!(axis.bin(10), None);
-///
+///    # Ok(()) }
 /// ```
 #[derive(Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]

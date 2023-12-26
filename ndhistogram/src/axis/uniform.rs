@@ -20,12 +20,13 @@ use super::{Axis, BinInterval};
 /// ```rust
 ///    use ndhistogram::{ndhistogram, Histogram};
 ///    use ndhistogram::axis::{Axis, Uniform, BinInterval};
-///    let hist = ndhistogram!(Uniform::new(10, -5.0, 5.0));
+///    # fn main() -> Result<(), ndhistogram::Error> {
+///    let hist = ndhistogram!(Uniform::new(10, -5.0, 5.0)?);
 ///    let axis = &hist.axes().as_tuple().0;
 ///    assert_eq!(axis.bin(0), Some(BinInterval::underflow(-5.0)));
 ///    assert_eq!(axis.bin(1), Some(BinInterval::new(-5.0, -4.0)));
 ///    assert_eq!(axis.bin(11), Some(BinInterval::overflow(5.0)));
-///
+///    # Ok(()) }
 /// ```
 #[derive(Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]

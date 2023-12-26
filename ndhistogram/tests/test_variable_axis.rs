@@ -1,6 +1,9 @@
 use std::f64::NAN;
 
-use ndhistogram::axis::{Axis, BinInterval, Variable};
+use ndhistogram::{
+    axis::{Axis, BinInterval, Variable},
+    Error,
+};
 
 #[test]
 fn test_variable_num_bins() {
@@ -9,21 +12,27 @@ fn test_variable_num_bins() {
 }
 
 #[test]
-#[should_panic]
 fn test_variable_noedges_panics() {
-    Variable::<f64>::new(vec![]);
+    assert_eq!(
+        Variable::<f64>::new(vec![]),
+        Err(Error::InvalidNumberOfBinEdges)
+    );
 }
 
 #[test]
-#[should_panic]
 fn test_variable_oneedges_panics() {
-    Variable::new(vec![1.0]);
+    assert_eq!(
+        Variable::new(vec![1.0]),
+        Err(Error::InvalidNumberOfBinEdges)
+    );
 }
 
 #[test]
-#[should_panic]
 fn test_variable_nan_edges_panics() {
-    Variable::new(vec![1.0, NAN, 2.0]);
+    assert_eq!(
+        Variable::new(vec![1.0, NAN, 2.0]),
+        Err(Error::FailedToSortBinEdges)
+    );
 }
 
 #[test]

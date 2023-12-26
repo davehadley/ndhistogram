@@ -171,12 +171,15 @@ where
     ///
     /// ```rust
     /// use ndhistogram::{Histogram, ndhistogram, axis::Uniform};
-    /// let mut hist1 = ndhistogram!(Uniform::<f64>::new(10, -5.0, 5.0));
-    /// let mut hist2 = ndhistogram!(Uniform::<f64>::new(10, -5.0, 5.0));
+    /// # fn main() -> Result<(), ndhistogram::Error> {
+    /// let mut hist1 = ndhistogram!(Uniform::<f64>::new(10, -5.0, 5.0)?);
+    /// let mut hist2 = ndhistogram!(Uniform::<f64>::new(10, -5.0, 5.0)?);
     /// hist1.fill_with(&0.0, 2.0);
     /// hist2.fill(&0.0);
     #[doc=concat!("let combined_hist = (&hist1 ", stringify!($mathsymbol), " &hist2).expect(\"Axes are compatible\");")]
     #[doc=concat!("assert_eq!(combined_hist.value(&0.0).unwrap(), &", stringify!($testresult), ");")]
+    /// # Ok(()) }
+    /// ```
     fn $method(self, rhs: &VecHistogram<A, V>) -> Self::Output {
         if self.axes() != rhs.axes() {
             return Err(Error::BinaryOperationError);
@@ -249,12 +252,15 @@ macro_rules! impl_binary_op_with_owned {
             ///
             /// ```rust
             /// use ndhistogram::{Histogram, ndhistogram, axis::Uniform};
-            /// let mut hist1 = ndhistogram!(Uniform::<f64>::new(10, -5.0, 5.0));
-            /// let mut hist2 = ndhistogram!(Uniform::<f64>::new(10, -5.0, 5.0));
+            /// # fn main() -> Result<(), ndhistogram::Error> {
+            /// let mut hist1 = ndhistogram!(Uniform::<f64>::new(10, -5.0, 5.0)?);
+            /// let mut hist2 = ndhistogram!(Uniform::<f64>::new(10, -5.0, 5.0)?);
             /// hist1.fill_with(&0.0, 2.0);
             /// hist2.fill(&0.0);
             #[doc=concat!("let combined_hist = (hist1 ", stringify!($mathsymbol), " &hist2).expect(\"Axes are compatible\");")]
             #[doc=concat!("assert_eq!(combined_hist.value(&0.0).unwrap(), &", stringify!($testresult), ");")]
+            /// # Ok(()) }
+            /// ```
             fn $method(mut self, rhs: &VecHistogram<A, V>) -> Self::Output {
                 if self.axes() != rhs.axes() {
                     return Err(Error::BinaryOperationError);
@@ -293,12 +299,14 @@ macro_rules! impl_binary_op_assign {
             ///
             /// ```rust
             /// use ndhistogram::{Histogram, ndhistogram, axis::Uniform};
-            /// let mut hist1 = ndhistogram!(Uniform::<f64>::new(10, -5.0, 5.0));
-            /// let mut hist2 = ndhistogram!(Uniform::<f64>::new(10, -5.0, 5.0));
+            /// # fn main() -> Result<(), ndhistogram::Error> {
+            /// let mut hist1 = ndhistogram!(Uniform::<f64>::new(10, -5.0, 5.0)?);
+            /// let mut hist2 = ndhistogram!(Uniform::<f64>::new(10, -5.0, 5.0)?);
             /// hist1.fill_with(&0.0, 2.0);
             /// hist2.fill(&0.0);
             #[doc=concat!("hist1 ", stringify!($mathsymbol), " &hist2;")]
             #[doc=concat!("assert_eq!(hist1.value(&0.0).unwrap(), &", stringify!($testresult), ");")]
+            /// # Ok(()) }
             /// ```
             fn $method(&mut self, rhs: &VecHistogram<A, V>) {
                 if self.axes() != rhs.axes() {

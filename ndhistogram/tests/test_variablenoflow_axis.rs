@@ -12,21 +12,27 @@ fn test_variablenoflow_num_bins() {
 }
 
 #[test]
-#[should_panic]
 fn test_variablenoflow_noedges_panics() {
-    VariableNoFlow::<f64>::new(vec![]);
+    assert_eq!(
+        VariableNoFlow::<f64>::new(vec![]),
+        Err(Error::InvalidNumberOfBinEdges)
+    );
 }
 
 #[test]
-#[should_panic]
 fn test_variablenoflow_oneedges_panics() {
-    VariableNoFlow::new(vec![1.0]);
+    assert_eq!(
+        VariableNoFlow::new(vec![1.0]),
+        Err(Error::InvalidNumberOfBinEdges)
+    );
 }
 
 #[test]
-#[should_panic]
 fn test_variablenoflow_nan_edges_panics() {
-    VariableNoFlow::new(vec![1.0, NAN, 2.0]);
+    assert_eq!(
+        VariableNoFlow::new(vec![1.0, NAN, 2.0]),
+        Err(Error::FailedToSortBinEdges)
+    );
 }
 
 #[test]

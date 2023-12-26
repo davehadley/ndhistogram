@@ -26,14 +26,16 @@ use crate::FillWithWeighted;
 /// ```rust
 /// use ndhistogram::{ndhistogram, Histogram, axis::Uniform, value::WeightedMean};
 ///
+/// # fn main() -> Result<(), ndhistogram::Error> {
 /// // create a histogram and fill it with some values
-/// let mut hist = ndhistogram!(Uniform::new(10, 0.0, 10.0); WeightedMean<i32, i32>);
+/// let mut hist = ndhistogram!(Uniform::new(10, 0.0, 10.0)?; WeightedMean<i32, i32>);
 /// hist.fill_with_weighted(&0.0, 2, 1);
 /// hist.fill_with_weighted(&0.0, 2, 2);
 /// hist.fill_with_weighted(&0.0, 4, 3);
 ///
 /// let weightedmean = hist.value(&0.0);
 /// assert_eq!(weightedmean.unwrap().get(), 3.0);
+/// # Ok(()) }
 /// ```
 #[derive(Copy, Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]

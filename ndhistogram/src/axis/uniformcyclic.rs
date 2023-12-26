@@ -16,7 +16,8 @@ use num_traits::{Float, Num, NumCast, NumOps};
 /// ```
 /// use ndhistogram::{ndhistogram, Histogram};
 /// use ndhistogram::axis::{Axis, BinInterval, UniformCyclic};
-/// let mut hist = ndhistogram!(UniformCyclic::new(4, 0.0, 360.0));
+/// # fn main() -> Result<(), ndhistogram::Error> {
+/// let mut hist = ndhistogram!(UniformCyclic::new(4, 0.0, 360.0)?);
 /// hist.fill(& 45.0         ); // Add entry at 45 degrees
 /// hist.fill(&(45.0 + 360.0)); // Add entry at 45 degrees + one whole turn
 /// hist.fill(&(45.0 - 360.0)); // Add entry at 45 degrees + one whole turn backwards
@@ -25,20 +26,24 @@ use num_traits::{Float, Num, NumCast, NumOps};
 /// // Lookup also wraps around
 /// assert_eq!(hist.value(&(45.0 + 360.0)), Some(&3.0));
 /// assert_eq!(hist.value(&(45.0 - 360.0)), Some(&3.0));
+/// # Ok(()) }
 /// ```
 /// Time of day
 /// ```
 /// use ndhistogram::{ndhistogram, Histogram};
 /// use ndhistogram::axis::{Axis, BinInterval, UniformCyclic};
+///
+/// # fn main() -> Result<(), ndhistogram::Error> {
 /// let bins_per_day = 24;
 /// let hours_per_bin = 1;
 /// let start_at_zero = 0;
 /// let four_pm = 16;
 /// let mut hist = ndhistogram!(UniformCyclic::with_step_size(
 ///     bins_per_day, start_at_zero, hours_per_bin
-/// ));
+/// )?);
 /// hist.fill(&40);                               // The 40th hour of the week ...
 /// assert_eq!(hist.value(&four_pm), Some(&1.0)); // ... is at 4 pm.
+/// # Ok(()) }
 /// ````
 #[derive(Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
