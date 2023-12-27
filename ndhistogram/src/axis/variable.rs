@@ -66,14 +66,14 @@ where
     pub fn low(&self) -> &T {
         self.bin_edges
             .first()
-            .expect("Variable bin_edges unexpectedly empty")
+            .expect("Variable bin_edges can never be empty as new returns an error if it is")
     }
 
     /// High edge of axis (excluding overflow bin).
     pub fn high(&self) -> &T {
         self.bin_edges
             .last()
-            .expect("Variable bin_edges unexpectedly empty")
+            .expect("Variable bin_edges can never be empty as new returns an error if it is")
     }
 }
 
