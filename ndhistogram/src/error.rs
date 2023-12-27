@@ -26,7 +26,7 @@ pub struct BinaryOperationError;
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum AxisError {
     /// Failed to create an axis as the number of bins is invalid for this axis type.
-    #[error("number of bins should be positive and non-zero")]
+    #[error("number of bins should be positive and non-zero and must be convertible to the coordinate type")]
     InvalidNumberOfBins,
     /// Failed to create an axis due to an invalid range for this axis type (for example the low edge equaling the high edge).
     #[error("Invalid axis range. Low edge should not equal high edge.")]

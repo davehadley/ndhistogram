@@ -56,7 +56,7 @@ where
             return Err(AxisError::InvalidAxisRange);
         }
         let (low, high) = if low > high { (high, low) } else { (low, high) };
-        let step = (high - low) / T::from(num).expect("");
+        let step = (high - low) / T::from(num).ok_or(AxisError::InvalidNumberOfBins)?;
         Ok(Self {
             num,
             low,
