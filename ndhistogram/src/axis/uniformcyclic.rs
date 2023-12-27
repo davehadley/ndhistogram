@@ -1,4 +1,4 @@
-use crate::{error::AxisError, Error};
+use crate::error::AxisError;
 
 use super::{Axis, BinInterval, UniformNoFlow};
 use std::fmt::{Debug, Display};

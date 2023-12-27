@@ -1,6 +1,6 @@
 use std::{cmp::Ordering, fmt::Display};
 
-use crate::{error::AxisError, Error};
+use crate::error::AxisError;
 
 use super::{Axis, BinInterval};
 

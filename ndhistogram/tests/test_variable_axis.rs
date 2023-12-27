@@ -3,7 +3,6 @@ use std::f64::NAN;
 use ndhistogram::{
     axis::{Axis, BinInterval, Variable},
     error::AxisError,
-    Error,
 };
 
 #[test]

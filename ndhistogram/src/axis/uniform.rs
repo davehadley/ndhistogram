@@ -2,7 +2,7 @@ use std::fmt::{Debug, Display};
 
 use num_traits::{Float, Num, NumCast, NumOps};
 
-use crate::error::{AxisError, Error};
+use crate::error::AxisError;
 
 use super::{Axis, BinInterval};
 

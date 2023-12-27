@@ -6,7 +6,7 @@ use std::{
 };
 
 use super::histogram::{Histogram, Iter, IterMut, ValuesMut};
-use crate::{axis::Axis, error::Error, Item};
+use crate::{axis::Axis, Item};
 
 /// A sparse N-dimensional [Histogram] that stores its values in a [HashMap].
 ///

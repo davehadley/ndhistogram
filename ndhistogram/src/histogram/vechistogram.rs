@@ -5,7 +5,7 @@ use std::{
     ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign},
 };
 
-use crate::{axis::Axis, error::Error};
+use crate::axis::Axis;
 
 use super::histogram::{Histogram, Item, Iter, IterMut, ValuesMut};
 

@@ -1,7 +1,6 @@
 use ndhistogram::{
     axis::{Axis, BinInterval, Uniform},
     error::AxisError,
-    Error,
 };
 
 #[test]
