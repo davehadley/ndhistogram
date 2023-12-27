@@ -180,7 +180,7 @@ macro_rules! impl_binary_op_with_immutable_borrow {
             /// returning a copy, and leaving the original histograms intact.
             ///
             /// If the input histograms have incompatible axes, this operation
-            /// will return a [Error::BinaryOperationError].
+            /// will return a [crate::error::BinaryOperationError].
             ///
             /// # Examples
             ///
@@ -241,7 +241,7 @@ macro_rules! impl_binary_op_with_owned {
             /// recommended method to merge histograms.
             ///
             /// If the input histograms have incompatible axes, this operation
-            /// will return a [Error::BinaryOperationError].
+            /// will return a [crate::error::BinaryOperationError].
             ///
             /// # Examples
             ///
