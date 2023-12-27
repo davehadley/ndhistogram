@@ -37,8 +37,7 @@ where
 {
     /// Factory method to create an axis with num uniformly spaced bins in the range [low, high) with no under/overflow bins.
     ///
-    /// # Panics
-    /// Panics under the same conditions as [Uniform::new].
+    /// The parameters have the same constraints as [Uniform::new], otherwise an error is returned.
     pub fn new(num: usize, low: T, high: T) -> Result<Self, AxisError>
     where
         T: Float,
@@ -50,8 +49,7 @@ where
 
     /// Factory method to create an axis with num uniformly spaced bins in the range [low, low+num*step) with no under/overflow bins.
     ///
-    /// # Panics
-    /// Panics under the same conditions as [Uniform::with_step_size].
+    /// The parameters have the same constraints as [Uniform::with_step_size], otherwise an error is returned.
     pub fn with_step_size(num: usize, low: T, step: T) -> Result<Self, AxisError>
     where
         T: Num,

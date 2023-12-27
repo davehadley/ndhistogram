@@ -42,10 +42,8 @@ where
 {
     /// Factory method to create an axis with [Variable] binning given a set of bin edges.
     ///
-    /// # Panics
-    ///
-    /// Panics if less than 2 edges are provided or if it fails to sort the
-    /// bin edges (for example if a NAN value is given).
+    /// If less than 2 edges are provided or if it fails to sort the
+    /// bin edges (for example if a NAN value is given), an error is returned.
     pub fn new<I: IntoIterator<Item = T>>(bin_edges: I) -> Result<Self, AxisError> {
         let mut bin_edges: Vec<T> = bin_edges.into_iter().collect();
         if bin_edges.len() < 2 {

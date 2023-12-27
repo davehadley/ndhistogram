@@ -62,8 +62,7 @@ where
     ///
     /// For floating point types, infinities and NaN do not map to any bin.
     ///
-    /// # Panics
-    /// Panics under the same conditions as [UniformNoFlow::new].
+    /// The parameters have the same constraints as [UniformNoFlow::new], otherwise an error in returned.
     pub fn new(nbins: usize, low: T, high: T) -> Result<Self, AxisError>
     where
         T: Float,
@@ -74,8 +73,7 @@ where
     }
 
     /// Create a wrap-around axis with `nbins` uniformly-spaced bins in the range `[low, low+num*step)`.
-    /// # Panics
-    /// Panics under the same conditions as [UniformNoFlow::new].
+    /// The parameters have the same constraints as [UniformNoFlow::new], otherwise an error is returned.
     pub fn with_step_size(nbins: usize, low: T, step: T) -> Result<Self, AxisError> {
         Ok(Self {
             axis: UniformNoFlow::with_step_size(nbins, low, step)?,

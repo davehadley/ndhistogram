@@ -33,7 +33,7 @@ fn test_uniform_integer_get_bin() {
 }
 
 #[test]
-fn test_uniform_with_step_size_should_panic_on_negative_step() {
+fn test_uniform_with_step_size_should_return_error_on_negative_step() {
     assert_eq!(
         Uniform::with_step_size(10, 20.0, -1.0),
         Err(AxisError::InvalidStepSize)
@@ -41,7 +41,7 @@ fn test_uniform_with_step_size_should_panic_on_negative_step() {
 }
 
 #[test]
-fn test_uniform_with_step_size_should_panic_on_zero_step() {
+fn test_uniform_with_step_size_should_return_error_on_zero_step() {
     assert_eq!(
         Uniform::with_step_size(10, 20.0, 0.0),
         Err(AxisError::InvalidStepSize)

@@ -13,7 +13,7 @@ fn test_variablenoflow_num_bins() {
 }
 
 #[test]
-fn test_variablenoflow_noedges_panics() {
+fn test_variablenoflow_noedges_return_error() {
     assert_eq!(
         VariableNoFlow::<f64>::new(vec![]),
         Err(AxisError::InvalidNumberOfBinEdges)
@@ -21,7 +21,7 @@ fn test_variablenoflow_noedges_panics() {
 }
 
 #[test]
-fn test_variablenoflow_oneedges_panics() {
+fn test_variablenoflow_oneedges_return_error() {
     assert_eq!(
         VariableNoFlow::new(vec![1.0]),
         Err(AxisError::InvalidNumberOfBinEdges)
@@ -29,7 +29,7 @@ fn test_variablenoflow_oneedges_panics() {
 }
 
 #[test]
-fn test_variablenoflow_nan_edges_panics() {
+fn test_variablenoflow_nan_edges_return_error() {
     assert_eq!(
         VariableNoFlow::new(vec![1.0, NAN, 2.0]),
         Err(AxisError::FailedToSortBinEdges)

@@ -38,10 +38,8 @@ where
 {
     /// Create a wrap-around axis with variable binning given a set of bin edges.
     ///
-    /// # Panics
-    ///
-    /// Panics if fewer than 2 edges are provided, or if the edges cannot be
-    /// sorted (for example when given NAN).
+    /// If fewer than 2 edges are provided, or if the edges cannot be
+    /// sorted (for example when given NAN) an error is returned.
     pub fn new<I: IntoIterator<Item = T>>(bin_edges: I) -> Result<Self, AxisError> {
         Ok(Self {
             axis: VariableNoFlow::new(bin_edges)?,

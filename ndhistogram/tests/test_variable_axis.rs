@@ -12,7 +12,7 @@ fn test_variable_num_bins() {
 }
 
 #[test]
-fn test_variable_noedges_panics() {
+fn test_variable_noedges_return_error() {
     assert_eq!(
         Variable::<f64>::new(vec![]),
         Err(AxisError::InvalidNumberOfBinEdges)
@@ -20,7 +20,7 @@ fn test_variable_noedges_panics() {
 }
 
 #[test]
-fn test_variable_oneedges_panics() {
+fn test_variable_oneedges_return_error() {
     assert_eq!(
         Variable::new(vec![1.0]),
         Err(AxisError::InvalidNumberOfBinEdges)
@@ -28,7 +28,7 @@ fn test_variable_oneedges_panics() {
 }
 
 #[test]
-fn test_variable_nan_edges_panics() {
+fn test_variable_nan_edges_return_error() {
     assert_eq!(
         Variable::new(vec![1.0, NAN, 2.0]),
         Err(AxisError::FailedToSortBinEdges)

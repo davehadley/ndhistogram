@@ -37,8 +37,7 @@ impl<T: PartialOrd + Copy> VariableNoFlow<T> {
     /// Factory method to create an variable binning from a set of bin edges with no under/overflow bins.
     /// See the documentation for [Variable::new].
     ///
-    /// # Panics
-    /// Panics under the same conditions as [Variable::new].
+    /// The parameters must satify the same constraints as [Variable::new], otherwise an error is returned.
     pub fn new<I: IntoIterator<Item = T>>(bin_edges: I) -> Result<Self, AxisError> {
         Ok(Self {
             axis: Variable::new(bin_edges)?,
