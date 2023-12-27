@@ -51,8 +51,9 @@
 //! ```rust
 //! use ndhistogram::{Histogram, ndhistogram, axis::Uniform};
 //!
+//! # fn main() -> Result<(), ndhistogram::Error> {
 //! // create a 1D histogram with 10 equally sized bins between -5 and 5
-//! let mut hist = ndhistogram!(Uniform::new(10, -5.0, 5.0));
+//! let mut hist = ndhistogram!(Uniform::new(10, -5.0, 5.0)?);
 //! // fill this histogram with a single value
 //! hist.fill(&1.0);
 //! // fill this histogram with weights
@@ -67,6 +68,7 @@
 //! }
 //! // print the histogram to stdout
 //! println!("{}", hist);
+//! # Ok(()) }
 //! ```
 //!
 //! ## Overview
@@ -125,15 +127,16 @@
 //!
 //! ```rust
 //! use ndhistogram::{Histogram, ndhistogram, axis::Uniform, value::Mean};
+//! # fn main() -> Result<(), ndhistogram::Error> {
 //! // Create a histogram whose bin values are i32
-//! let mut hist = ndhistogram!(Uniform::new(10, -5.0, 5.0); i32);
+//! let mut hist = ndhistogram!(Uniform::new(10, -5.0, 5.0)?; i32);
 //! hist.fill_with(&1.0, 2);
 //! let value: Option<&i32> = hist.value(&1.0);
 //! assert_eq!(value, Some(&2));
 //!
 //! // More complex value types beyond primitives are available
 //! // "Mean" calculates the average of values it is filled with
-//! let mut hist = ndhistogram!(Uniform::new(10, -5.0, 5.0); Mean);
+//! let mut hist = ndhistogram!(Uniform::new(10, -5.0, 5.0)?; Mean);
 //! hist.fill_with(&1.0, 1.0);
 //! hist.fill_with(&1.0, 3.0);
 //! assert_eq!(hist.value(&1.0).unwrap().mean(), 2.0);
@@ -142,24 +145,28 @@
 //!
 //! // user defined value types are possible by implementing
 //! // Fill, FillWith or FillWithWeighted traits
+//! # Ok(()) }
 //! ```
 //!
 //! ### Create and Use a 2D Histogram
 //!
 //! ```rust
 //! use ndhistogram::{Histogram, ndhistogram, axis::Uniform};
+//! # fn main() -> Result<(), ndhistogram::Error> {
 //! // create a 2D histogram
-//! let mut hist = ndhistogram!(Uniform::new(10, -5.0, 5.0), Uniform::new(10, -5.0, 5.0));
+//! let mut hist = ndhistogram!(Uniform::new(10, -5.0, 5.0)?, Uniform::new(10, -5.0, 5.0)?);
 //! // fill 2D histogram
 //! hist.fill(&(1.0, 2.0));
 //! // read back the histogram values
 //! let x1_y2 = hist.value(&(1.0, 2.0));
 //! // higher dimensions are possible with additional arguments to ndhistogram
+//! # Ok(()) }
 //! ```
 //!
 //! ### Create a Histogram with a Discrete Axis
 //! ```rust
 //! use ndhistogram::{Histogram, ndhistogram, axis::Category};
+//! # fn main() -> Result<(), ndhistogram::Error> {
 //! let mut hist = ndhistogram!(Category::new(vec![0, 2, 4]));
 //! hist.fill_with(&2, 42.0);
 //! hist.fill_with(&1, 128.0);
@@ -173,19 +180,22 @@
 //! let mut hist = ndhistogram!(Category::new(vec!["Red", "Blue", "Green"]));
 //! hist.fill(&"Red");
 //! assert_eq!(hist.value(&"Red"), Some(&1.0));
+//! # Ok(()) }
 //! ```
 //!
 //! ### Create a Histogram with Variable Sized Bins
 //!
 //! ```rust
 //! use ndhistogram::{Histogram, ndhistogram, axis::Variable};
-//! let mut hist = ndhistogram!(Variable::new(vec![0.0, 1.0, 3.0, 6.0]));
+//! # fn main() -> Result<(), ndhistogram::Error> {
+//! let mut hist = ndhistogram!(Variable::new(vec![0.0, 1.0, 3.0, 6.0])?);
 //! for x in 0..6 {
 //!     hist.fill(&f64::from(x));
 //! }
 //! assert_eq!(hist.value(&0.0), Some(&1.0));
 //! assert_eq!(hist.value(&1.0), Some(&2.0));
 //! assert_eq!(hist.value(&3.0), Some(&3.0));
+//! # Ok(()) }
 //! ```
 //!
 //! ### Create a Histogram with a Periodic or Cyclic Axis
@@ -193,55 +203,61 @@
 //! ```rust
 //! use std::f64::consts::PI;
 //! use ndhistogram::{Histogram, ndhistogram, axis::UniformCyclic};
-//! let mut hist = ndhistogram!(UniformCyclic::<f64>::new(10, 0.0, 2.0*PI));
+//! # fn main() -> Result<(), ndhistogram::Error> {
+//! let mut hist = ndhistogram!(UniformCyclic::<f64>::new(10, 0.0, 2.0*PI)?);
 //! hist.fill(&PI);
 //! hist.fill(&-PI);
 //! // +pi and -pi are mapped onto the same value
 //! assert_eq!(hist.value(&-PI), Some(&2.0));
 //! assert_eq!(hist.value(&PI), Some(&2.0));
+//! # Ok(()) }
 //! ```
 //!
 //! ### Create a Sparse Histogram
 //!
 //! ```rust
 //! use ndhistogram::{Histogram, sparsehistogram, axis::Uniform};
+//! # fn main() -> Result<(), ndhistogram::Error> {
 //! // This histogram has 1e18 bins, too many to allocate with a normal histogram
 //! let mut histogram_with_lots_of_bins = sparsehistogram!(
-//!     Uniform::new(1_000_000, -5.0, 5.0),
-//!     Uniform::new(1_000_000, -5.0, 5.0),
-//!     Uniform::new(1_000_000, -5.0, 5.0)
+//!     Uniform::new(1_000_000, -5.0, 5.0)?,
+//!     Uniform::new(1_000_000, -5.0, 5.0)?,
+//!     Uniform::new(1_000_000, -5.0, 5.0)?
 //! );
 //! histogram_with_lots_of_bins.fill(&(1.0, 2.0, 3.0));
 //! // read back the filled value
 //! assert_eq!(histogram_with_lots_of_bins.value(&(1.0, 2.0, 3.0)).unwrap(), &1.0);
 //! // unfilled bins will return None
 //! assert!(histogram_with_lots_of_bins.value(&(0.0, 0.0, 0.0)).is_none());
+//! # Ok(()) }
 //! ```
 //!
 //! ### Merge Histograms
 //!
 //! ```rust
 //! use ndhistogram::{Histogram, ndhistogram, axis::Uniform};
-//! let mut hist1 = ndhistogram!(Uniform::<f64>::new(10, -5.0, 5.0));
-//! let mut hist2 = ndhistogram!(Uniform::<f64>::new(10, -5.0, 5.0));
+//! # fn main() -> Result<(), ndhistogram::Error> {
+//! let mut hist1 = ndhistogram!(Uniform::<f64>::new(10, -5.0, 5.0)?);
+//! let mut hist2 = ndhistogram!(Uniform::<f64>::new(10, -5.0, 5.0)?);
 //! hist1.fill_with(&0.0, 2.0);
 //! hist2.fill_with(&0.0, 3.0);
 //! let combined_hist = (hist1 + &hist2).expect("Axes are compatible");
 //! # assert_eq!(combined_hist.value(&0.0).unwrap(), &5.0);
+//! # Ok(()) }
 //! ```
 //!
 //! ### Iterate over Histogram Bins in Parallel
 //!
 //! ```rust
 //! # #[cfg(feature = "rayon")]
-//! # {
+//! # fn main() -> Result<(), ndhistogram::Error> {
 //! use rayon::prelude::*;
 //! use ndhistogram::{Histogram, ndhistogram, axis::Uniform};
-//! let mut histogram = ndhistogram!(Uniform::<f64>::new(10, -5.0, 5.0));
+//! let mut histogram = ndhistogram!(Uniform::<f64>::new(10, -5.0, 5.0)?);
 //! let sum: f64 = histogram.par_iter().map(|bin| bin.value).sum();
 //! // see also: par_iter_mut, par_values, par_values_mut.
 //! assert_eq!(sum, 0.0);
-//! # }
+//! # Ok(()) }
 //! ```
 //! Requires "rayon" feature enabled.
 //!
@@ -321,6 +337,8 @@ pub type SparseHistND<A, V = f64> = HashHistogram<AxesTuple<A>, V>;
 
 /// Provides errors that may be returned by [Histogram]s.
 pub mod error;
+
+pub use error::Error;
 
 #[macro_use]
 mod macros;

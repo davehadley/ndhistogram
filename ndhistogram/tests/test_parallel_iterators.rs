@@ -8,7 +8,7 @@ mod rayon_tests {
     use rayon::prelude::*;
 
     fn example_filled_vec_histogram() -> Hist1D<Uniform> {
-        let mut hist = ndhistogram!(Uniform::new(100, 0.0, 100.0));
+        let mut hist = ndhistogram!(Uniform::new(100, 0.0, 100.0).unwrap());
         (-1..=101).for_each(|it| hist.fill_with(&(it as f64), it as f64));
         hist
     }
@@ -54,7 +54,7 @@ mod rayon_tests {
     }
 
     fn example_filled_hash_histogram() -> SparseHist1D<Uniform, i64> {
-        let mut hist = sparsehistogram!(Uniform::new(100, 0.0, 100.0); i64);
+        let mut hist = sparsehistogram!(Uniform::new(100, 0.0, 100.0).unwrap(); i64);
         (-1..=101).for_each(|it| hist.fill_with(&(it as f64), it));
         hist
     }

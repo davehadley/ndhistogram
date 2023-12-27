@@ -1,3 +1,5 @@
+use crate::error::AxisError;
+
 use super::{Axis, BinInterval, Variable};
 
 use std::fmt::{Debug, Display};
@@ -14,7 +16,8 @@ use std::fmt::{Debug, Display};
 /// ```rust
 ///    use ndhistogram::{ndhistogram, Histogram};
 ///    use ndhistogram::axis::{Axis, VariableNoFlow};
-///    let mut hist = ndhistogram!(VariableNoFlow::new(vec![0.0, 1.0, 3.0, 7.0]); i32);
+///    # fn main() -> Result<(), ndhistogram::Error> {
+///    let mut hist = ndhistogram!(VariableNoFlow::new(vec![0.0, 1.0, 3.0, 7.0])?; i32);
 ///    hist.fill(&-1.0); // will be ignored as there is no underflow bin
 ///    hist.fill(&1.0);
 ///    hist.fill(&2.0);
@@ -22,7 +25,7 @@ use std::fmt::{Debug, Display};
 ///        hist.values().copied().collect::<Vec<_>>(),
 ///        vec![0, 2, 0],
 ///    );
-///
+///    # Ok(()) }
 /// ```
 #[derive(Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
@@ -34,12 +37,11 @@ impl<T: PartialOrd + Copy> VariableNoFlow<T> {
     /// Factory method to create an variable binning from a set of bin edges with no under/overflow bins.
     /// See the documentation for [Variable::new].
     ///
-    /// # Panics
-    /// Panics under the same conditions as [Variable::new].
-    pub fn new<I: IntoIterator<Item = T>>(bin_edges: I) -> Self {
-        Self {
-            axis: Variable::new(bin_edges),
-        }
+    /// The parameters must satify the same constraints as [Variable::new], otherwise an error is returned.
+    pub fn new<I: IntoIterator<Item = T>>(bin_edges: I) -> Result<Self, AxisError> {
+        Ok(Self {
+            axis: Variable::new(bin_edges)?,
+        })
     }
 
     /// Return the lowest bin edge.

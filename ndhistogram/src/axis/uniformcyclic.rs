@@ -1,3 +1,5 @@
+use crate::error::AxisError;
+
 use super::{Axis, BinInterval, UniformNoFlow};
 use std::fmt::{Debug, Display};
 
@@ -14,7 +16,8 @@ use num_traits::{Float, Num, NumCast, NumOps};
 /// ```
 /// use ndhistogram::{ndhistogram, Histogram};
 /// use ndhistogram::axis::{Axis, BinInterval, UniformCyclic};
-/// let mut hist = ndhistogram!(UniformCyclic::new(4, 0.0, 360.0));
+/// # fn main() -> Result<(), ndhistogram::Error> {
+/// let mut hist = ndhistogram!(UniformCyclic::new(4, 0.0, 360.0)?);
 /// hist.fill(& 45.0         ); // Add entry at 45 degrees
 /// hist.fill(&(45.0 + 360.0)); // Add entry at 45 degrees + one whole turn
 /// hist.fill(&(45.0 - 360.0)); // Add entry at 45 degrees + one whole turn backwards
@@ -23,20 +26,24 @@ use num_traits::{Float, Num, NumCast, NumOps};
 /// // Lookup also wraps around
 /// assert_eq!(hist.value(&(45.0 + 360.0)), Some(&3.0));
 /// assert_eq!(hist.value(&(45.0 - 360.0)), Some(&3.0));
+/// # Ok(()) }
 /// ```
 /// Time of day
 /// ```
 /// use ndhistogram::{ndhistogram, Histogram};
 /// use ndhistogram::axis::{Axis, BinInterval, UniformCyclic};
+///
+/// # fn main() -> Result<(), ndhistogram::Error> {
 /// let bins_per_day = 24;
 /// let hours_per_bin = 1;
 /// let start_at_zero = 0;
 /// let four_pm = 16;
 /// let mut hist = ndhistogram!(UniformCyclic::with_step_size(
 ///     bins_per_day, start_at_zero, hours_per_bin
-/// ));
+/// )?);
 /// hist.fill(&40);                               // The 40th hour of the week ...
 /// assert_eq!(hist.value(&four_pm), Some(&1.0)); // ... is at 4 pm.
+/// # Ok(()) }
 /// ````
 #[derive(Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
@@ -55,24 +62,22 @@ where
     ///
     /// For floating point types, infinities and NaN do not map to any bin.
     ///
-    /// # Panics
-    /// Panics under the same conditions as [UniformNoFlow::new].
-    pub fn new(nbins: usize, low: T, high: T) -> Self
+    /// The parameters have the same constraints as [UniformNoFlow::new], otherwise an error in returned.
+    pub fn new(nbins: usize, low: T, high: T) -> Result<Self, AxisError>
     where
         T: Float,
     {
-        Self {
-            axis: UniformNoFlow::new(nbins, low, high),
-        }
+        Ok(Self {
+            axis: UniformNoFlow::new(nbins, low, high)?,
+        })
     }
 
     /// Create a wrap-around axis with `nbins` uniformly-spaced bins in the range `[low, low+num*step)`.
-    /// # Panics
-    /// Panics under the same conditions as [UniformNoFlow::new].
-    pub fn with_step_size(nbins: usize, low: T, step: T) -> Self {
-        Self {
-            axis: UniformNoFlow::with_step_size(nbins, low, step),
-        }
+    /// The parameters have the same constraints as [UniformNoFlow::new], otherwise an error is returned.
+    pub fn with_step_size(nbins: usize, low: T, step: T) -> Result<Self, AxisError> {
+        Ok(Self {
+            axis: UniformNoFlow::with_step_size(nbins, low, step)?,
+        })
     }
 }
 

@@ -1,7 +1,7 @@
 use ndhistogram::{axis::Uniform, ndhistogram, value::Sum, FillWith, Histogram};
 #[test]
 fn test_sum_value_fill() {
-    let mut hist = ndhistogram!(Uniform::new(1, 0.0, 1.0); Sum<i32>);
+    let mut hist = ndhistogram!(Uniform::new(1, 0.0, 1.0).unwrap(); Sum<i32>);
     hist.fill(&0.0);
     assert_eq!(hist.value(&0.0).unwrap().get(), 1)
 }
@@ -12,7 +12,7 @@ fn assert_float_eq(left: f64, right: f64) {
 
 #[test]
 fn test_sum_value_error() {
-    let mut hist = ndhistogram!(Uniform::new(1, 0.0, 1.0); Sum);
+    let mut hist = ndhistogram!(Uniform::new(1, 0.0, 1.0).unwrap(); Sum);
     hist.fill(&0.0);
     hist.fill(&0.0);
     let binvalue = hist.value(&0.0).unwrap();

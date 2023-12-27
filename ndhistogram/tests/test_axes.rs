@@ -1,14 +1,15 @@
 use ndhistogram::{
     axis::{Axis, Category, CategoryNoFlow, SingleValueBinInterval, Uniform},
-    AxesTuple,
+    AxesTuple, Error,
 };
 
 #[test]
-fn test_axes_2d_num_bins() {
-    let x = Uniform::new(5, 0.0, 1.0);
-    let y = Uniform::new(4, 0.0, 1.0);
+fn test_axes_2d_num_bins() -> Result<(), Error> {
+    let x = Uniform::new(5, 0.0, 1.0)?;
+    let y = Uniform::new(4, 0.0, 1.0)?;
     let xy: AxesTuple<_> = (x, y).into();
-    assert_eq!(xy.num_bins(), (5 + 2) * (4 + 2))
+    assert_eq!(xy.num_bins(), (5 + 2) * (4 + 2));
+    Ok(())
 }
 
 #[test]
@@ -64,12 +65,13 @@ fn test_axes_2d_bin() {
 }
 
 #[test]
-fn test_axes_3d_num_bins() {
-    let x = Uniform::new(5, 0.0, 1.0);
-    let y = Uniform::new(4, 0.0, 1.0);
-    let z = Uniform::new(3, 0.0, 1.0);
+fn test_axes_3d_num_bins() -> Result<(), Error> {
+    let x = Uniform::new(5, 0.0, 1.0)?;
+    let y = Uniform::new(4, 0.0, 1.0)?;
+    let z = Uniform::new(3, 0.0, 1.0)?;
     let xyz: AxesTuple<_> = (x, y, z).into();
-    assert_eq!(xyz.num_bins(), (5 + 2) * (4 + 2) * (3 + 2))
+    assert_eq!(xyz.num_bins(), (5 + 2) * (4 + 2) * (3 + 2));
+    Ok(())
 }
 
 #[test]

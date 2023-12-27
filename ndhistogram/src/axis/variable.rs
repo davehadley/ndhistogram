@@ -1,4 +1,6 @@
-use std::fmt::Display;
+use std::{cmp::Ordering, fmt::Display};
+
+use crate::error::AxisError;
 
 use super::{Axis, BinInterval};
 
@@ -17,7 +19,8 @@ use super::{Axis, BinInterval};
 /// ```rust
 ///    use ndhistogram::{ndhistogram, Histogram};
 ///    use ndhistogram::axis::{Axis, Variable, BinInterval};
-///    let mut hist = ndhistogram!(Variable::new(vec![0.0, 1.0, 3.0, 7.0]); i32);
+///    # fn main() -> Result<(), ndhistogram::Error> {
+///    let mut hist = ndhistogram!(Variable::new(vec![0.0, 1.0, 3.0, 7.0])?; i32);
 ///    hist.fill(&0.0);
 ///    hist.fill(&1.0);
 ///    hist.fill(&2.0);
@@ -25,7 +28,7 @@ use super::{Axis, BinInterval};
 ///        hist.values().copied().collect::<Vec<_>>(),
 ///        vec![0, 1, 2, 0, 0],
 ///    );
-///
+///    # Ok(()) }
 /// ```
 #[derive(Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
@@ -39,31 +42,38 @@ where
 {
     /// Factory method to create an axis with [Variable] binning given a set of bin edges.
     ///
-    /// # Panics
-    ///
-    /// Panics if less than 2 edges are provided or if it fails to sort the
-    /// bin edges (for example if a NAN value is given).
-    pub fn new<I: IntoIterator<Item = T>>(bin_edges: I) -> Self {
+    /// If less than 2 edges are provided or if it fails to sort the
+    /// bin edges (for example if a NAN value is given), an error is returned.
+    pub fn new<I: IntoIterator<Item = T>>(bin_edges: I) -> Result<Self, AxisError> {
         let mut bin_edges: Vec<T> = bin_edges.into_iter().collect();
         if bin_edges.len() < 2 {
-            panic!("Invalid axis number of bin edges ({})", bin_edges.len());
+            return Err(AxisError::InvalidNumberOfBinEdges);
         }
-        bin_edges.sort_by(|a, b| a.partial_cmp(b).expect("failed to sort bin_edges."));
-        Self { bin_edges }
+        let mut sort_failed = false;
+        bin_edges.sort_by(|a, b| {
+            a.partial_cmp(b).unwrap_or_else(|| {
+                sort_failed = true;
+                Ordering::Less
+            })
+        });
+        if sort_failed {
+            return Err(AxisError::FailedToSortBinEdges);
+        }
+        Ok(Self { bin_edges })
     }
 
     /// Low edge of axis (excluding underflow bin).
     pub fn low(&self) -> &T {
         self.bin_edges
             .first()
-            .expect("Variable bin_edges unexpectedly empty")
+            .expect("Variable bin_edges can never be empty as new returns an error if it is")
     }
 
     /// High edge of axis (excluding overflow bin).
     pub fn high(&self) -> &T {
         self.bin_edges
             .last()
-            .expect("Variable bin_edges unexpectedly empty")
+            .expect("Variable bin_edges can never be empty as new returns an error if it is")
     }
 }
 

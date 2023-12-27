@@ -66,7 +66,7 @@ Please report any bugs in the [issues tracker](https://github.com/davehadley/ndh
 use ndhistogram::{Histogram, ndhistogram, axis::Uniform};
 
 // create a 1D histogram with 10 equally sized bins between -5 and 5
-let mut hist = ndhistogram!(Uniform::new(10, -5.0, 5.0));
+let mut hist = ndhistogram!(Uniform::new(10, -5.0, 5.0)?);
 // fill this histogram with a single value
 hist.fill(&1.0);
 // fill this histogram with weights
@@ -140,14 +140,14 @@ User defined bin value types are possible by implementing the [Fill], [FillWith]
 ```rust
 use ndhistogram::{Histogram, ndhistogram, axis::Uniform, value::Mean};
 // Create a histogram whose bin values are i32
-let mut hist = ndhistogram!(Uniform::new(10, -5.0, 5.0); i32);
+let mut hist = ndhistogram!(Uniform::new(10, -5.0, 5.0)?; i32);
 hist.fill_with(&1.0, 2);
 let value: Option<&i32> = hist.value(&1.0);
 assert_eq!(value, Some(&2));
 
 // More complex value types beyond primitives are available
 // "Mean" calculates the average of values it is filled with
-let mut hist = ndhistogram!(Uniform::new(10, -5.0, 5.0); Mean);
+let mut hist = ndhistogram!(Uniform::new(10, -5.0, 5.0)?; Mean);
 hist.fill_with(&1.0, 1.0);
 hist.fill_with(&1.0, 3.0);
 assert_eq!(hist.value(&1.0).unwrap().mean(), 2.0);
@@ -163,7 +163,7 @@ assert_eq!(hist.value(&1.0).unwrap().mean(), 2.0);
 ```rust
 use ndhistogram::{Histogram, ndhistogram, axis::Uniform};
 // create a 2D histogram
-let mut hist = ndhistogram!(Uniform::new(10, -5.0, 5.0), Uniform::new(10, -5.0, 5.0));
+let mut hist = ndhistogram!(Uniform::new(10, -5.0, 5.0)?, Uniform::new(10, -5.0, 5.0)?);
 // fill 2D histogram
 hist.fill(&(1.0, 2.0));
 // read back the histogram values
@@ -193,7 +193,7 @@ assert_eq!(hist.value(&"Red"), Some(&1.0));
 
 ```rust
 use ndhistogram::{Histogram, ndhistogram, axis::Variable};
-let mut hist = ndhistogram!(Variable::new(vec![0.0, 1.0, 3.0, 6.0]));
+let mut hist = ndhistogram!(Variable::new(vec![0.0, 1.0, 3.0, 6.0])?);
 for x in 0..6 {
     hist.fill(&f64::from(x));
 }
@@ -207,7 +207,7 @@ assert_eq!(hist.value(&3.0), Some(&3.0));
 ```rust
 use std::f64::consts::PI;
 use ndhistogram::{Histogram, ndhistogram, axis::UniformCyclic};
-let mut hist = ndhistogram!(UniformCyclic::<f64>::new(10, 0.0, 2.0*PI));
+let mut hist = ndhistogram!(UniformCyclic::<f64>::new(10, 0.0, 2.0*PI)?);
 hist.fill(&PI);
 hist.fill(&-PI);
 // +pi and -pi are mapped onto the same value
@@ -221,9 +221,9 @@ assert_eq!(hist.value(&PI), Some(&2.0));
 use ndhistogram::{Histogram, sparsehistogram, axis::Uniform};
 // This histogram has 1e18 bins, too many to allocate with a normal histogram
 let mut histogram_with_lots_of_bins = sparsehistogram!(
-    Uniform::new(1_000_000, -5.0, 5.0),
-    Uniform::new(1_000_000, -5.0, 5.0),
-    Uniform::new(1_000_000, -5.0, 5.0)
+    Uniform::new(1_000_000, -5.0, 5.0)?,
+    Uniform::new(1_000_000, -5.0, 5.0)?,
+    Uniform::new(1_000_000, -5.0, 5.0)?
 );
 histogram_with_lots_of_bins.fill(&(1.0, 2.0, 3.0));
 // read back the filled value
@@ -236,8 +236,8 @@ assert!(histogram_with_lots_of_bins.value(&(0.0, 0.0, 0.0)).is_none());
 
 ```rust
 use ndhistogram::{Histogram, ndhistogram, axis::Uniform};
-let mut hist1 = ndhistogram!(Uniform::<f64>::new(10, -5.0, 5.0));
-let mut hist2 = ndhistogram!(Uniform::<f64>::new(10, -5.0, 5.0));
+let mut hist1 = ndhistogram!(Uniform::<f64>::new(10, -5.0, 5.0)?);
+let mut hist2 = ndhistogram!(Uniform::<f64>::new(10, -5.0, 5.0)?);
 hist1.fill_with(&0.0, 2.0);
 hist2.fill_with(&0.0, 3.0);
 let combined_hist = (hist1 + &hist2).expect("Axes are compatible");
@@ -248,7 +248,7 @@ let combined_hist = (hist1 + &hist2).expect("Axes are compatible");
 ```rust
 use rayon::prelude::*;
 use ndhistogram::{Histogram, ndhistogram, axis::Uniform};
-let mut histogram = ndhistogram!(Uniform::<f64>::new(10, -5.0, 5.0));
+let mut histogram = ndhistogram!(Uniform::<f64>::new(10, -5.0, 5.0)?);
 let sum: f64 = histogram.par_iter().map(|bin| bin.value).sum();
 // see also: par_iter_mut, par_values, par_values_mut.
 assert_eq!(sum, 0.0);

@@ -2,6 +2,8 @@ use std::fmt::{Debug, Display};
 
 use num_traits::{Float, Num, NumCast, NumOps};
 
+use crate::error::AxisError;
+
 use super::{Axis, BinInterval};
 
 /// An axis with equal sized bins.
@@ -18,12 +20,13 @@ use super::{Axis, BinInterval};
 /// ```rust
 ///    use ndhistogram::{ndhistogram, Histogram};
 ///    use ndhistogram::axis::{Axis, Uniform, BinInterval};
-///    let hist = ndhistogram!(Uniform::new(10, -5.0, 5.0));
+///    # fn main() -> Result<(), ndhistogram::Error> {
+///    let hist = ndhistogram!(Uniform::new(10, -5.0, 5.0)?);
 ///    let axis = &hist.axes().as_tuple().0;
 ///    assert_eq!(axis.bin(0), Some(BinInterval::underflow(-5.0)));
 ///    assert_eq!(axis.bin(1), Some(BinInterval::new(-5.0, -4.0)));
 ///    assert_eq!(axis.bin(11), Some(BinInterval::overflow(5.0)));
-///
+///    # Ok(()) }
 /// ```
 #[derive(Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
@@ -42,47 +45,45 @@ where
     ///
     /// Only implemented for [Float]. Use [Uniform::with_step_size] for integers.
     ///
-    /// # Panics
-    /// Panics if num bins == 0 or low == high.
-    pub fn new(num: usize, low: T, high: T) -> Self
+    pub fn new(num: usize, low: T, high: T) -> Result<Self, AxisError>
     where
         T: Float,
     {
         if num == 0 {
-            panic!("Invalid axis num bins ({})", num);
+            return Err(AxisError::InvalidNumberOfBins);
         }
         if low == high {
-            panic!("Invalid axis range (low == high)");
+            return Err(AxisError::InvalidAxisRange);
         }
         let (low, high) = if low > high { (high, low) } else { (low, high) };
-        let step = (high - low) / T::from(num).expect("");
-        Self {
+        let step = (high - low) / T::from(num).ok_or(AxisError::InvalidNumberOfBins)?;
+        Ok(Self {
             num,
             low,
             high,
             step,
-        }
+        })
     }
 
     /// Factory method to create an axis with num uniformly spaced bins in the range [low, low+num*step). Under/overflow bins cover values outside this range.
     ///
-    /// # Panics
-    /// Panics if num bins == 0 or step <= 0.
-    pub fn with_step_size(num: usize, low: T, step: T) -> Self {
-        let high = T::from(num).expect("num bins can be converted to coordinate type") * step + low;
+    /// The number of bins and step size must both be greater than zero, otherwise an error is returned.
+    /// The number of bins must be representable in the type T, otherwise an error is returned.
+    pub fn with_step_size(num: usize, low: T, step: T) -> Result<Self, AxisError> {
+        let high = T::from(num).ok_or(AxisError::InvalidNumberOfBins)? * step + low;
         if num == 0 {
-            panic!("Invalid axis num bins ({})", num);
+            return Err(AxisError::InvalidNumberOfBins);
         }
         if step <= T::zero() {
-            panic!("Invalid step size. Step size must be greater than zero.");
+            return Err(AxisError::InvalidStepSize);
         }
         let (low, high) = if low > high { (high, low) } else { (low, high) };
-        Self {
+        Ok(Self {
             num,
             low,
             high,
             step,
-        }
+        })
     }
 }
 

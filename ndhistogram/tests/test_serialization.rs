@@ -25,18 +25,18 @@ mod serde_tests {
     test_serialize_empty_impl! {
         test_serialized_vec_histogram_1d_f64;
         Hist1D<Uniform>;
-        ndhistogram!(Uniform::new(10, -5.0, 5.0); f64)
+        ndhistogram!(Uniform::new(10, -5.0, 5.0).unwrap(); f64)
     }
 
     test_serialize_empty_impl! {
         test_serialized_vec_histogram_6d_f64;
         HistND<(Uniform, Variable<i32>, Category<&str>, UniformNoFlow, VariableNoFlow<i32>, CategoryNoFlow<&str>)>;
         ndhistogram!(
-            Uniform::new(10, -5.0, 5.0),
-            Variable::new(vec![0, 2, 4, 8, 16]),
+            Uniform::new(10, -5.0, 5.0).unwrap(),
+            Variable::new(vec![0, 2, 4, 8, 16]).unwrap(),
             Category::new(vec!["A", "B", "C"]),
-            UniformNoFlow::new(10, -5.0, 5.0),
-            VariableNoFlow::new(vec![0, 2, 4, 8, 16]),
+            UniformNoFlow::new(10, -5.0, 5.0).unwrap(),
+            VariableNoFlow::new(vec![0, 2, 4, 8, 16]).unwrap(),
             CategoryNoFlow::new(vec!["A", "B", "C"]),
             ; f64
         )
@@ -46,7 +46,7 @@ mod serde_tests {
     ($fnname:ident; $Type:ty; $hist:ident; $rng:ident; $fillexpr:expr) => {
         #[test]
         fn $fnname() {
-            let mut $hist: Hist1D<Uniform, $Type> = ndhistogram!(Uniform::new(10, -5.0, 5.0); $Type);
+            let mut $hist: Hist1D<Uniform, $Type> = ndhistogram!(Uniform::new(10, -5.0, 5.0).unwrap(); $Type);
             let mut $rng = StdRng::seed_from_u64(123);
             (0..1000).for_each(|_| $fillexpr);
             let serialized = serde_json::to_string(&$hist).unwrap();

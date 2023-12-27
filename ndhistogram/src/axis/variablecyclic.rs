@@ -1,3 +1,5 @@
+use crate::error::AxisError;
+
 use super::{Axis, BinInterval, VariableNoFlow};
 use std::fmt::{Debug, Display};
 
@@ -16,11 +18,13 @@ use num_traits::Num;
 /// use ndhistogram::{ndhistogram, Histogram};
 /// use ndhistogram::axis::{Axis, BinInterval, VariableCyclic};
 /// use std::f64::consts::PI;
-/// let mut hist = ndhistogram!(VariableCyclic::new(vec![0.0, PI/2.0, PI, 2.0*PI]); i32);
+/// # fn main() -> Result<(), ndhistogram::Error> {
+/// let mut hist = ndhistogram!(VariableCyclic::new(vec![0.0, PI/2.0, PI, 2.0*PI])?; i32);
 /// let angle = 0.1;
 /// hist.fill(&angle); // fills the first bin
 /// hist.fill(&(angle + 2.0*PI)); // wraps around and fills the same first bin
 /// assert_eq!(hist.value(&angle), Some(&2));
+/// # Ok(()) }
 #[derive(Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct VariableCyclic<T = f64> {
@@ -32,16 +36,14 @@ impl<T> VariableCyclic<T>
 where
     T: PartialOrd + Copy,
 {
-    /// Create a wrap-around axis with [Variable] binning given a set of bin edges.
+    /// Create a wrap-around axis with variable binning given a set of bin edges.
     ///
-    /// # Panics
-    ///
-    /// Panics if fewer than 2 edges are provided, or if the edges cannot be
-    /// sorted (for example when given NAN).
-    pub fn new<I: IntoIterator<Item = T>>(bin_edges: I) -> Self {
-        Self {
-            axis: VariableNoFlow::new(bin_edges),
-        }
+    /// If fewer than 2 edges are provided, or if the edges cannot be
+    /// sorted (for example when given NAN) an error is returned.
+    pub fn new<I: IntoIterator<Item = T>>(bin_edges: I) -> Result<Self, AxisError> {
+        Ok(Self {
+            axis: VariableNoFlow::new(bin_edges)?,
+        })
     }
 
     /// Low edge of axis (excluding wrap-around)

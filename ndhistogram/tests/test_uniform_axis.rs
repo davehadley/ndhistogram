@@ -4,13 +4,13 @@ use std::{convert::TryFrom, ops::Range};
 
 #[test]
 fn test_uniform_num_bins() {
-    let ax = Uniform::new(5, 0.0, 1.0);
+    let ax = Uniform::new(5, 0.0, 1.0).unwrap();
     assert_eq!(ax.num_bins(), 5 + 2)
 }
 
 #[test]
 fn test_uniform_get_index() {
-    let ax = Uniform::new(5, 0.0, 1.0);
+    let ax = Uniform::new(5, 0.0, 1.0).unwrap();
     let actual: Vec<usize> = (-2..7)
         .map(|x| ax.index(&((x as f64 + 1e-6) / 5.0)).unwrap())
         .collect();
@@ -20,7 +20,7 @@ fn test_uniform_get_index() {
 
 #[test]
 fn test_uniform_get_bin() {
-    let ax = Uniform::new(1, 0.0, 1.0);
+    let ax = Uniform::new(1, 0.0, 1.0).unwrap();
     let actual: Vec<_> = (0..4).map(|it| ax.bin(it)).collect();
     let expected: Vec<_> = vec![
         Some(BinInterval::underflow(0.0)),
@@ -33,7 +33,7 @@ fn test_uniform_get_bin() {
 
 #[test]
 fn test_uniform_get_edges() {
-    let ax = Uniform::new(5, 0.0, 1.0);
+    let ax = Uniform::new(5, 0.0, 1.0).unwrap();
     let actual: Vec<Range<f64>> = Range::<i32> { start: -2, end: 7 }
         .filter_map(|x| ax.bin(x as usize))
         .filter_map(|x| Range::try_from(x).ok())
@@ -57,25 +57,25 @@ fn test_uniform_get_edges() {
 
 #[test]
 fn test_uniform_clone() {
-    let ax = Uniform::new(5, 0.0, 1.0);
+    let ax = Uniform::new(5, 0.0, 1.0).unwrap();
     assert_eq!(ax, ax.clone());
 }
 
 #[test]
 fn test_uniform_debug_display() {
-    let ax = Uniform::new(5, 0.0, 1.0);
+    let ax = Uniform::new(5, 0.0, 1.0).unwrap();
     println!("{:?}", ax);
 }
 
 #[test]
 fn test_uniform_display() {
-    let ax = Uniform::new(5, 0.0, 1.0);
+    let ax = Uniform::new(5, 0.0, 1.0).unwrap();
     println!("{}", ax);
 }
 
 #[test]
 fn test_uniform_iterate_indices() {
-    let ax = Uniform::new(5, 0.0, 1.0);
+    let ax = Uniform::new(5, 0.0, 1.0).unwrap();
     let actual: Vec<usize> = ax.indices().collect();
     let expected = vec![0, 1, 2, 3, 4, 5, 6];
     assert_eq!(expected, actual);
@@ -83,7 +83,7 @@ fn test_uniform_iterate_indices() {
 
 #[test]
 fn test_uniform_iterate_items() {
-    let ax = Uniform::new(2, 0.0, 2.0);
+    let ax = Uniform::new(2, 0.0, 2.0).unwrap();
     let actual: Vec<_> = ax.into_iter().collect();
     let expected: Vec<(usize, _)> = vec![
         (0, BinInterval::underflow(0.0)),
@@ -96,7 +96,7 @@ fn test_uniform_iterate_items() {
 
 #[test]
 fn test_uniform_iterate_bin() {
-    let ax = Uniform::new(1, 0.0, 1.0);
+    let ax = Uniform::new(1, 0.0, 1.0).unwrap();
     let actual: Vec<_> = ax.bins().collect();
     let expected: Vec<_> = vec![
         BinInterval::underflow(0.0),
@@ -108,7 +108,7 @@ fn test_uniform_iterate_bin() {
 
 #[test]
 fn test_iter_axis() {
-    let ax = Uniform::new(100, 0.0, 100.0);
+    let ax = Uniform::new(100, 0.0, 100.0).unwrap();
     let expected: Vec<_> = ax.iter().collect();
     let actual: Vec<_> = ax.into_iter().collect();
     assert_eq!(expected, actual);
@@ -116,7 +116,7 @@ fn test_iter_axis() {
 
 #[test]
 fn test_negative_axis() {
-    let axis = Uniform::new(10, -5.0, 5.0);
+    let axis = Uniform::new(10, -5.0, 5.0).unwrap();
     assert_eq!(axis.bin(0), Some(BinInterval::underflow(-5.0)));
     assert_eq!(axis.bin(1), Some(BinInterval::new(-5.0, -4.0)));
     assert_eq!(axis.bin(11), Some(BinInterval::overflow(5.0)));

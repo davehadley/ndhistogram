@@ -11,7 +11,7 @@ use rstest::rstest;
          case(3    , Some(BinInterval::new(0.75, 1.00))),
 )]
 fn bin(bin_no: usize, expected_interval: Option<BinInterval<f32>>) {
-    let axis = UniformCyclic::new(4, 0.0, 1.0);
+    let axis = UniformCyclic::new(4, 0.0, 1.0).unwrap();
     assert_eq!(axis.bin(bin_no), expected_interval);
 }
 
@@ -34,7 +34,7 @@ fn bin(bin_no: usize, expected_interval: Option<BinInterval<f32>>) {
          case(-10.1 , Some(8)),
 )]
 fn float_index(coordinate: f32, expected_index: Option<usize>) {
-    let axis = UniformCyclic::new(10, 0.0, 1.0);
+    let axis = UniformCyclic::new(10, 0.0, 1.0).unwrap();
     assert_eq!(axis.index(&coordinate), expected_index);
 }
 
@@ -63,21 +63,21 @@ fn integer_index(
     coordinate: i32,
     expected_index: Option<usize>,
 ) {
-    let axis = UniformCyclic::with_step_size(nbins, low, step);
+    let axis = UniformCyclic::with_step_size(nbins, low, step).unwrap();
     assert_eq!(axis.index(&coordinate), expected_index);
 }
 
 #[test]
 fn indices() {
     let n = 7;
-    let axis = UniformCyclic::new(n, 23.4, 97.3);
+    let axis = UniformCyclic::new(n, 23.4, 97.3).unwrap();
     let indices = axis.indices().collect::<Vec<_>>();
     assert_eq!(indices, (0..n).collect::<Vec<_>>());
 }
 
 #[rstest]
 fn wrap_float_fill() {
-    let mut hist = ndhistogram!(UniformCyclic::new(4, 0.0, 360.0); u8);
+    let mut hist = ndhistogram!(UniformCyclic::new(4, 0.0, 360.0).unwrap(); u8);
     hist.fill(&45.0);
     hist.fill(&(45.0 + 360.0));
     hist.fill(&(45.0 - 360.0));
@@ -90,18 +90,17 @@ fn wrap_int_fill() {
     let bins_per_day = 24;
     let hours_per_bin = 1;
     let start_at_zero = 0;
-    let mut hist = ndhistogram!(UniformCyclic::with_step_size(
-        bins_per_day,
-        start_at_zero,
-        hours_per_bin
-    ));
+    let mut hist =
+        ndhistogram!(
+            UniformCyclic::with_step_size(bins_per_day, start_at_zero, hours_per_bin).unwrap()
+        );
     hist.fill(&40); // The 40th hour of the week ...
     assert_eq!(hist.value(&16), Some(&1.0)); // ... is at 4 pm.
 }
 
 #[rstest]
 fn wrap_float_value() {
-    let mut hist = ndhistogram!(UniformCyclic::new(4, 0.0, 360.0); u8);
+    let mut hist = ndhistogram!(UniformCyclic::new(4, 0.0, 360.0).unwrap(); u8);
     hist.fill(&45.0);
     assert_eq!(hist.value(&45.0), Some(&1));
     assert_eq!(hist.value(&(45.0 + 360.0)), Some(&1));
@@ -110,7 +109,7 @@ fn wrap_float_value() {
 
 #[rstest]
 fn into_iter() {
-    let axis = UniformCyclic::with_step_size(3, 15, 10);
+    let axis = UniformCyclic::with_step_size(3, 15, 10).unwrap();
     let mut bins = vec![];
     for x in &axis {
         bins.push(x)

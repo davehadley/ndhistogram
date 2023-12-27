@@ -5,7 +5,7 @@ use std::{
     ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign},
 };
 
-use crate::{axis::Axis, error::BinaryOperationError};
+use crate::axis::Axis;
 
 use super::histogram::{Histogram, Item, Iter, IterMut, ValuesMut};
 
@@ -159,27 +159,30 @@ macro_rules! impl_binary_op_with_immutable_borrow {
 where
     for<'a> &'a V: $Trait<Output = V>,
 {
-    type Output = Result<VecHistogram<A, V>, BinaryOperationError>;
+    type Output = Result<VecHistogram<A, V>, crate::error::BinaryOperationError>;
 
     /// Combine the right-hand histogram with the left-hand histogram,
     /// returning a copy, and leaving the original histograms intact.
     ///
     /// If the input histograms have incompatible axes, this operation
-    /// will return a [BinaryOperationError].
+    /// will return a [crate::error::BinaryOperationError].
     ///
     /// # Examples
     ///
     /// ```rust
     /// use ndhistogram::{Histogram, ndhistogram, axis::Uniform};
-    /// let mut hist1 = ndhistogram!(Uniform::<f64>::new(10, -5.0, 5.0));
-    /// let mut hist2 = ndhistogram!(Uniform::<f64>::new(10, -5.0, 5.0));
+    /// # fn main() -> Result<(), ndhistogram::Error> {
+    /// let mut hist1 = ndhistogram!(Uniform::<f64>::new(10, -5.0, 5.0)?);
+    /// let mut hist2 = ndhistogram!(Uniform::<f64>::new(10, -5.0, 5.0)?);
     /// hist1.fill_with(&0.0, 2.0);
     /// hist2.fill(&0.0);
     #[doc=concat!("let combined_hist = (&hist1 ", stringify!($mathsymbol), " &hist2).expect(\"Axes are compatible\");")]
     #[doc=concat!("assert_eq!(combined_hist.value(&0.0).unwrap(), &", stringify!($testresult), ");")]
+    /// # Ok(()) }
+    /// ```
     fn $method(self, rhs: &VecHistogram<A, V>) -> Self::Output {
         if self.axes() != rhs.axes() {
-            return Err(BinaryOperationError);
+            return Err(crate::error::BinaryOperationError);
         }
         let values = self
             .values
@@ -235,7 +238,7 @@ macro_rules! impl_binary_op_with_owned {
         where
             for<'a> V: $ValueAssignTrait<&'a V>,
         {
-            type Output = Result<VecHistogram<A, V>, BinaryOperationError>;
+            type Output = Result<VecHistogram<A, V>, crate::error::BinaryOperationError>;
 
             /// Combine the right-hand histogram with the left-hand histogram,
             /// consuming the left-hand histogram and returning a new value.
@@ -243,21 +246,24 @@ macro_rules! impl_binary_op_with_owned {
             /// recommended method to merge histograms.
             ///
             /// If the input histograms have incompatible axes, this operation
-            /// will return a [BinaryOperationError].
+            /// will return a [crate::error::BinaryOperationError].
             ///
             /// # Examples
             ///
             /// ```rust
             /// use ndhistogram::{Histogram, ndhistogram, axis::Uniform};
-            /// let mut hist1 = ndhistogram!(Uniform::<f64>::new(10, -5.0, 5.0));
-            /// let mut hist2 = ndhistogram!(Uniform::<f64>::new(10, -5.0, 5.0));
+            /// # fn main() -> Result<(), ndhistogram::Error> {
+            /// let mut hist1 = ndhistogram!(Uniform::<f64>::new(10, -5.0, 5.0)?);
+            /// let mut hist2 = ndhistogram!(Uniform::<f64>::new(10, -5.0, 5.0)?);
             /// hist1.fill_with(&0.0, 2.0);
             /// hist2.fill(&0.0);
             #[doc=concat!("let combined_hist = (hist1 ", stringify!($mathsymbol), " &hist2).expect(\"Axes are compatible\");")]
             #[doc=concat!("assert_eq!(combined_hist.value(&0.0).unwrap(), &", stringify!($testresult), ");")]
+            /// # Ok(()) }
+            /// ```
             fn $method(mut self, rhs: &VecHistogram<A, V>) -> Self::Output {
                 if self.axes() != rhs.axes() {
-                    return Err(BinaryOperationError);
+                    return Err(crate::error::BinaryOperationError);
                 }
                 self.values
                     .iter_mut()
@@ -293,12 +299,14 @@ macro_rules! impl_binary_op_assign {
             ///
             /// ```rust
             /// use ndhistogram::{Histogram, ndhistogram, axis::Uniform};
-            /// let mut hist1 = ndhistogram!(Uniform::<f64>::new(10, -5.0, 5.0));
-            /// let mut hist2 = ndhistogram!(Uniform::<f64>::new(10, -5.0, 5.0));
+            /// # fn main() -> Result<(), ndhistogram::Error> {
+            /// let mut hist1 = ndhistogram!(Uniform::<f64>::new(10, -5.0, 5.0)?);
+            /// let mut hist2 = ndhistogram!(Uniform::<f64>::new(10, -5.0, 5.0)?);
             /// hist1.fill_with(&0.0, 2.0);
             /// hist2.fill(&0.0);
             #[doc=concat!("hist1 ", stringify!($mathsymbol), " &hist2;")]
             #[doc=concat!("assert_eq!(hist1.value(&0.0).unwrap(), &", stringify!($testresult), ");")]
+            /// # Ok(()) }
             /// ```
             fn $method(&mut self, rhs: &VecHistogram<A, V>) {
                 if self.axes() != rhs.axes() {
