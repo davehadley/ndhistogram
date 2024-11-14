@@ -87,20 +87,20 @@ println!("{}", hist);
 
 A [Histogram] is composed of two components:
 - The [Axes] which is a set of [Axis](axis::Axis) corresponding to each dimension of the histogram.
-The [Axes] and [Axis](axis::Axis) define the binning of the histogram and are responsible for mapping from coordinate space (eg \[x,y,z\]) to an integer bin number.
+  The [Axes] and [Axis](axis::Axis) define the binning of the histogram and are responsible for mapping from coordinate space (eg \[x,y,z\]) to an integer bin number.
 - The histogram bin value storage. Valid bin value types include any integer and floating number type as well as user defined types that implement [Fill], [FillWith] or [FillWithWeighted].
 
 ### Histogram Implementations
 
 - [VecHistogram]: bin values are stored in a [Vec].
-Created with the [ndhistogram] macro.
-This is the recommended implementation for most use cases.
-However, as memory is allocated even for empty bins,
-this may not be practical for very high dimension histograms.
+  Created with the [ndhistogram] macro.
+  This is the recommended implementation for most use cases.
+  However, as memory is allocated even for empty bins,
+  this may not be practical for very high dimension histograms.
 - [HashHistogram]: bin values are stored in a [HashMap](std::collections::HashMap).
-Created with the [sparsehistogram] macro.
-Useful for high dimension, mostly empty, histograms as empty bins
-take up no memory.
+  Created with the [sparsehistogram] macro.
+  Useful for high dimension, mostly empty, histograms as empty bins
+  take up no memory.
 
 Alternative implementations are possible by implementing the [Histogram] trait.
 
@@ -246,6 +246,7 @@ let combined_hist = (hist1 + &hist2).expect("Axes are compatible");
 ### Iterate over Histogram Bins in Parallel
 
 ```rust
+#[cfg(feature = "rayon")] {
 use rayon::prelude::*;
 use ndhistogram::{Histogram, ndhistogram, axis::Uniform};
 let mut histogram = ndhistogram!(Uniform::<f64>::new(10, -5.0, 5.0)?);
