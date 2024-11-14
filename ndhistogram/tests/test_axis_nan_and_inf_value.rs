@@ -8,7 +8,7 @@ macro_rules! test_get_index_of_nan {
         #[test]
         fn $fnname() -> Result<(), Error> {
             let ax = $constructor;
-            let actual = ax.index(&std::f64::NAN);
+            let actual = ax.index(&f64::NAN);
             let expected = $expected;
             assert_eq!(expected, actual);
             Ok(())
@@ -21,7 +21,7 @@ macro_rules! test_get_index_of_inf {
         #[test]
         fn $fnname() -> Result<(), Error> {
             let ax = $constructor;
-            let actual = ax.index(&std::f64::INFINITY);
+            let actual = ax.index(&f64::INFINITY);
             let expected = $expected;
             assert_eq!(expected, actual);
             Ok(())
@@ -34,7 +34,7 @@ macro_rules! test_get_index_of_neg_inf {
         #[test]
         fn $fnname() -> Result<(), Error> {
             let ax = $constructor;
-            let actual = ax.index(&std::f64::NEG_INFINITY);
+            let actual = ax.index(&f64::NEG_INFINITY);
             let expected = $expected;
             assert_eq!(expected, actual);
             Ok(())
