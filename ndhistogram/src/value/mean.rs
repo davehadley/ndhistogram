@@ -25,14 +25,16 @@ use crate::FillWith;
 /// ```rust
 /// use ndhistogram::{ndhistogram, Histogram, axis::Uniform, value::Mean};
 ///
+/// # fn main() -> Result<(), ndhistogram::Error> {
 /// // create a histogram and fill it with some values
-/// let mut hist = ndhistogram!(Uniform::new(10, 0.0, 10.0); Mean<i32>);
+/// let mut hist = ndhistogram!(Uniform::new(10, 0.0, 10.0)?; Mean<i32>);
 /// hist.fill_with(&0.0, 1);
 /// hist.fill_with(&0.0, 2);
 /// hist.fill_with(&0.0, 3);
 ///
 /// let mean = hist.value(&0.0);
 /// assert_eq!(mean.unwrap().get(), 2.0); // should be the mean of [1,2,3]
+/// Ok(()) }
 /// ```
 #[derive(Copy, Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]

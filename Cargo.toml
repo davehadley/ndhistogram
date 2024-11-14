@@ -1,2 +1,3 @@
 [workspace]
 members = [ "ndhistogram",]
+resolver = "2"

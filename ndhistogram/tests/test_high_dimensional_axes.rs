@@ -1,12 +1,12 @@
 use ndhistogram::{
     axis::{Axis, Category, Uniform},
-    AxesTuple,
+    AxesTuple, Error,
 };
 use rand::{prelude::StdRng, Rng, SeedableRng};
 
 #[test]
-fn test_axes_2d() {
-    let xaxis = Uniform::new(3, 0.0, 3.0);
+fn test_axes_2d() -> Result<(), Error> {
+    let xaxis = Uniform::new(3, 0.0, 3.0)?;
     let yaxis = Category::new(vec!["A", "B"]);
     let axes3d: AxesTuple<_> = (xaxis.clone(), yaxis.clone()).into();
     let mut rng = StdRng::seed_from_u64(12);
@@ -31,6 +31,7 @@ fn test_axes_2d() {
         .enumerate().for_each(|(nthtest, (coord, actual, expected))| assert_eq!(actual, expected,
             "\nFailed on test:{}/{}.\n3D histogram failed to give expected result for:\n(x,y,z)={:?}", 
             nthtest, ntests, coord));
+    Ok(())
 }
 
 macro_rules! make_nd_axes {
@@ -39,7 +40,7 @@ macro_rules! make_nd_axes {
         let t = (
         $(
             {
-                let $d = Uniform::new(2, 0.0, 2.0);
+                let $d = Uniform::new(2, 0.0, 2.0)?;
                 $d
             },
         )*
@@ -52,9 +53,9 @@ macro_rules! make_nd_axes {
 macro_rules! make_test_nd_axes {
     ($fnname:ident($($d:ident:$dimnum:tt),+)) => {
         #[test]
-        fn $fnname() {
+        fn $fnname() -> Result<(), Error> {
             let axes = make_nd_axes!($($d)+);
-            $(let $d = Uniform::new(2, 0.0, 2.0);)+
+            $(let $d = Uniform::new(2, 0.0, 2.0)?;)+
 
             let mut rng = StdRng::seed_from_u64(12);
             let ntests = 10000;
@@ -86,6 +87,7 @@ macro_rules! make_test_nd_axes {
                 .enumerate().for_each(|(nthtest, (coord, actual, expected))| assert_eq!(actual, expected,
                     "\nFailed on test:{}/{}.\nND histogram failed to give expected result for:\n(x,y,z)={:?}",
                     nthtest, ntests, coord));
+                Ok(())
         }
     }
 }

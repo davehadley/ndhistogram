@@ -1,3 +1,5 @@
+use crate::error::AxisError;
+
 use super::{Axis, BinInterval, Uniform};
 use std::fmt::{Debug, Display};
 
@@ -9,16 +11,19 @@ use num_traits::{Float, Num, NumCast, NumOps};
 /// Similar to [Uniform] but this axis has no over/underflow bins.
 /// Hence it has N bins.
 ///
+/// For floating point types, infinities and NaN do not map to any bin.
+///
 /// # Example
 /// Create a 1D histogram with 10 uniformly spaced bins between -5.0 and 5.0.
 /// ```rust
 ///    use ndhistogram::{ndhistogram, Histogram};
 ///    use ndhistogram::axis::{Axis, UniformNoFlow, BinInterval};
-///    let hist = ndhistogram!(UniformNoFlow::new(10, -5.0, 5.0));
+///    # fn main() -> Result<(), ndhistogram::Error> {
+///    let hist = ndhistogram!(UniformNoFlow::new(10, -5.0, 5.0)?);
 ///    let axis = &hist.axes().as_tuple().0;
 ///    assert_eq!(axis.bin(0), Some(BinInterval::new(-5.0, -4.0)));
 ///    assert_eq!(axis.bin(10), None);
-///
+///    # Ok(()) }
 /// ```
 #[derive(Default, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
@@ -32,30 +37,30 @@ where
 {
     /// Factory method to create an axis with num uniformly spaced bins in the range [low, high) with no under/overflow bins.
     ///
-    /// # Panics
-    /// Panics under the same conditions as [Uniform::new].
-    pub fn new(num: usize, low: T, high: T) -> Self
+    /// The parameters have the same constraints as [Uniform::new], otherwise an error is returned.
+    pub fn new(num: usize, low: T, high: T) -> Result<Self, AxisError>
     where
         T: Float,
     {
-        Self {
-            axis: Uniform::new(num, low, high),
-        }
+        Ok(Self {
+            axis: Uniform::new(num, low, high)?,
+        })
     }
 
     /// Factory method to create an axis with num uniformly spaced bins in the range [low, low+num*step) with no under/overflow bins.
     ///
-    /// # Panics
-    /// Panics under the same conditions as [Uniform::with_step_size].
-    pub fn with_step_size(num: usize, low: T, step: T) -> Self
+    /// The parameters have the same constraints as [Uniform::with_step_size], otherwise an error is returned.
+    pub fn with_step_size(num: usize, low: T, step: T) -> Result<Self, AxisError>
     where
         T: Num,
     {
-        Self {
-            axis: Uniform::with_step_size(num, low, step),
-        }
+        Ok(Self {
+            axis: Uniform::with_step_size(num, low, step)?,
+        })
     }
+}
 
+impl<T> UniformNoFlow<T> {
     /// Return the lowest bin edge.
     pub fn low(&self) -> &T {
         self.axis.low()

@@ -13,8 +13,10 @@
 /// use std::fmt::Display;
 /// use ndhistogram::{ndhistogram, Histogram};
 ///
-/// let hist1D = ndhistogram!(Uniform::new(10, -5.0, 5.0));
+/// # fn main() -> Result<(), ndhistogram::Error> {
+/// let hist1D = ndhistogram!(Uniform::new(10, -5.0, 5.0)?);
 /// println!("{}", hist1D);
+/// # Ok(()) }
 /// ```
 ///
 /// ## Creating a 2D Histogram
@@ -22,9 +24,11 @@
 /// use ndhistogram::axis::{Uniform, Axis};
 /// use ndhistogram::{ndhistogram, Histogram};
 ///
-/// let hist2D = ndhistogram!(Uniform::new(10, -5.0, 5.0), Uniform::new(10, -5.0, 5.0));
+/// # fn main() -> Result<(), ndhistogram::Error> {
+/// let hist2D = ndhistogram!(Uniform::new(10, -5.0, 5.0)?, Uniform::new(10, -5.0, 5.0)?);
 /// // each axis has 10+2 bins due to under/overflow
-/// assert_eq!(hist2D.axes().num_bins(), 12*12)
+/// assert_eq!(hist2D.axes().num_bins(), 12*12);
+/// # Ok(()) }
 /// ```
 ///
 /// ## Creating a Histogram with a specific bin value type
@@ -34,10 +38,12 @@
 /// use ndhistogram::{ndhistogram, Histogram};
 /// use ndhistogram::value::Mean;
 ///
-/// let mut hist = ndhistogram!(Uniform::new(10, -5.0, 5.0); Mean);
+/// # fn main() -> Result<(), ndhistogram::Error> {
+/// let mut hist = ndhistogram!(Uniform::new(10, -5.0, 5.0)?; Mean);
 /// hist.fill_with(&0.0, 1.0);
 /// hist.fill_with(&0.0, 3.0);
-/// assert_eq!(hist.value(&0.0).unwrap().get(), 2.0) // mean of [1.0, 3.0] is 2.0
+/// assert_eq!(hist.value(&0.0).unwrap().get(), 2.0); // mean of [1.0, 3.0] is 2.0
+/// # Ok(()) }
 /// ```
 #[macro_export]
 macro_rules! ndhistogram {
@@ -82,18 +88,21 @@ macro_rules! ndhistogram {
 /// use std::fmt::Display;
 /// use ndhistogram::{sparsehistogram, Histogram};
 ///
-/// let hist1D = sparsehistogram!(Uniform::new(10, -5.0, 5.0));
+/// # fn main() -> Result<(), ndhistogram::Error> {
+/// let hist1D = sparsehistogram!(Uniform::new(10, -5.0, 5.0)?);
 /// println!("{}", hist1D);
+/// # Ok(()) }
 /// ```
 ///
 /// ## Creating a sparse 2D Histogram
 /// ```rust
 /// use ndhistogram::axis::{Uniform, Axis};
 /// use ndhistogram::{sparsehistogram, Histogram};
-///
-/// let hist2D = sparsehistogram!(Uniform::new(10, -5.0, 5.0), Uniform::new(10, -5.0, 5.0));
+/// # fn main() -> Result<(), ndhistogram::Error> {
+/// let hist2D = sparsehistogram!(Uniform::new(10, -5.0, 5.0)?, Uniform::new(10, -5.0, 5.0)?);
 /// // each axis has 10+2 bins due to under/overflow
-/// assert_eq!(hist2D.axes().num_bins(), 12*12)
+/// assert_eq!(hist2D.axes().num_bins(), 12*12);
+/// # Ok(()) }
 /// ```
 ///
 /// ## Creating a Histogram with a specific bin value type
@@ -103,10 +112,12 @@ macro_rules! ndhistogram {
 /// use ndhistogram::{sparsehistogram, Histogram};
 /// use ndhistogram::value::Mean;
 ///
-/// let mut hist = sparsehistogram!(Uniform::new(10, -5.0, 5.0); Mean);
+/// # fn main() -> Result<(), ndhistogram::Error> {
+/// let mut hist = sparsehistogram!(Uniform::new(10, -5.0, 5.0)?; Mean);
 /// hist.fill_with(&0.0, 1.0);
 /// hist.fill_with(&0.0, 3.0);
-/// assert_eq!(hist.value(&0.0).unwrap().get(), 2.0) // mean of [1.0, 3.0] is 2.0
+/// assert_eq!(hist.value(&0.0).unwrap().get(), 2.0); // mean of [1.0, 3.0] is 2.0
+/// # Ok(()) }
 /// ```
 #[macro_export]
 macro_rules! sparsehistogram {

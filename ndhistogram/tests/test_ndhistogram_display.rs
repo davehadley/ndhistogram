@@ -1,8 +1,8 @@
-use ndhistogram::{axis::Uniform, ndhistogram, Histogram};
+use ndhistogram::{axis::Uniform, ndhistogram, Error, Histogram};
 
 #[test]
-fn test_histogram_display_blank() {
-    let hist = ndhistogram!(Uniform::new(4, 0.0, 2.0));
+fn test_histogram_display_blank() -> Result<(), Error> {
+    let hist = ndhistogram!(Uniform::new(4, 0.0, 2.0)?);
     let actual = format!("{}", hist);
     println!("{}", actual);
     let expected = "VecHistogram1D(6 bins, sum=0)
@@ -13,12 +13,13 @@ fn test_histogram_display_blank() {
     [1.50, 2.00) | 
      [2.00, inf) | ";
     assert_eq!(actual, expected);
+    Ok(())
 }
 
 #[test]
-fn test_histogram_display_filled_positive() {
-    let mut hist = ndhistogram!(Uniform::new(4, 0.0, 2.0));
-    vec![
+fn test_histogram_display_filled_positive() -> Result<(), Error> {
+    let mut hist = ndhistogram!(Uniform::new(4, 0.0, 2.0)?);
+    [
         (-1.0, 2.0),
         (0.1, 0.9),
         (0.6, 4.0),
@@ -38,4 +39,5 @@ fn test_histogram_display_filled_positive() {
     [1.50, 2.00) | ##################################################
      [2.00, inf) | #########################";
     assert_eq!(actual, expected);
+    Ok(())
 }

@@ -10,7 +10,7 @@ fn assert_float_eq(left: f64, right: f64) {
 }
 
 fn simple_filled_float_mean_hist() -> Hist1D<Uniform, Mean> {
-    let mut hist = ndhistogram!(Uniform::new(1, 0.0, 1.0); Mean);
+    let mut hist = ndhistogram!(Uniform::new(1, 0.0, 1.0).unwrap(); Mean);
     hist.fill_with(&0.0, 1.0);
     hist.fill_with(&0.0, 2.0);
     hist.fill_with(&0.0, 3.0);
@@ -52,7 +52,7 @@ fn test_mean_value_stderr() {
 }
 
 fn simple_filled_int_mean_hist() -> Hist1D<Uniform, Mean<i32>> {
-    let mut hist = ndhistogram!(Uniform::new(1, 0.0, 1.0); Mean<i32>);
+    let mut hist = ndhistogram!(Uniform::new(1, 0.0, 1.0).unwrap(); Mean<i32>);
     hist.fill_with(&0.0, 1);
     hist.fill_with(&0.0, 2);
     hist.fill_with(&0.0, 3);

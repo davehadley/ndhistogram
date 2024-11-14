@@ -1,22 +1,26 @@
 use ndhistogram::{
     axis::{Axis, Uniform},
-    ndhistogram, Histogram,
+    ndhistogram, Error, Histogram,
 };
 
 #[test]
 #[allow(clippy::float_cmp)]
-fn test_histogram_uniform_2d_unweighted_fill_once() {
-    let mut hist = ndhistogram!(Uniform::new(5, 0.0, 0.5), Uniform::new(5, 0.5, 1.0));
+fn test_histogram_uniform_2d_unweighted_fill_once() -> Result<(), Error> {
+    let mut hist = ndhistogram!(Uniform::new(5, 0.0, 0.5)?, Uniform::new(5, 0.5, 1.0)?);
     hist.fill(&(0.1, 0.6));
     let actual = *hist.value(&(0.1, 0.6)).unwrap();
     let expected = 1.0;
     assert_eq!(expected, actual);
+    Ok(())
 }
 
 #[test]
 #[allow(clippy::float_cmp)]
 fn test_histogram_uniform_2d_unfilled_is_empty() {
-    let hist = ndhistogram!(Uniform::new(5, 0.0, 0.5), Uniform::new(5, 0.5, 1.0));
+    let hist = ndhistogram!(
+        Uniform::new(5, 0.0, 0.5).unwrap(),
+        Uniform::new(5, 0.5, 1.0).unwrap()
+    );
     let actual: Vec<f64> = hist.values().copied().collect();
     let expected = vec![0.0; 7 * 7];
     assert_eq!(expected, actual);
@@ -25,7 +29,10 @@ fn test_histogram_uniform_2d_unfilled_is_empty() {
 #[test]
 #[allow(clippy::float_cmp)]
 fn test_histogram_uniform_2d_weighted_fill_once() {
-    let mut hist = ndhistogram!(Uniform::new(5, 0.0, 0.5), Uniform::new(5, 0.5, 1.0));
+    let mut hist = ndhistogram!(
+        Uniform::new(5, 0.0, 0.5).unwrap(),
+        Uniform::new(5, 0.5, 1.0).unwrap()
+    );
     hist.fill_with(&(0.1, 0.6), 2.0);
     let actual = *hist.value(&(0.1, 0.6)).unwrap();
     let expected = 2.0;
@@ -35,7 +42,10 @@ fn test_histogram_uniform_2d_weighted_fill_once() {
 #[test]
 #[allow(clippy::float_cmp)]
 fn test_histogram_uniform_2d_unweighted_fill_bin_edges() {
-    let mut hist = ndhistogram!(Uniform::new(2, 0.0, 2.0), Uniform::new(2, 0.0, 2.0));
+    let mut hist = ndhistogram!(
+        Uniform::new(2, 0.0, 2.0).unwrap(),
+        Uniform::new(2, 0.0, 2.0).unwrap()
+    );
     hist.fill(&(-1.0, -1.0));
     hist.fill_with(&(0.0, 0.0), 20.0);
     hist.fill_with(&(1.0, 0.0), 300.0);

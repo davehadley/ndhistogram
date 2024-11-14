@@ -13,7 +13,7 @@ fn bint<T>(lo: T, hi: T) -> Option<BinInterval<T>> {
          case(1, bint(0.5, 2.0), &[0.5, 2.0, 0.0]),
 )]
 fn bin_float(bin_no: usize, expected_interval: Option<BinInterval<f32>>, edges: &[f32]) {
-    let axis = VariableCyclic::new(edges.iter().cloned());
+    let axis = VariableCyclic::new(edges.iter().cloned()).unwrap();
     assert_eq!(axis.bin(bin_no), expected_interval);
 }
 
@@ -24,7 +24,7 @@ fn bin_float(bin_no: usize, expected_interval: Option<BinInterval<f32>>, edges: 
          case(1, bint(5, 20), &[ 5, 20,  0]),
 )]
 fn bin_int(bin_no: usize, expected_interval: Option<BinInterval<i32>>, edges: &[i32]) {
-    let axis = VariableCyclic::new(edges.iter().cloned());
+    let axis = VariableCyclic::new(edges.iter().cloned()).unwrap();
     assert_eq!(axis.bin(bin_no), expected_interval);
 }
 
@@ -43,7 +43,7 @@ fn bin_int(bin_no: usize, expected_interval: Option<BinInterval<i32>>, edges: &[
          case(6.0 - 8.0,     Some(3)   , &[0.0, 1.0, 2.0, 4.0, 8.0]),
 )]
 fn float_index(coordinate: f32, expected_index: Option<usize>, edges: &[f32]) {
-    let axis = VariableCyclic::new(edges.iter().cloned());
+    let axis = VariableCyclic::new(edges.iter().cloned()).unwrap();
     assert_eq!(axis.index(&coordinate), expected_index);
 }
 
@@ -62,7 +62,7 @@ fn float_index(coordinate: f32, expected_index: Option<usize>, edges: &[f32]) {
          case(60 - 80  ,     Some(3)   , &[ 0, 10, 20, 40, 80]),
 )]
 fn int_index(coordinate: i32, expected_index: Option<usize>, edges: &[i32]) {
-    let axis = VariableCyclic::new(edges.iter().cloned());
+    let axis = VariableCyclic::new(edges.iter().cloned()).unwrap();
     assert_eq!(axis.index(&coordinate), expected_index);
 }
 
@@ -72,16 +72,16 @@ fn int_index(coordinate: i32, expected_index: Option<usize>, edges: &[i32]) {
 )]
 fn indices(edges: &[f32]) {
     let n = edges.len() - 1;
-    let axis = VariableCyclic::new(edges.iter().cloned());
+    let axis = VariableCyclic::new(edges.iter().cloned()).unwrap();
     let indices = axis.indices().collect::<Vec<_>>();
     assert_eq!(indices, (0..n).collect::<Vec<_>>());
 }
 
 use ndhistogram::{ndhistogram, Histogram};
 
-#[test]
+#[rstest]
 fn wrap_float_fill() {
-    let mut hist = ndhistogram!(VariableCyclic::new(vec![8.0, 0.0, 4.0, 2.0]); u8);
+    let mut hist = ndhistogram!(VariableCyclic::new(vec![8.0, 0.0, 4.0, 2.0]).unwrap(); u8);
     let v = &5.0;
     let r = 8.0;
     hist.fill(v);
@@ -91,9 +91,9 @@ fn wrap_float_fill() {
     assert_eq!(hist.value_at_index(2), Some(&3));
 }
 
-#[test]
+#[rstest]
 fn wrap_int_fill() {
-    let mut hist = ndhistogram!(VariableCyclic::new(vec![8, 0, 4, 2]); u8);
+    let mut hist = ndhistogram!(VariableCyclic::new(vec![8, 0, 4, 2]).unwrap(); u8);
     let v = &5;
     let r = 8;
     hist.fill(v);
@@ -103,9 +103,9 @@ fn wrap_int_fill() {
     assert_eq!(hist.value_at_index(2), Some(&3));
 }
 
-#[test]
+#[rstest]
 fn wrap_float_value() {
-    let mut hist = ndhistogram!(VariableCyclic::new(vec![4.0, 8.0, 2.0, 1.0]); u8);
+    let mut hist = ndhistogram!(VariableCyclic::new(vec![4.0, 8.0, 2.0, 1.0]).unwrap(); u8);
     let v = &2.3;
     let r = 7.0;
     hist.fill(v);
@@ -114,10 +114,9 @@ fn wrap_float_value() {
     assert_eq!(hist.value(&(v + r)), Some(&1));
 }
 
-#[test]
+#[rstest]
 fn into_iter() {
-    use ndhistogram::axis::BinInterval;
-    let axis = VariableCyclic::new([0, 1, 10, 100]);
+    let axis = VariableCyclic::new([0, 1, 10, 100]).unwrap();
     let mut bins = vec![];
     for x in &axis {
         bins.push(x)

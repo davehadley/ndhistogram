@@ -6,7 +6,7 @@ use std::{
 };
 
 use super::histogram::{Histogram, Iter, IterMut, ValuesMut};
-use crate::{axis::Axis, error::BinaryOperationError, Item};
+use crate::{axis::Axis, Item};
 
 /// A sparse N-dimensional [Histogram] that stores its values in a [HashMap].
 ///
@@ -174,27 +174,30 @@ macro_rules! impl_binary_op_with_immutable_borrow {
             V: Clone + Default,
             for<'a> &'a V: $Trait<Output = V>,
         {
-            type Output = Result<HashHistogram<A, V>, BinaryOperationError>;
+            type Output = Result<HashHistogram<A, V>, crate::error::BinaryOperationError>;
 
             /// Combine the right-hand histogram with the left-hand histogram,
             /// returning a copy, and leaving the original histograms intact.
             ///
             /// If the input histograms have incompatible axes, this operation
-            /// will return a [BinaryOperationError].
+            /// will return a [crate::error::BinaryOperationError].
             ///
             /// # Examples
             ///
             /// ```rust
             /// use ndhistogram::{Histogram, sparsehistogram, axis::Uniform};
-            /// let mut hist1 = sparsehistogram!(Uniform::<f64>::new(10, -5.0, 5.0));
-            /// let mut hist2 = sparsehistogram!(Uniform::<f64>::new(10, -5.0, 5.0));
+            /// # fn main() -> Result<(), ndhistogram::Error> {
+            /// let mut hist1 = sparsehistogram!(Uniform::<f64>::new(10, -5.0, 5.0)?);
+            /// let mut hist2 = sparsehistogram!(Uniform::<f64>::new(10, -5.0, 5.0)?);
             /// hist1.fill_with(&0.0, 2.0);
             /// hist2.fill(&0.0);
             #[doc=concat!("let combined_hist = (&hist1 ", stringify!($mathsymbol), " &hist2).expect(\"Axes are compatible\");")]
             #[doc=concat!("assert_eq!(combined_hist.value(&0.0).unwrap(), &", stringify!($testresult), ");")]
+            /// # Ok(()) }
+            /// ```
             fn $method(self, rhs: &HashHistogram<A, V>) -> Self::Output {
                 if self.axes() != rhs.axes() {
-                    return Err(BinaryOperationError);
+                    return Err(crate::error::BinaryOperationError);
                 }
                 let indices: HashSet<usize> = self.values.keys().chain(rhs.values.keys()).copied().collect();
                 let values: HashMap<usize, V> = indices.into_iter().map(|index| {
@@ -230,7 +233,7 @@ macro_rules! impl_binary_op_with_owned {
             V: Clone + Default,
             for<'a> V: $ValueAssignTrait<&'a V>,
         {
-            type Output = Result<HashHistogram<A, V>, BinaryOperationError>;
+            type Output = Result<HashHistogram<A, V>, crate::error::BinaryOperationError>;
 
             /// Combine the right-hand histogram with the left-hand histogram,
             /// consuming the left-hand histogram and returning a new value.
@@ -238,21 +241,24 @@ macro_rules! impl_binary_op_with_owned {
             /// recommended method to merge histograms.
             ///
             /// If the input histograms have incompatible axes, this operation
-            /// will return a [BinaryOperationError].
+            /// will return a [crate::error::BinaryOperationError].
             ///
             /// # Examples
             ///
             /// ```rust
             /// use ndhistogram::{Histogram, sparsehistogram, axis::Uniform};
-            /// let mut hist1 = sparsehistogram!(Uniform::<f64>::new(10, -5.0, 5.0));
-            /// let mut hist2 = sparsehistogram!(Uniform::<f64>::new(10, -5.0, 5.0));
+            /// # fn main() -> Result<(), ndhistogram::Error> {
+            /// let mut hist1 = sparsehistogram!(Uniform::<f64>::new(10, -5.0, 5.0)?);
+            /// let mut hist2 = sparsehistogram!(Uniform::<f64>::new(10, -5.0, 5.0)?);
             /// hist1.fill_with(&0.0, 2.0);
             /// hist2.fill(&0.0);
             #[doc=concat!("let combined_hist = (hist1 ", stringify!($mathsymbol), " &hist2).expect(\"Axes are compatible\");")]
             #[doc=concat!("assert_eq!(combined_hist.value(&0.0).unwrap(), &", stringify!($testresult), ");")]
+            /// # Ok(()) }
+            /// ```
             fn $method(mut self, rhs: &HashHistogram<A, V>) -> Self::Output {
                 if self.axes() != rhs.axes() {
-                    return Err(BinaryOperationError);
+                    return Err(crate::error::BinaryOperationError);
                 }
                 for (index, rhs_value) in rhs.values.iter() {
                     let lhs_value = self.values.entry(*index).or_default();
@@ -291,12 +297,15 @@ macro_rules! impl_binary_op_assign {
             ///
             /// ```rust
             /// use ndhistogram::{Histogram, sparsehistogram, axis::Uniform};
-            /// let mut hist1 = sparsehistogram!(Uniform::<f64>::new(10, -5.0, 5.0));
-            /// let mut hist2 = sparsehistogram!(Uniform::<f64>::new(10, -5.0, 5.0));
+            /// # fn main() -> Result<(), ndhistogram::Error> {
+            /// let mut hist1 = sparsehistogram!(Uniform::<f64>::new(10, -5.0, 5.0)?);
+            /// let mut hist2 = sparsehistogram!(Uniform::<f64>::new(10, -5.0, 5.0)?);
             /// hist1.fill_with(&0.0, 2.0);
             /// hist2.fill(&0.0);
             #[doc=concat!("hist1 ", stringify!($mathsymbol), " &hist2;")]
             #[doc=concat!("assert_eq!(hist1.value(&0.0).unwrap(), &", stringify!($testresult), ");")]
+            /// # Ok(()) }
+            /// ```
             fn $method(&mut self, rhs: &HashHistogram<A, V>) {
                 if self.axes() != rhs.axes() {
                     panic!("Cannot combine HashHistograms with incompatible axes.");

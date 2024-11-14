@@ -16,10 +16,17 @@
 For usage instructions see:
 - [crates.io package](https://crates.io/crates/ndhistogram)
 - [documentation](https://docs.rs/ndhistogram)
+- [ndhistogram readme](ndhistogram/README.md)
 
 # Development Instructions
 
-Report bugs/issues or submit pull requests to <https://github.com/davehadley/ndhistogram/issues>.
+If you wish to make a contribution to this repository please read the 
+[contribution guide](https://github.com/davehadley/ndhistogram/blob/develop/ndhistogram/README.md#how-to-contribute).
+
+For development you will need the [rust toolchain installed](https://rustup.rs/)
+and [pre-commit](https://pre-commit.com/) to run pre-commit hooks.
+Some helper scripts are included to help you setup a working development
+environment.
 
 Setup the development environment with:
 ```

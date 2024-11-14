@@ -16,7 +16,7 @@ type Hist1D = HistND<(Uniform<f64>,), f64>;
 type Hist3D = HistND<(Uniform<f64>, Uniform<f64>, Uniform<f64>), f64>;
 
 fn generate_normal_hist_1d(seed: u64) -> Hist1D {
-    let mut hist = ndhistogram!(Uniform::new(10, -5.0, 5.0));
+    let mut hist = ndhistogram!(Uniform::new(10, -5.0, 5.0).unwrap());
     generate_nomal(-1.0, 2.0, seed)
         .take(1000)
         .for_each(|it| hist.fill(&it));
@@ -25,9 +25,9 @@ fn generate_normal_hist_1d(seed: u64) -> Hist1D {
 
 fn generate_normal_hist_3d(seed: u64) -> Hist3D {
     let mut hist = ndhistogram!(
-        Uniform::new(10, -5.0, 5.0),
-        Uniform::new(10, -5.0, 5.0),
-        Uniform::new(10, -5.0, 5.0),
+        Uniform::new(10, -5.0, 5.0).unwrap(),
+        Uniform::new(10, -5.0, 5.0).unwrap(),
+        Uniform::new(10, -5.0, 5.0).unwrap(),
     );
     let x = generate_nomal(-1.0, 2.0, seed + 1);
     let y = generate_nomal(0.0, 2.0, seed + 2);
@@ -48,7 +48,7 @@ fn test_ndhistogram_add_1d_elementwise_with_copy() {
         .collect();
     let expected: Vec<_> = left
         .iter()
-        .zip(right.into_iter())
+        .zip(right.iter())
         .map(|(l, r)| (l.index, l.bin, l.value + r.value))
         .collect();
     assert_eq!(actual, expected)
@@ -77,8 +77,8 @@ macro_rules! impl_binary_op {
 
         #[test]
         fn $fnnamefails() {
-            let left = ndhistogram!(Uniform::new(10, -5.0, 5.0));
-            let right = ndhistogram!(Uniform::new(10, -5.0, 6.0));
+            let left = ndhistogram!(Uniform::new(10, -5.0, 5.0).unwrap());
+            let right = ndhistogram!(Uniform::new(10, -5.0, 6.0).unwrap());
             let hadd = &left $mathsymbol &right;
             assert!(hadd.is_err())
         }

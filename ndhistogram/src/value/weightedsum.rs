@@ -43,7 +43,7 @@ impl<T: Copy> WeightedSum<T> {
     }
 
     /// Square root of the variance.
-    pub fn standard_deviation<O: Float>(&self) -> O
+    pub fn standard_deviation<O>(&self) -> O
     where
         T: Into<O>,
         O: Float,

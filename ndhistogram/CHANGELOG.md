@@ -1,4 +1,11 @@
-# 0.9.0 (2023-03-19)
+# 0.10.0 (2022-11-14)
+
+- Fix [issue 33](https://github.com/davehadley/ndhistogram/issues/33): Filling a histogram where the axis value is NaN not longer panics. NaN is mapped to the overflow bin where one exists or to no bin on axes without overflow bins.
+- Most cases where the library could panic have been replaced with functions that return Result instead.
+- Fix new clippy and compiler warnings.
+- Minimum supported rust version is increased to 1.63.0.
+
+# 0.9.0 (2023-05-19)
 
 - Make serde an optional dependency. This is a breaking change. If you were using serde with this crate's types you will have to enable the "serde" feature flag in your `Cargo/toml`.
 - Implement rayon support for parallel iteration over histogram bins. For example see: [VecHistogram::par_iter](https://docs.rs/ndhistogram/0.9.0/struct.VecHistogram.html#method.par_iter) and [HashHistogram::par_iter](https://docs.rs/ndhistogram/0.9.0/struct.HashHistogram.html#method.par_iter). These features are enabled with the "rayon" crate feature flag.
