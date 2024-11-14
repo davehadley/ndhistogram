@@ -249,14 +249,15 @@
 //! ### Iterate over Histogram Bins in Parallel
 //!
 //! ```rust
-//! # #[cfg(feature = "rayon")]
 //! # fn main() -> Result<(), ndhistogram::Error> {
+//! #[cfg(feature = "rayon")] {
 //! use rayon::prelude::*;
 //! use ndhistogram::{Histogram, ndhistogram, axis::Uniform};
 //! let mut histogram = ndhistogram!(Uniform::<f64>::new(10, -5.0, 5.0)?);
 //! let sum: f64 = histogram.par_iter().map(|bin| bin.value).sum();
 //! // see also: par_iter_mut, par_values, par_values_mut.
 //! assert_eq!(sum, 0.0);
+//! # }
 //! # Ok(()) }
 //! ```
 //! Requires "rayon" feature enabled.
