@@ -1,6 +1,5 @@
 use std::{
     cmp::Ordering,
-    f64::INFINITY,
     fmt::Display,
     ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign},
 };
@@ -136,7 +135,7 @@ where
             .iter()
             .max_by(|l, r| l.1.partial_cmp(&r.1).unwrap_or(Ordering::Less))
             .map(|it| it.1)
-            .unwrap_or(INFINITY);
+            .unwrap_or(f64::INFINITY);
         values
             .into_iter()
             .map(|(bin, value)| (bin, 50.0 * (value / scale)))

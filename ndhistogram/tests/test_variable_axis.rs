@@ -1,5 +1,3 @@
-use std::f64::NAN;
-
 use ndhistogram::{
     axis::{Axis, BinInterval, Variable},
     error::AxisError,
@@ -30,7 +28,7 @@ fn test_variable_oneedges_return_error() {
 #[test]
 fn test_variable_nan_edges_return_error() {
     assert_eq!(
-        Variable::new(vec![1.0, NAN, 2.0]),
+        Variable::new(vec![1.0, f64::NAN, 2.0]),
         Err(AxisError::FailedToSortBinEdges)
     );
 }
