@@ -53,7 +53,7 @@ Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-ndhistogram = "0.9.0"
+ndhistogram = "0.10.0"
 ```
 
 See the [change log](https://github.com/davehadley/ndhistogram/blob/main/ndhistogram/CHANGELOG.md)
