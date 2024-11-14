@@ -1,4 +1,4 @@
-# 0.10.0 (2023-12-03)
+# 0.10.0 (2022-11-14)
 
 - Fix issue 33: Filling a histogram where the axis value is NaN not longer panics. NaN is mapped to the overflow bin where one exists or to no bin on axes without overflow bins.
 - Most cases where the library could panic have been replaced with functions that return Result instead.
