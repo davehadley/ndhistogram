@@ -174,6 +174,6 @@ fn test_histogram_uniform_1d_iter_mut() {
 #[test]
 fn test_histogram_display() -> Result<(), Error> {
     let hist = ndhistogram!(Uniform::new(4, 0.0, 2.0)?);
-    format!("{}", hist);
+    let _ = format!("{}", hist);
     Ok(())
 }

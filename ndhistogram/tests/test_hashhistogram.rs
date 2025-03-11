@@ -117,7 +117,7 @@ fn test_hashhistogram_values_mut() {
 #[test]
 fn test_hashhistogram_display() {
     let hist = sparsehistogram!(Uniform::new(4, 0.0, 2.0).unwrap());
-    format!("{}", hist);
+    let _ = format!("{}", hist);
 }
 
 #[test]
