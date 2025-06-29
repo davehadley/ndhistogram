@@ -31,6 +31,16 @@ impl<A: Axis, V> HashHistogram<A, V> {
             values: HashMap::new(),
         }
     }
+
+    /// Constructs a new histogram from the underlying data
+    pub fn from_underlying(axes: A, values: HashMap<usize, V>) -> Self {
+        Self { axes, values }
+    }
+
+    /// Returns a reference to the underlying data
+    pub fn get_underlying(&self) -> &HashMap<usize, V> {
+        &self.values
+    }
 }
 
 impl<A: Axis, V: Default> Histogram<A, V> for HashHistogram<A, V> {

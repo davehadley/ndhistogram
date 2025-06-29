@@ -28,6 +28,22 @@ impl<A: Axis, V: Default + Clone> VecHistogram<A, V> {
             values: vec![V::default(); size],
         }
     }
+
+    /// Returns `None` if the number of values does not match the
+    /// expected number of bins for the given axes.
+    pub fn from_underlying(axes: A, values: Vec<V>) -> Option<Self> {
+        let size = axes.num_bins();
+        if size == values.len() {
+            Some(Self { axes, values })
+        } else {
+            None
+        }
+    }
+
+    /// Returns a reference to the underlying datastructure
+    pub fn get_underlying(&self) -> &Vec<V> {
+        &self.values
+    }
 }
 
 impl<A: Axis, V> Histogram<A, V> for VecHistogram<A, V> {
