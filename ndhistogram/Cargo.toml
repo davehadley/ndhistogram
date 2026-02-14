@@ -1,51 +1,49 @@
 [[bench]]
-name = "bench_fill"
 harness = false
+name = "bench_fill"
 
 [dependencies]
 num-traits = "0.2"
-rayon = {version="1.6", optional = true}
+rayon = {version = "1.6", optional = true}
 thiserror = "1.0"
 
 [dependencies.serde]
-version = "1.0"
-features = [ "derive",]
+features = ["derive"]
 optional = true
+version = "1.0"
 
 [dev-dependencies]
+paste = "1.0"
 rand = "0.8"
 rand_distr = "0.4"
+rstest = "0.23"
 serde_json = "1.0"
 version-sync = "0.9"
-paste = "1.0"
-rstest = "0.23"
 
 [dev-dependencies.criterion]
+features = ["html_reports"]
 version = "0.5"
-features = [ "html_reports",]
+
+[features]
+default = []
 
 [lib]
 bench = false
 
 [package]
-name = "ndhistogram"
-version = "0.10.0"
-authors = [ "David Hadley <davehadley@users.noreply.github.com>",]
-edition = "2021"
-rust-version = "1.71.0"
-license = "MIT OR Apache-2.0"
+authors = ["David Hadley <davehadley@users.noreply.github.com>"]
+categories = ["science", "mathematics", "data-structures"]
 description = "multi-dimensional histogramming for Rust"
-repository = "https://github.com/davehadley/ndhistogram"
+edition = "2021"
+keywords = ["histogram", "statistics", "data", "analysis", "multidimensional"]
+license = "MIT OR Apache-2.0"
+name = "ndhistogram"
 readme = "README.md"
-keywords = [ "histogram", "statistics", "data", "analysis", "multidimensional",]
-categories = [ "science", "mathematics", "data-structures",]
-
-[features]
-default = []
+repository = "https://github.com/davehadley/ndhistogram"
+rust-version = "1.71.0"
+version = "0.10.0"
 
 [package.metadata.docs.rs]
-
 # have docs.rs document all features
 # see: https://docs.rs/about/metadata
 all-features = true
-
