@@ -6,48 +6,21 @@ repos:
   hooks:
   - id: rustfmt
     name: rustfmt
-    entry: rustfmt
+    entry: cargo fmt
     language: system
+    pass_filenames: false
     types: [rust]
 
-- repo: https://github.com/pycqa/isort
-  rev: 6.0.1
-  hooks:
-  - id: isort
-    stages: [pre-commit]
-
-- repo: https://github.com/ambv/black
-  rev: 25.1.0
-  hooks:
-  - id: black
-    language_version: python3
-    stages: [pre-commit]
-
-
-- repo: https://github.com/pycqa/flake8
-  rev: 7.1.2
-  hooks:
-  - id: flake8
-    stages: [pre-commit]
-
-- repo: https://github.com/pre-commit/mirrors-mypy
-  rev: v1.15.0
-  hooks:
-  - id: mypy
-
 - repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
-  rev: v2.14.0
+  rev: v2.16.0
   hooks:
   - id: pretty-format-yaml
     args: [--autofix, --preserve-quotes]
-  # Temporarily disable this hook due to toml-sort issue
-  # TODO: renable this hook once this issue is fixed
-  # https://github.com/macisamuele/language-formatters-pre-commit-hooks/issues/133
-  # - id: pretty-format-toml
-  #  args: [--autofix]
+  - id: pretty-format-toml
+    args: [--autofix]
 
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v5.0.0
+  rev: v6.0.0
   hooks:
   - id: check-added-large-files
   - id: check-ast
