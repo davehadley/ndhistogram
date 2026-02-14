@@ -77,13 +77,13 @@ fn test_variable_clone() {
 #[test]
 fn test_variable_debug_display() {
     let ax = Variable::new(vec![0, 1, 4, 8]).unwrap();
-    println!("{:?}", ax);
+    println!("{ax:?}");
 }
 
 #[test]
 fn test_variable_display() {
     let ax = Variable::new(vec![0, 1, 4, 8]).unwrap();
-    println!("{}", ax);
+    println!("{ax}");
 }
 
 #[test]

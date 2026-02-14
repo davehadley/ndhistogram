@@ -46,14 +46,14 @@ fn test_category_clone() {
 #[test]
 fn test_category_debug_display() {
     let ax = Category::new(vec!["A", "B", "C"]);
-    println!("{:?}", ax);
+    println!("{ax:?}");
 }
 
 #[test]
 fn test_category_display() {
     let ax = Category::new(vec!["A", "B", "C"]);
-    println!("{}", ax);
-    assert_eq!(format!("{}", ax), "{{A}, {B}, {C}, {overflow}}")
+    println!("{ax}");
+    assert_eq!(format!("{ax}"), "{{A}, {B}, {C}, {overflow}}")
 }
 
 #[test]

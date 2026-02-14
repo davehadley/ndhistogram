@@ -19,9 +19,7 @@ fn test_hashhistogram_fill() {
 fn assert_float_eq(left: f64, right: f64) {
     assert!(
         (left - right).abs() < (1e-6 * (left + right)),
-        "left={} does not equal right={}",
-        left,
-        right
+        "left={left} does not equal right={right}"
     )
 }
 
@@ -117,7 +115,7 @@ fn test_hashhistogram_values_mut() {
 #[test]
 fn test_hashhistogram_display() {
     let hist = sparsehistogram!(Uniform::new(4, 0.0, 2.0).unwrap());
-    let _ = format!("{}", hist);
+    let _ = format!("{hist}");
 }
 
 #[test]

@@ -29,8 +29,7 @@ fn test_axes_2d() -> Result<(), Error> {
             )
         })
         .enumerate().for_each(|(nthtest, (coord, actual, expected))| assert_eq!(actual, expected,
-            "\nFailed on test:{}/{}.\n3D histogram failed to give expected result for:\n(x,y,z)={:?}", 
-            nthtest, ntests, coord));
+            "\nFailed on test:{nthtest}/{ntests}.\n3D histogram failed to give expected result for:\n(x,y,z)={coord:?}"));
     Ok(())
 }
 

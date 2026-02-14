@@ -65,13 +65,13 @@ fn test_uniform_noflow_iter() {
 #[test]
 fn test_uniform_noflow_display() {
     let ax = UniformNoFlow::new(2, 0.0, 2.0).unwrap();
-    let _ = format!("{}", ax);
+    let _ = format!("{ax}");
 }
 
 #[test]
 fn test_uniform_noflow_debug() {
     let ax = UniformNoFlow::new(2, 0.0, 2.0).unwrap();
-    let _ = format!("{:?}", ax);
+    let _ = format!("{ax:?}");
 }
 
 #[test]

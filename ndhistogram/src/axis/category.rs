@@ -110,7 +110,7 @@ impl<T: Display + Value> Display for Category<T> {
             .map(|it| it.to_string())
             .collect::<Vec<_>>()
             .join(", ");
-        write!(f, "{{{}}}", comma_separated_list)
+        write!(f, "{{{comma_separated_list}}}")
     }
 }
 

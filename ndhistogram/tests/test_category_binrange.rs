@@ -19,25 +19,25 @@ fn test_categorybinrange_equality() {
 #[test]
 fn test_categorybinrange_overflow_debug() {
     let overflow = SingleValueBinInterval::<String>::overflow();
-    println!("{:?}", overflow);
+    println!("{overflow:?}");
 }
 
 #[test]
 fn test_categorybinrange_bin_debug() {
     let bin = SingleValueBinInterval::new("One");
-    println!("{:?}", bin);
+    println!("{bin:?}");
 }
 
 #[test]
 fn test_categorybinrange_overflow_display() {
     let overflow = SingleValueBinInterval::<String>::overflow();
-    println!("{}", overflow);
+    println!("{overflow}");
 }
 
 #[test]
 fn test_categorybinrange_bin_display() {
     let bin = SingleValueBinInterval::new("One");
-    println!("{}", bin);
+    println!("{bin}");
 }
 
 #[test]

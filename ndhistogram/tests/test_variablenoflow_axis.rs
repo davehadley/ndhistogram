@@ -76,13 +76,13 @@ fn test_variablenoflow_clone() {
 #[test]
 fn test_variablenoflow_debug_display() {
     let ax = VariableNoFlow::new(vec![0, 1, 4, 8]);
-    println!("{:?}", ax);
+    println!("{ax:?}");
 }
 
 #[test]
 fn test_variablenoflow_display() {
     let ax = VariableNoFlow::new(vec![0, 1, 4, 8]).unwrap();
-    println!("{}", ax);
+    println!("{ax}");
 }
 
 #[test]

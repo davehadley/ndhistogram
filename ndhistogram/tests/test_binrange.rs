@@ -35,37 +35,37 @@ fn test_binrange_equality() {
 #[test]
 fn test_binrange_underflow_debug() {
     let underflow = BinInterval::underflow(0.0);
-    println!("{:?}", underflow);
+    println!("{underflow:?}");
 }
 
 #[test]
 fn test_binrange_overflow_debug() {
     let overflow = BinInterval::overflow(0.0);
-    println!("{:?}", overflow);
+    println!("{overflow:?}");
 }
 
 #[test]
 fn test_binrange_bin_debug() {
     let bin = BinInterval::new(0.0, 1.0);
-    println!("{:?}", bin);
+    println!("{bin:?}");
 }
 
 #[test]
 fn test_binrange_underflow_display() {
     let underflow = BinInterval::underflow(0.0);
-    println!("{}", underflow);
+    println!("{underflow}");
 }
 
 #[test]
 fn test_binrange_overflow_display() {
     let overflow = BinInterval::overflow(0.0);
-    println!("{}", overflow);
+    println!("{overflow}");
 }
 
 #[test]
 fn test_binrange_bin_display() {
     let bin = BinInterval::new(0.0, 1.0);
-    println!("{}", bin);
+    println!("{bin}");
 }
 
 #[test]

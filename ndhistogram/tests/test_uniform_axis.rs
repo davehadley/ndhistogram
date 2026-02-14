@@ -64,13 +64,13 @@ fn test_uniform_clone() {
 #[test]
 fn test_uniform_debug_display() {
     let ax = Uniform::new(5, 0.0, 1.0).unwrap();
-    println!("{:?}", ax);
+    println!("{ax:?}");
 }
 
 #[test]
 fn test_uniform_display() {
     let ax = Uniform::new(5, 0.0, 1.0).unwrap();
-    println!("{}", ax);
+    println!("{ax}");
 }
 
 #[test]

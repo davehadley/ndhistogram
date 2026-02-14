@@ -45,14 +45,14 @@ fn test_categorynoflow_clone() {
 #[test]
 fn test_categorynoflow_debug_display() {
     let ax = CategoryNoFlow::new(vec!["A", "B", "C"]);
-    println!("{:?}", ax);
+    println!("{ax:?}");
 }
 
 #[test]
 fn test_categorynoflow_display() {
     let ax = CategoryNoFlow::new(vec!["A", "B", "C"]);
-    println!("{}", ax);
-    assert_eq!(format!("{}", ax), "{{A}, {B}, {C}, {overflow}}")
+    println!("{ax}");
+    assert_eq!(format!("{ax}"), "{{A}, {B}, {C}, {overflow}}")
 }
 
 #[test]

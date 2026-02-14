@@ -3,8 +3,8 @@ use ndhistogram::{axis::Uniform, ndhistogram, Error, Histogram};
 #[test]
 fn test_histogram_display_blank() -> Result<(), Error> {
     let hist = ndhistogram!(Uniform::new(4, 0.0, 2.0)?);
-    let actual = format!("{}", hist);
-    println!("{}", actual);
+    let actual = format!("{hist}");
+    println!("{actual}");
     let expected = "VecHistogram1D(6 bins, sum=0)
     (-inf, 0.00) | 
     [0.00, 0.50) | 
@@ -29,8 +29,8 @@ fn test_histogram_display_filled_positive() -> Result<(), Error> {
     ]
     .iter()
     .for_each(|(x, w)| hist.fill_with(x, w));
-    let actual = format!("{}", hist);
-    println!("{}", actual);
+    let actual = format!("{hist}");
+    println!("{actual}");
     let expected = "VecHistogram1D(6 bins, sum=162.9)
     (-inf, 0.00) | #
     [0.00, 0.50) | 

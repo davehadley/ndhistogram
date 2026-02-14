@@ -41,7 +41,7 @@ impl<T: Display> Display for SingleValueBinInterval<T> {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::result::Result<(), std::fmt::Error> {
         match self {
             Self::Overflow => write!(f, "{{overflow}}"),
-            Self::Bin { value } => write!(f, "{{{}}}", value),
+            Self::Bin { value } => write!(f, "{{{value}}}"),
         }
     }
 }
