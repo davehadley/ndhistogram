@@ -139,12 +139,7 @@ where
         values
             .into_iter()
             .map(|(bin, value)| (bin, 50.0 * (value / scale)))
-            .map(|(bin, value)| {
-                (
-                    format!("{bin:.precision$}"),
-                    "#".repeat(value as usize),
-                )
-            })
+            .map(|(bin, value)| (format!("{bin:.precision$}"), "#".repeat(value as usize)))
             .map(|(bin, value)| write!(f, "\n{bin:>16} | {value}"))
             .filter_map(Result::ok)
             .count();
