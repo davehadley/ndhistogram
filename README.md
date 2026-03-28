@@ -10,17 +10,17 @@
 [![Last commit](https://img.shields.io/github/last-commit/davehadley/ndhistogram/develop)](https://github.com/davehadley/ndhistogram)
 [![Last release](https://img.shields.io/github/release-date/davehadley/ndhistogram)](https://crates.io/crates/ndhistogram)
 
-
 # Usage
 
 For usage instructions see:
+
 - [crates.io package](https://crates.io/crates/ndhistogram)
 - [documentation](https://docs.rs/ndhistogram)
 - [ndhistogram readme](ndhistogram/README.md)
 
 # Development Instructions
 
-If you wish to make a contribution to this repository please read the 
+If you wish to make a contribution to this repository please read the
 [contribution guide](https://github.com/davehadley/ndhistogram/blob/develop/ndhistogram/README.md#how-to-contribute).
 
 For development you will need the [rust toolchain installed](https://rustup.rs/)
@@ -29,19 +29,23 @@ Some helper scripts are included to help you setup a working development
 environment.
 
 Setup the development environment with:
+
 ```
 source setup-environment.sh
 ```
-or you may use the 
+
+or you may use the
 [development container](https://code.visualstudio.com/docs/remote/containers)
 inside `.devcontainer/Dockerfile`.
 
 Before committing any code, please install pre-commit hooks with:
+
 ```
 ./scripts/install-hook.py
 ```
 
 Some additional checks may be run with:
+
 ```
 ./scripts/run-checks.py
 ```
@@ -50,10 +54,10 @@ Some additional checks may be run with:
 
 Licensed under either of
 
- * Apache License, Version 2.0
-   ([LICENSE-APACHE](LICENSE-APACHE) or http://www.apache.org/licenses/LICENSE-2.0)
- * MIT license
-   ([LICENSE-MIT](LICENSE-MIT) or http://opensource.org/licenses/MIT)
+- Apache License, Version 2.0
+  ([LICENSE-APACHE](LICENSE-APACHE) or http://www.apache.org/licenses/LICENSE-2.0)
+- MIT license
+  ([LICENSE-MIT](LICENSE-MIT) or http://opensource.org/licenses/MIT)
 
 at your option.
 

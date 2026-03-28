@@ -14,12 +14,12 @@
 
 ndhistogram implements multi-dimensional histograms for Rust.
 
-
 This library aims to provide a similar feature set to the C++ library
 [boost-histogram](https://www.boost.org/doc/libs/1_75_0/libs/histogram)
 but with an idomatic pure-Rust implementation.
 
 Features include:
+
 - Histograms with any number of dimensions from 1 up to 21 dimensions.
 - Continuous (eg represented by a floating point number) and discrete axis (eg a category represented by a string value or enum) types that are composable (eg you may mix discrete and continuous axes).
 - Flexible bin values including any primitive number type, or a user-defined type.
@@ -86,6 +86,7 @@ println!("{}", hist);
 ## Overview
 
 A [Histogram] is composed of two components:
+
 - The [Axes] which is a set of [Axis](axis::Axis) corresponding to each dimension of the histogram.
   The [Axes] and [Axis](axis::Axis) define the binning of the histogram and are responsible for mapping from coordinate space (eg \[x,y,z\]) to an integer bin number.
 - The histogram bin value storage. Valid bin value types include any integer and floating number type as well as user defined types that implement [Fill], [FillWith] or [FillWithWeighted].
@@ -172,6 +173,7 @@ let x1_y2 = hist.value(&(1.0, 2.0));
 ```
 
 ### Create a Histogram with a Discrete Axis
+
 ```rust
 use ndhistogram::{Histogram, ndhistogram, axis::Category};
 let mut hist = ndhistogram!(Category::new(vec![0, 2, 4]));
@@ -254,13 +256,16 @@ let sum: f64 = histogram.par_iter().map(|bin| bin.value).sum();
 // see also: par_iter_mut, par_values, par_values_mut.
 assert_eq!(sum, 0.0);
 ```
+
 Requires "rayon" feature enabled.
 
 ## Crate Feature Flags
+
 All cargo features of this crate are off by default.
 The following features can be enabled in your `Cargo.toml`:
-  - [serde] : enable support for histogram serialization and deserialization.
-  - [rayon] : enable parallel iteration over histograms.
+
+- [serde] : enable support for histogram serialization and deserialization.
+- [rayon] : enable parallel iteration over histograms.
 
 ## How to contribute
 
@@ -271,17 +276,16 @@ If you discover a bug in this crate or a mistake in the documentation please eit
 If you want to request or add a new feature please
 [open an issue](https://github.com/davehadley/ndhistogram/issues).
 
-
 <!-- cargo-sync-readme end -->
 
 ## License
 
 Licensed under either of
 
- * Apache License, Version 2.0
-   ([LICENSE-APACHE](LICENSE-APACHE) or http://www.apache.org/licenses/LICENSE-2.0)
- * MIT license
-   ([LICENSE-MIT](LICENSE-MIT) or http://opensource.org/licenses/MIT)
+- Apache License, Version 2.0
+  ([LICENSE-APACHE](LICENSE-APACHE) or http://www.apache.org/licenses/LICENSE-2.0)
+- MIT license
+  ([LICENSE-MIT](LICENSE-MIT) or http://opensource.org/licenses/MIT)
 
 at your option.
 

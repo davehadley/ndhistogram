@@ -4,7 +4,7 @@ name = "bench_fill"
 
 [dependencies]
 num-traits = "0.2"
-rayon = {version = "1.6", optional = true}
+rayon = { version = "1.6", optional = true }
 thiserror = "1.0"
 
 [dependencies.serde]
@@ -31,17 +31,17 @@ default = []
 bench = false
 
 [package]
+name = "ndhistogram"
+version = "0.10.0"
 authors = ["David Hadley <davehadley@users.noreply.github.com>"]
 categories = ["science", "mathematics", "data-structures"]
-description = "multi-dimensional histogramming for Rust"
 edition = "2021"
 keywords = ["histogram", "statistics", "data", "analysis", "multidimensional"]
 license = "MIT OR Apache-2.0"
-name = "ndhistogram"
 readme = "README.md"
 repository = "https://github.com/davehadley/ndhistogram"
 rust-version = "1.71.0"
-version = "0.10.0"
+description = "multi-dimensional histogramming for Rust"
 
 [package.metadata.docs.rs]
 # have docs.rs document all features

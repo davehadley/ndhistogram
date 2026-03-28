@@ -4,15 +4,13 @@ on:
   release:
     types: [published]
 
-
 jobs:
-
   test:
     name: Publish
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - uses: dtolnay/rust-toolchain@stable
-    - name: cargo publish
-      working-directory: ./ndhistogram
-      run: cargo publish --locked --token ${{ secrets.CRATES_TOKEN }}
+      - uses: actions/checkout@v3
+      - uses: dtolnay/rust-toolchain@stable
+      - name: cargo publish
+        working-directory: ./ndhistogram
+        run: cargo publish --locked --token ${{ secrets.CRATES_TOKEN }}
