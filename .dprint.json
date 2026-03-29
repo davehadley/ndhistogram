@@ -8,7 +8,8 @@
   "yaml": {
   },
   "excludes": [
-    "**/*-lock.json"
+    "**/*-lock.json",
+    "ndhistogram/CHANGELOG.md"
   ],
   "plugins": [
     "https://plugins.dprint.dev/json-0.21.1.wasm",
