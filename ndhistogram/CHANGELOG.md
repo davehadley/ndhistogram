@@ -1,3 +1,26 @@
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+
+## [0.10.1](https://github.com/davehadley/ndhistogram/compare/v0.10.0...v0.10.1) - 2026-03-29
+
+### Other
+
+- update readme
+- update msrv in CI
+- run cargo-sync-readme
+- add commitlint and dprint to CI
+- auto format toml
+- cargo fmt
+- relax dependency requirements, update msrv
+- fix clippy lints
+- Fix some compiler warnings in tests.
+- Update dependencies.
 # 0.10.0 (2022-11-14)
 
 - Fix [issue 33](https://github.com/davehadley/ndhistogram/issues/33): Filling a histogram where the axis value is NaN not longer panics. NaN is mapped to the overflow bin where one exists or to no bin on axes without overflow bins.
