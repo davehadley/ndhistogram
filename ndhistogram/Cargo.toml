@@ -5,7 +5,7 @@ name = "bench_fill"
 [dependencies]
 num-traits = "0.2"
 rayon = { version = "1.6", optional = true }
-thiserror = "1.0"
+thiserror = "2.0"
 
 [dependencies.serde]
 features = ["derive"]
