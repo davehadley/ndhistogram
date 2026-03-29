@@ -54,11 +54,13 @@ jobs:
         working-directory: ./ndhistogram
         run: cargo install cargo-sync-readme && cargo sync-readme --check
       - name: Setup python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v6
       - name: Run pre-commit hooks
         run: |
-          cargo install dprint \
-          && pip install pre-commit \
+          curl -fsSL https://dprint.dev/install.sh | sh \
+          && export DPRINT_INSTALL="${USER}/.dprint" \
+          && export PATH="${DPRINT_INSTALL}/bin:${PATH}" \
+          && pip install pre-commit dprint-py \
           && pre-commit run --all-files
 
   msrv:
