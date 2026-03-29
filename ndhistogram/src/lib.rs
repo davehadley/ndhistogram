@@ -39,7 +39,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! ndhistogram = "0.10.0"
+//! ndhistogram = "0.10.1"
 //! ```
 //!
 //! See the [change log](https://github.com/davehadley/ndhistogram/blob/main/ndhistogram/CHANGELOG.md)
