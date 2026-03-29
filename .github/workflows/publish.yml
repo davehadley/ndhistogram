@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - develop
 
 jobs:
 
@@ -12,7 +11,7 @@ jobs:
   release-plz-release:
     name: Release-plz release
     runs-on: ubuntu-latest
-    if: ${{ github.repository_owner == 'davehadley' && github.ref == 'refs/heads/main' }}
+    if: ${{ github.repository_owner == 'davehadley' }}
     permissions:
       contents: write
       pull-requests: read
@@ -38,7 +37,7 @@ jobs:
   release-plz-pr:
     name: Release-plz PR
     runs-on: ubuntu-latest
-    if: ${{ github.repository_owner == 'davehadley' && github.ref == 'refs/heads/develop' }}
+    if: ${{ github.repository_owner == 'davehadley' }}
     permissions:
       contents: write
       pull-requests: write
