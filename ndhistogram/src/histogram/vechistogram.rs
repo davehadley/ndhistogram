@@ -351,6 +351,11 @@ impl<A, V> VecHistogram<A, V> {
         &self.values
     }
 
+    /// Get a reference to the backing data as a slice.
+    pub fn as_slice(&self) -> &[V] {
+        &self.values
+    }
+
     /// An [immutable rayon parallel iterator](rayon::iter::IndexedParallelIterator) over the histogram values.
     ///
     /// This requires the "rayon" [crate feature](index.html#crate-feature-flags) to be enabled.
