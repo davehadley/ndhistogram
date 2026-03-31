@@ -331,6 +331,11 @@ use rayon::prelude::*;
 // See comments on vechistogram for more info.
 
 impl<A, V> HashHistogram<A, V> {
+    /// Get a reference to the backing Vec<V>.
+    pub fn as_map(&self) -> &HashMap<usize, V> {
+        &self.values
+    }
+
     /// An [immutable rayon parallel iterator](rayon::iter::ParallelIterator) over the histogram values.
     ///
     /// It only iterates over filled bins in the sparse histogram.
@@ -397,5 +402,11 @@ impl<A, V> HashHistogram<A, V> {
                 .expect("We only iterate over valid indices."),
             value: it.1,
         })
+    }
+}
+
+impl<A, V> From<HashHistogram<A, V>> for HashMap<usize, V> {
+    fn from(value: HashHistogram<A, V>) -> Self {
+        value.values
     }
 }
