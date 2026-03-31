@@ -1,12 +1,44 @@
 use std::{
-    collections::HashMap,
-    collections::HashSet,
+    collections::{HashMap, HashSet},
+    fmt::Debug,
     fmt::Display,
+    hash::{BuildHasher, Hasher},
     ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign},
 };
 
 use super::histogram::{Histogram, Iter, IterMut, ValuesMut};
 use crate::{axis::Axis, error::AxisError, Axes, Item};
+
+use rustc_hash::FxHasher;
+
+#[derive(Default, Clone)]
+/// Default hashing algorithm used for HashHistogram.
+///
+/// Currently uses rustc-hash FxHasher.
+pub struct DefaultHasher(FxHasher);
+
+impl BuildHasher for DefaultHasher {
+    type Hasher = Self;
+
+    fn build_hasher(&self) -> Self::Hasher {
+        Self::default()
+    }
+}
+
+impl Hasher for DefaultHasher {
+    fn finish(&self) -> u64 {
+        self.0.finish()
+    }
+    fn write(&mut self, bytes: &[u8]) {
+        self.0.write(bytes)
+    }
+}
+
+impl Debug for DefaultHasher {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_tuple("DefaultHasher").finish()
+    }
+}
 
 /// A sparse N-dimensional [Histogram] that stores its values in a [HashMap].
 ///
@@ -15,11 +47,36 @@ use crate::{axis::Axis, error::AxisError, Axes, Item};
 ///  possible. If memory usage is not a concern, see [VecHistogram](crate::VecHistogram).
 ///
 /// See [crate::sparsehistogram] for examples of its use.
-#[derive(Default, Clone, PartialEq, Eq, Debug)]
+#[derive(Default, Clone, Debug)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct HashHistogram<A, V> {
+#[cfg_attr(
+    feature = "serde",
+    serde(bound(
+        deserialize = "A: serde::Deserialize<'de>, V: serde::Deserialize<'de>, S: std::hash::BuildHasher + Default"
+    ))
+)]
+pub struct HashHistogram<A, V, S = DefaultHasher> {
     axes: A,
-    values: HashMap<usize, V>,
+    values: HashMap<usize, V, S>,
+}
+
+impl<A, V, S> Eq for HashHistogram<A, V, S>
+where
+    A: Eq,
+    V: Eq,
+    S: std::hash::BuildHasher,
+{
+}
+
+impl<A, V, S> PartialEq for HashHistogram<A, V, S>
+where
+    A: PartialEq,
+    V: PartialEq,
+    S: std::hash::BuildHasher,
+{
+    fn eq(&self, other: &Self) -> bool {
+        self.axes == other.axes && self.values == other.values
+    }
 }
 
 impl<A: Axis, V> HashHistogram<A, V> {
@@ -28,12 +85,22 @@ impl<A: Axis, V> HashHistogram<A, V> {
     pub fn new(axes: A) -> Self {
         Self {
             axes,
-            values: HashMap::new(),
+            values: HashMap::default(),
         }
     }
 }
 
-impl<A: Axis, V: Default> Histogram<A, V> for HashHistogram<A, V> {
+impl<A: Axis, V, S: std::hash::BuildHasher> HashHistogram<A, V, S> {
+    /// Factory method for HashHistogram to specify the hashing method.
+    pub fn with_hasher(axes: A, hash_builder: S) -> Self {
+        Self {
+            axes,
+            values: HashMap::with_hasher(hash_builder),
+        }
+    }
+}
+
+impl<A: Axis, V: Default, S: BuildHasher> Histogram<A, V> for HashHistogram<A, V, S> {
     #[inline]
     fn axes(&self) -> &A {
         &self.axes
@@ -115,9 +182,9 @@ impl<A: Axis, V: Default> Histogram<A, V> for HashHistogram<A, V> {
     }
 }
 
-impl<'a, A: Axis, V> IntoIterator for &'a HashHistogram<A, V>
+impl<'a, A: Axis, V, S> IntoIterator for &'a HashHistogram<A, V, S>
 where
-    HashHistogram<A, V>: Histogram<A, V>,
+    HashHistogram<A, V, S>: Histogram<A, V>,
 {
     type Item = Item<A::BinInterval, &'a V>;
 
@@ -128,9 +195,9 @@ where
     }
 }
 
-impl<'a, A: Axis, V: 'a> IntoIterator for &'a mut HashHistogram<A, V>
+impl<'a, A: Axis, V: 'a, S> IntoIterator for &'a mut HashHistogram<A, V, S>
 where
-    HashHistogram<A, V>: Histogram<A, V>,
+    HashHistogram<A, V, S>: Histogram<A, V>,
 {
     type Item = Item<A::BinInterval, &'a mut V>;
 
@@ -141,9 +208,9 @@ where
     }
 }
 
-impl<A: Axis, V> Display for HashHistogram<A, V>
+impl<A: Axis, V, S> Display for HashHistogram<A, V, S>
 where
-    HashHistogram<A, V>: Histogram<A, V>,
+    HashHistogram<A, V, S>: Histogram<A, V>,
     V: Clone + Into<f64>,
     A::BinInterval: Display,
 {
@@ -168,13 +235,14 @@ where
 
 macro_rules! impl_binary_op_with_immutable_borrow {
     ($Trait:tt, $method:tt, $mathsymbol:tt, $testresult:tt) => {
-        impl<A: Axis + PartialEq + Clone, V> $Trait<&HashHistogram<A, V>> for &HashHistogram<A, V>
+        impl<A: Axis + PartialEq + Clone, V, S> $Trait<&HashHistogram<A, V, S>> for &HashHistogram<A, V, S>
         where
-            HashHistogram<A, V>: Histogram<A, V>,
+            HashHistogram<A, V, S>: Histogram<A, V>,
             V: Clone + Default,
+            S: BuildHasher + Default,
             for<'a> &'a V: $Trait<Output = V>,
         {
-            type Output = Result<HashHistogram<A, V>, crate::error::BinaryOperationError>;
+            type Output = Result<HashHistogram<A, V, S>, crate::error::BinaryOperationError>;
 
             /// Combine the right-hand histogram with the left-hand histogram,
             /// returning a copy, and leaving the original histograms intact.
@@ -195,12 +263,12 @@ macro_rules! impl_binary_op_with_immutable_borrow {
             #[doc=concat!("assert_eq!(combined_hist.value(&0.0).unwrap(), &", stringify!($testresult), ");")]
             /// # Ok(()) }
             /// ```
-            fn $method(self, rhs: &HashHistogram<A, V>) -> Self::Output {
+            fn $method(self, rhs: &HashHistogram<A, V, S>) -> Self::Output {
                 if self.axes() != rhs.axes() {
                     return Err(crate::error::BinaryOperationError);
                 }
                 let indices: HashSet<usize> = self.values.keys().chain(rhs.values.keys()).copied().collect();
-                let values: HashMap<usize, V> = indices.into_iter().map(|index| {
+                let values: HashMap<usize, V, S> = indices.into_iter().map(|index| {
                     let left = self.values.get(&index);
                     let right = rhs.values.get(&index);
                     let newvalue = match (left, right) {
@@ -227,13 +295,14 @@ impl_binary_op_with_immutable_borrow! {Div, div, /, 2.0}
 
 macro_rules! impl_binary_op_with_owned {
     ($Trait:tt, $method:tt, $ValueAssignTrait:tt, $mathsymbol:tt, $assignmathsymbol:tt, $testresult:tt) => {
-        impl<A: Axis + PartialEq + Clone, V> $Trait<&HashHistogram<A, V>> for HashHistogram<A, V>
+        impl<A: Axis + PartialEq + Clone, V, S> $Trait<&HashHistogram<A, V, S>> for HashHistogram<A, V, S>
         where
-            HashHistogram<A, V>: Histogram<A, V>,
+            HashHistogram<A, V, S>: Histogram<A, V>,
             V: Clone + Default,
+            S: BuildHasher,
             for<'a> V: $ValueAssignTrait<&'a V>,
         {
-            type Output = Result<HashHistogram<A, V>, crate::error::BinaryOperationError>;
+            type Output = Result<HashHistogram<A, V, S>, crate::error::BinaryOperationError>;
 
             /// Combine the right-hand histogram with the left-hand histogram,
             /// consuming the left-hand histogram and returning a new value.
@@ -256,7 +325,7 @@ macro_rules! impl_binary_op_with_owned {
             #[doc=concat!("assert_eq!(combined_hist.value(&0.0).unwrap(), &", stringify!($testresult), ");")]
             /// # Ok(()) }
             /// ```
-            fn $method(mut self, rhs: &HashHistogram<A, V>) -> Self::Output {
+            fn $method(mut self, rhs: &HashHistogram<A, V, S>) -> Self::Output {
                 if self.axes() != rhs.axes() {
                     return Err(crate::error::BinaryOperationError);
                 }
@@ -277,10 +346,11 @@ impl_binary_op_with_owned! {Div, div, DivAssign, /, /=, 2.0}
 
 macro_rules! impl_binary_op_assign {
     ($Trait:tt, $method:tt, $ValueAssignTrait:tt, $mathsymbol:tt, $testresult:tt) => {
-        impl<A: Axis + PartialEq, V> $Trait<&HashHistogram<A, V>> for HashHistogram<A, V>
+        impl<A: Axis + PartialEq, V, S> $Trait<&HashHistogram<A, V, S>> for HashHistogram<A, V, S>
         where
-            HashHistogram<A, V>: Histogram<A, V>,
+            HashHistogram<A, V, S>: Histogram<A, V>,
             V: Default,
+            S: BuildHasher,
             for<'a> V: $ValueAssignTrait<&'a V>,
         {
 
@@ -306,7 +376,7 @@ macro_rules! impl_binary_op_assign {
             #[doc=concat!("assert_eq!(hist1.value(&0.0).unwrap(), &", stringify!($testresult), ");")]
             /// # Ok(()) }
             /// ```
-            fn $method(&mut self, rhs: &HashHistogram<A, V>) {
+            fn $method(&mut self, rhs: &HashHistogram<A, V, S>) {
                 if self.axes() != rhs.axes() {
                     panic!("Cannot combine HashHistograms with incompatible axes.");
                 }
@@ -330,11 +400,11 @@ use rayon::prelude::*;
 // TODO: It would be better to implement rayon::iter::IntoParallelIterator
 // See comments on vechistogram for more info.
 
-impl<A, V> HashHistogram<A, V> {
+impl<A, V, S> HashHistogram<A, V, S> {
     /// Construct a HashHistogram from a Vec and Axes.
     ///
     /// Returns AxisError::InvalidNumberOfBins if the provided values contains bins indices that are not contained within the provided axes.
-    pub fn from_map(axes: A, values: HashMap<usize, V>) -> Result<Self, crate::Error>
+    pub fn from_map(axes: A, values: HashMap<usize, V, S>) -> Result<Self, crate::Error>
     where
         A: Axes,
     {
@@ -346,7 +416,7 @@ impl<A, V> HashHistogram<A, V> {
     }
 
     /// Get a reference to the backing HashMap.
-    pub fn as_map(&self) -> &HashMap<usize, V> {
+    pub fn as_map(&self) -> &HashMap<usize, V, S> {
         &self.values
     }
 
@@ -383,6 +453,7 @@ impl<A, V> HashHistogram<A, V> {
     where
         A: Axis + Sync,
         V: Sync,
+        S: Sync,
         <A as Axis>::BinInterval: Send,
     {
         self.values.par_iter().map(move |(index, value)| Item {
@@ -419,8 +490,8 @@ impl<A, V> HashHistogram<A, V> {
     }
 }
 
-impl<A, V> From<HashHistogram<A, V>> for HashMap<usize, V> {
-    fn from(value: HashHistogram<A, V>) -> Self {
+impl<A, V, S> From<HashHistogram<A, V, S>> for HashMap<usize, V, S> {
+    fn from(value: HashHistogram<A, V, S>) -> Self {
         value.values
     }
 }
