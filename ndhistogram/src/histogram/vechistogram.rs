@@ -423,3 +423,9 @@ impl<A, V> VecHistogram<A, V> {
         })
     }
 }
+
+impl<A, V> From<VecHistogram<A, V>> for Vec<V> {
+    fn from(value: VecHistogram<A, V>) -> Self {
+        value.values
+    }
+}
