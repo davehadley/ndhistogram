@@ -360,7 +360,7 @@ impl<A, V> VecHistogram<A, V> {
         }
     }
 
-    /// Get a reference to the backing Vec<V>.
+    /// Get a reference to the backing Vec.
     pub fn as_vec(&self) -> &Vec<V> {
         &self.values
     }

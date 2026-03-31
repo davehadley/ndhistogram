@@ -345,7 +345,7 @@ impl<A, V> HashHistogram<A, V> {
         }
     }
 
-    /// Get a reference to the backing Vec<V>.
+    /// Get a reference to the backing HashMap.
     pub fn as_map(&self) -> &HashMap<usize, V> {
         &self.values
     }
