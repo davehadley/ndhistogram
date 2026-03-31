@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.11.0](https://github.com/davehadley/ndhistogram/compare/v0.10.1...v0.11.0) - 2026-03-31
+
+### Added
+
+- implement from_map for HashHistogram
+- implement from_vec for VecHistogram
+- conversion from HashHistogram into HashMap
+- implement From/Into for Vec/VecHistogram
+- implement as_slice for VecHistogram
+- implement as_vec for VecHistogram
+
+### Other
+
+- fix HTMLrender error in docs
+- remove html_root_url as it is no longer recommended
+- *(deps)* [**breaking**] upgrade thiserror to 2.0
+- update latest release in docs
+
 ## [0.10.1](https://github.com/davehadley/ndhistogram/compare/v0.10.0...v0.10.1) - 2026-03-29
 
 ### Other
