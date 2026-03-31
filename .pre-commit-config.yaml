@@ -14,7 +14,7 @@ repos:
     hooks:
       - id: dprint
         name: dprint
-        entry: dprint fmt --
+        entry: dprint fmt --allow-no-files --
         language: system
         pass_filenames: true
         files: \.(json|md|markdown|toml|ya?ml)$
