@@ -6,7 +6,7 @@ use std::{
 };
 
 use super::histogram::{Histogram, Iter, IterMut, ValuesMut};
-use crate::{axis::Axis, Item};
+use crate::{axis::Axis, error::AxisError, Axes, Item};
 
 /// A sparse N-dimensional [Histogram] that stores its values in a [HashMap].
 ///
@@ -331,6 +331,20 @@ use rayon::prelude::*;
 // See comments on vechistogram for more info.
 
 impl<A, V> HashHistogram<A, V> {
+    /// Construct a HashHistogram from a Vec and Axes.
+    ///
+    /// Returns AxisError::InvalidNumberOfBins if the provided values contains bins indices that are not contained within the provided axes.
+    pub fn from_map(axes: A, values: HashMap<usize, V>) -> Result<Self, crate::Error>
+    where
+        A: Axes,
+    {
+        if values.keys().all(|it| *it < axes.num_bins()) {
+            Ok(Self { axes, values })
+        } else {
+            Err(AxisError::InvalidNumberOfBins.into())
+        }
+    }
+
     /// Get a reference to the backing Vec<V>.
     pub fn as_map(&self) -> &HashMap<usize, V> {
         &self.values

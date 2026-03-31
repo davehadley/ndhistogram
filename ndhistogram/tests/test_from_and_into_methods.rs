@@ -1,8 +1,8 @@
 use std::collections::HashMap;
 
 use ndhistogram::{
-    axis::Uniform, error::AxisError, ndhistogram, sparsehistogram, AxesTuple, Error, Histogram,
-    VecHistogram,
+    axis::Uniform, error::AxisError, ndhistogram, sparsehistogram, AxesTuple, Error, HashHistogram,
+    Histogram, VecHistogram,
 };
 
 #[test]
@@ -65,4 +65,21 @@ fn test_hashhistogram_into_map() {
     let actual: HashMap<usize, f64> = hist.into();
     let expected: HashMap<usize, f64> = HashMap::from([(1, 1.0)]);
     assert_eq!(expected, actual);
+}
+
+#[test]
+fn test_hash_histogram_from_hashmap() {
+    let axes: AxesTuple<_> = (Uniform::new(1, 0.0, 1.0).unwrap(),).into();
+    let hist = HashHistogram::<_, _>::from_map(axes, HashMap::from([(1, 1.0)]));
+    assert!(hist.is_ok());
+}
+
+#[test]
+fn test_hash_histogram_from_hashmap_with_invalid_bin_numbers() {
+    let axes: AxesTuple<_> = (Uniform::new(1, 0.0, 1.0).unwrap(),).into();
+    let result = HashHistogram::<_, _>::from_map(axes, HashMap::from([(3, 1.0)]));
+    assert_eq!(
+        result,
+        Err(Error::AxisError(AxisError::InvalidNumberOfBins))
+    );
 }
