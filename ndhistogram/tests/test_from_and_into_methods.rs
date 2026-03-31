@@ -1,6 +1,9 @@
 use std::collections::HashMap;
 
-use ndhistogram::{axis::Uniform, ndhistogram, sparsehistogram, Histogram};
+use ndhistogram::{
+    axis::Uniform, error::AxisError, ndhistogram, sparsehistogram, AxesTuple, Error, Histogram,
+    VecHistogram,
+};
 
 #[test]
 fn test_vec_histogram_as_vec() {
@@ -27,6 +30,23 @@ fn test_vec_histogram_into_vec() {
     let actual: Vec<f64> = hist.into();
     let expected: Vec<f64> = vec![0.0, 1.0, 0.0];
     assert_eq!(expected, actual);
+}
+
+#[test]
+fn test_vec_histogram_from_vec() {
+    let axes: AxesTuple<_> = (Uniform::new(1, 0.0, 1.0).unwrap(),).into();
+    let hist = VecHistogram::<_, _>::from_vec(axes, vec![0.0, 1.0, 0.0]);
+    assert!(hist.is_ok());
+}
+
+#[test]
+fn test_vec_histogram_from_vec_with_invalid_bin_numbers() {
+    let axes: AxesTuple<_> = (Uniform::new(1, 0.0, 1.0).unwrap(),).into();
+    let result = VecHistogram::<_, _>::from_vec(axes, vec![0.0]);
+    assert_eq!(
+        result,
+        Err(Error::AxisError(AxisError::InvalidNumberOfBins))
+    );
 }
 
 #[test]

@@ -4,7 +4,7 @@ use std::{
     ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign},
 };
 
-use crate::axis::Axis;
+use crate::{axis::Axis, error::AxisError, Axes};
 
 use super::histogram::{Histogram, Item, Iter, IterMut, ValuesMut};
 
@@ -346,6 +346,20 @@ use rayon::prelude::*;
 // However we want to crate to build on stable.
 
 impl<A, V> VecHistogram<A, V> {
+    /// Construct a VecHistogram from a Vec and Axes.
+    ///
+    /// Returns AxisError::InvalidNumberOfBins if the provided histogram does not have the correct number of bins.
+    pub fn from_vec(axes: A, values: Vec<V>) -> Result<Self, crate::Error>
+    where
+        A: Axes,
+    {
+        if axes.num_bins() == values.len() {
+            Ok(Self { axes, values })
+        } else {
+            Err(AxisError::InvalidNumberOfBins.into())
+        }
+    }
+
     /// Get a reference to the backing Vec<V>.
     pub fn as_vec(&self) -> &Vec<V> {
         &self.values
