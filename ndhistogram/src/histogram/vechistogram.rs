@@ -346,6 +346,11 @@ use rayon::prelude::*;
 // However we want to crate to build on stable.
 
 impl<A, V> VecHistogram<A, V> {
+    /// Get a reference to the backing Vec<V>.
+    pub fn as_vec(&self) -> &Vec<V> {
+        &self.values
+    }
+
     /// An [immutable rayon parallel iterator](rayon::iter::IndexedParallelIterator) over the histogram values.
     ///
     /// This requires the "rayon" [crate feature](index.html#crate-feature-flags) to be enabled.

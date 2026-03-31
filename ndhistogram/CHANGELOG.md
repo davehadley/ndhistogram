@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - fix clippy lints
 - Fix some compiler warnings in tests.
 - Update dependencies.
+
 # 0.10.0 (2022-11-14)
 
 - Fix [issue 33](https://github.com/davehadley/ndhistogram/issues/33): Filling a histogram where the axis value is NaN not longer panics. NaN is mapped to the overflow bin where one exists or to no bin on axes without overflow bins.

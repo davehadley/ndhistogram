@@ -283,6 +283,7 @@
 //! [open an issue](https://github.com/davehadley/ndhistogram/issues).
 
 #![doc(issue_tracker_base_url = "https://github.com/davehadley/ndhistogram/issues")]
+#![doc(html_root_url = "https://docs.rs/ndhistogram/0.10.1")]
 #![cfg_attr(
     debug_assertions,
     warn(
