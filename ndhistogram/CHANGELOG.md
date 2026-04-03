@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.12.1](https://github.com/davehadley/ndhistogram/compare/v0.12.0...v0.12.1) - 2026-04-03
+
+### Other
+
+- remove specific version from usage instructions (suggest cargo add instead)
+- update latest version
+
 ## [0.12.0](https://github.com/davehadley/ndhistogram/compare/v0.11.0...v0.12.0) - 2026-04-03
 
 ### Added
