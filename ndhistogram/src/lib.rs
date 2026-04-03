@@ -35,11 +35,10 @@
 //!
 //! ## Usage
 //!
-//! Add this to your `Cargo.toml`:
+//! Add this crate to your dependencies with:
 //!
-//! ```toml
-//! [dependencies]
-//! ndhistogram = "0.12.0"
+//! ```sh
+//! cargo add ndhistogram
 //! ```
 //!
 //! See the [change log](https://github.com/davehadley/ndhistogram/blob/main/ndhistogram/CHANGELOG.md)
