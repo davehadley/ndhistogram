@@ -33,7 +33,7 @@ bench = false
 
 [package]
 name = "ndhistogram"
-version = "0.12.0"
+version = "0.12.1"
 authors = ["David Hadley <davehadley@users.noreply.github.com>"]
 categories = ["science", "mathematics", "data-structures"]
 edition = "2021"
