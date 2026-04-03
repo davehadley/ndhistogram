@@ -2,7 +2,8 @@ use ndhistogram::{
     axis::{Category, Uniform, Variable},
     ndhistogram, sparsehistogram,
     value::WeightedMean,
-    Error, Hist1D, Hist2D, Hist3D, Histogram, Item, SparseHist1D, SparseHist2D, SparseHist3D,
+    DefaultHasher, Error, Hist1D, Hist2D, Hist3D, Histogram, Item, SparseHist1D, SparseHist2D,
+    SparseHist3D,
 };
 use num_traits::Float;
 use rand::{prelude::StdRng, Rng, SeedableRng};
@@ -293,3 +294,14 @@ impl_binary_op_assign! {test_sparsehistogram_1d_elementwise_add_assign, +=}
 impl_binary_op_assign! {test_sparsehistogram_1d_elementwise_sub_assign, -=}
 impl_binary_op_assign! {test_sparsehistogram_1d_elementwise_div_assign, /=}
 impl_binary_op_assign! {test_sparsehistogram_1d_elementwise_mul_assign, *=}
+
+#[test]
+fn test_default_hasher_debug_impl() {
+    let hasher = DefaultHasher::default();
+    let debug_str = format!("{:?}", hasher);
+    assert!(
+        debug_str.contains("DefaultHasher"),
+        "Debug output should identify as DefaultHasher, got: {}",
+        debug_str
+    );
+}

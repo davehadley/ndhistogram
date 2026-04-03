@@ -39,7 +39,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! ndhistogram = "0.10.1"
+//! ndhistogram = "0.11.0"
 //! ```
 //!
 //! See the [change log](https://github.com/davehadley/ndhistogram/blob/main/ndhistogram/CHANGELOG.md)
@@ -311,6 +311,7 @@ pub use axes::AxesTuple;
 pub use histogram::fill::Fill;
 pub use histogram::fill::FillWith;
 pub use histogram::fill::FillWithWeighted;
+pub use histogram::hashhistogram::DefaultHasher;
 pub use histogram::hashhistogram::HashHistogram;
 pub use histogram::histogram::Histogram;
 pub use histogram::histogram::Item;

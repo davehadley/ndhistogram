@@ -5,6 +5,7 @@ name = "bench_fill"
 [dependencies]
 num-traits = "0.2"
 rayon = { version = "1.6", optional = true }
+rustc-hash = "2.1.2"
 thiserror = "2.0"
 
 [dependencies.serde]
