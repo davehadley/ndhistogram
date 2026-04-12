@@ -6,6 +6,8 @@
 
 mod bininterval;
 
+use std::iter::FusedIterator;
+
 pub use bininterval::bininterval::BinInterval;
 pub use bininterval::singlevaluebininterval::SingleValueBinInterval;
 mod uniformcyclic;
@@ -161,4 +163,16 @@ impl<'a, A: Axis> Iterator for AxisIter<'a, A> {
             None
         }
     }
+
+    fn size_hint(&self) -> (usize, Option<usize>) {
+        self.range.size_hint()
+    }
 }
+
+impl<'a, A: Axis> ExactSizeIterator for AxisIter<'a, A> {
+    fn len(&self) -> usize {
+        self.range.len()
+    }
+}
+
+impl<'a, A: Axis> FusedIterator for AxisIter<'a, A> {}
