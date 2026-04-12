@@ -1,12 +1,13 @@
 use std::{
     cmp::Ordering,
     fmt::Display,
+    iter::FusedIterator,
     ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign},
 };
 
 use crate::{axis::Axis, error::AxisError, Axes};
 
-use super::histogram::{Histogram, Item, Iter, IterMut, ValuesMut};
+use super::histogram::{Histogram, Item};
 
 /// A [Histogram] that stores its values in a [Vec].
 ///
@@ -31,6 +32,30 @@ impl<A: Axis, V: Default + Clone> VecHistogram<A, V> {
 }
 
 impl<A: Axis, V> Histogram<A, V> for VecHistogram<A, V> {
+    type Values<'a>
+        = std::slice::Iter<'a, V>
+    where
+        Self: 'a,
+        V: 'a;
+
+    type ValuesMut<'a>
+        = std::slice::IterMut<'a, V>
+    where
+        Self: 'a,
+        V: 'a;
+
+    type Iter<'a>
+        = VecHistogramIter<'a, A, V>
+    where
+        Self: 'a,
+        V: 'a;
+
+    type IterMut<'a>
+        = VecHistogramIterMut<'a, A, V>
+    where
+        Self: 'a,
+        V: 'a;
+
     fn value(&self, coordinate: &A::Coordinate) -> Option<&V> {
         let index = self.axes.index(coordinate)?;
         self.values.get(index)
@@ -45,44 +70,37 @@ impl<A: Axis, V> Histogram<A, V> for VecHistogram<A, V> {
         self.values.get(index)
     }
 
-    fn values<'a>(&'a self) -> Box<dyn Iterator<Item = &'a V> + 'a> {
-        Box::new(self.values.iter())
+    fn values<'a>(&'a self) -> Self::Values<'a> {
+        self.values.iter()
     }
 
-    fn iter<'a>(&'a self) -> Box<dyn Iterator<Item = Item<A::BinInterval, &'a V>> + 'a> {
-        Box::new(self.axes().iter().map(move |(index, binrange)| {
-            Item {
-                index,
-                bin: binrange,
-                value: self
-                    .value_at_index(index)
-                    .expect("iter() indices are always in range"),
-            }
-        }))
+    fn iter<'a>(&'a self) -> Self::Iter<'a> {
+        VecHistogramIter {
+            axis: &self.axes,
+            iter: self.values.iter().enumerate(),
+        }
     }
 
     fn value_at_index_mut(&mut self, index: usize) -> Option<&mut V> {
         self.values.get_mut(index)
     }
 
-    fn values_mut(&mut self) -> ValuesMut<'_, V> {
-        Box::new(self.values.iter_mut())
+    fn values_mut(&mut self) -> Self::ValuesMut<'_> {
+        self.values.iter_mut()
     }
 
-    fn iter_mut(&mut self) -> IterMut<'_, A, V> {
-        Box::new(
-            self.axes
-                .iter()
-                .zip(self.values.iter_mut())
-                .map(|((index, bin), value)| Item { index, bin, value }),
-        )
+    fn iter_mut(&mut self) -> Self::IterMut<'_> {
+        VecHistogramIterMut {
+            axis: &self.axes,
+            iter: self.values.iter_mut().enumerate(),
+        }
     }
 }
 
 impl<'a, A: Axis, V> IntoIterator for &'a VecHistogram<A, V> {
     type Item = Item<A::BinInterval, &'a V>;
 
-    type IntoIter = Iter<'a, A, V>;
+    type IntoIter = <VecHistogram<A, V> as Histogram<A, V>>::Iter<'a>;
 
     fn into_iter(self) -> Self::IntoIter {
         self.iter()
@@ -92,7 +110,7 @@ impl<'a, A: Axis, V> IntoIterator for &'a VecHistogram<A, V> {
 impl<'a, A: Axis, V: 'a> IntoIterator for &'a mut VecHistogram<A, V> {
     type Item = Item<A::BinInterval, &'a mut V>;
 
-    type IntoIter = IterMut<'a, A, V>;
+    type IntoIter = <VecHistogram<A, V> as Histogram<A, V>>::IterMut<'a>;
 
     fn into_iter(self) -> Self::IntoIter {
         self.iter_mut()
@@ -441,5 +459,97 @@ impl<A, V> VecHistogram<A, V> {
 impl<A, V> From<VecHistogram<A, V>> for Vec<V> {
     fn from(value: VecHistogram<A, V>) -> Self {
         value.values
+    }
+}
+
+/// Iterates over all bins yielding `(bin_interval, &value)`.
+#[derive(Debug)]
+pub struct VecHistogramIter<'a, A: Axis, V> {
+    axis: &'a A,
+    iter: std::iter::Enumerate<std::slice::Iter<'a, V>>,
+}
+
+impl<'a, A: Axis, V: 'a> Iterator for VecHistogramIter<'a, A, V> {
+    type Item = Item<<A as Axis>::BinInterval, &'a V>;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        let (index, value) = self.iter.next()?;
+        let bin = self
+            .axis
+            .bin(index)
+            .expect("vec histogram indices are always valid");
+
+        Some(Item::new(index, bin, value))
+    }
+
+    fn size_hint(&self) -> (usize, Option<usize>) {
+        self.iter.size_hint()
+    }
+}
+
+/// Mutably iterates over all bins, yielding `(bin_interval, &mut value)`.
+#[derive(Debug)]
+pub struct VecHistogramIterMut<'a, A: Axis, V> {
+    axis: &'a A,
+    iter: std::iter::Enumerate<std::slice::IterMut<'a, V>>,
+}
+
+impl<'a, A: Axis, V: 'a> Iterator for VecHistogramIterMut<'a, A, V> {
+    type Item = Item<<A as Axis>::BinInterval, &'a mut V>;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        let (index, value) = self.iter.next()?;
+        let bin = self
+            .axis
+            .bin(index)
+            .expect("vec histogram indices are always valid");
+
+        Some(Item::new(index, bin, value))
+    }
+
+    fn size_hint(&self) -> (usize, Option<usize>) {
+        self.iter.size_hint()
+    }
+}
+
+impl<'a, A: Axis, V> ExactSizeIterator for VecHistogramIter<'a, A, V> {
+    fn len(&self) -> usize {
+        self.iter.len()
+    }
+}
+
+impl<'a, A: Axis, V> ExactSizeIterator for VecHistogramIterMut<'a, A, V> {
+    fn len(&self) -> usize {
+        self.iter.len()
+    }
+}
+
+impl<'a, A: Axis, V> FusedIterator for VecHistogramIter<'a, A, V> {}
+
+impl<'a, A: Axis, V> FusedIterator for VecHistogramIterMut<'a, A, V> {}
+
+impl<'a, A: Axis, V> DoubleEndedIterator for VecHistogramIter<'a, A, V> {
+    fn next_back(&mut self) -> Option<Self::Item> {
+        let (index, value) = self.iter.next_back()?;
+
+        let bin = self
+            .axis
+            .bin(index)
+            .expect("vec histogram indices are always valid");
+
+        Some(Item::new(index, bin, value))
+    }
+}
+
+impl<'a, A: Axis, V> DoubleEndedIterator for VecHistogramIterMut<'a, A, V> {
+    fn next_back(&mut self) -> Option<Self::Item> {
+        let (index, value) = self.iter.next_back()?;
+
+        let bin = self
+            .axis
+            .bin(index)
+            .expect("vec histogram indices are always valid");
+
+        Some(Item::new(index, bin, value))
     }
 }

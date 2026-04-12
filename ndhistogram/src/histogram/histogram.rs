@@ -2,16 +2,6 @@ use crate::{axis::Axis, FillWith};
 
 use super::fill::{Fill, FillWithWeighted};
 
-// TODO: Using generic associated types would give a cleaner interface and avoid boxing the iterators
-// https://github.com/rust-lang/rfcs/blob/master/text/1598-generic_associated_types.md
-pub(crate) type Values<'a, V> = Box<dyn Iterator<Item = &'a V> + 'a>;
-pub(crate) type Iter<'a, A, V> =
-    Box<dyn Iterator<Item = Item<<A as Axis>::BinInterval, &'a V>> + 'a>;
-
-pub(crate) type ValuesMut<'a, V> = Box<dyn Iterator<Item = &'a mut V> + 'a>;
-pub(crate) type IterMut<'a, A, V> =
-    Box<dyn Iterator<Item = Item<<A as Axis>::BinInterval, &'a mut V>> + 'a>;
-
 /// A common interface for an ND histograms.
 ///
 /// Implementations of this trait should handle storing the histogram bin values
@@ -20,6 +10,30 @@ pub(crate) type IterMut<'a, A, V> =
 /// The most commonly used implementation is [VecHistogram](crate::VecHistogram).
 /// See [crate::ndhistogram] for examples of its use.
 pub trait Histogram<A: Axis, V> {
+    /// Iterator over histogram values in implementation-defined order.
+    type Values<'a>: Iterator<Item = &'a V>
+    where
+        Self: 'a,
+        V: 'a;
+
+    /// Mutable iterator over histogram values in implementation-defined order.
+    type ValuesMut<'a>: Iterator<Item = &'a mut V>
+    where
+        Self: 'a,
+        V: 'a;
+
+    /// Iterator over histogram bins and values, yielding `(bin_interval, &value)` in implementation defined order.
+    type Iter<'a>: Iterator<Item = Item<<A as Axis>::BinInterval, &'a V>>
+    where
+        Self: 'a,
+        V: 'a;
+
+    /// Mutable iterator over histogram bins and values, yielding `(bin_interval, &mut value)`, in implementation defined order.
+    type IterMut<'a>: Iterator<Item = Item<<A as Axis>::BinInterval, &'a mut V>>
+    where
+        Self: 'a,
+        V: 'a;
+
     /// The histogram [Axes](crate::Axes) that map coordinates to bin numbers.
     fn axes(&self) -> &A;
 
@@ -35,10 +49,10 @@ pub trait Histogram<A: Axis, V> {
     }
 
     /// Iterator over bin values.
-    fn values(&self) -> Values<'_, V>;
+    fn values(&self) -> Self::Values<'_>;
 
     /// Iterator over bin indices, bin interval and bin values.
-    fn iter(&self) -> Iter<'_, A, V>;
+    fn iter(&self) -> Self::Iter<'_>;
 
     /// Mutable access to a bin value at a given index.
     fn value_at_index_mut(&mut self, index: usize) -> Option<&mut V>;
@@ -51,9 +65,9 @@ pub trait Histogram<A: Axis, V> {
     }
 
     /// Mutable iterator over bin values.
-    fn values_mut(&mut self) -> ValuesMut<'_, V>;
+    fn values_mut(&mut self) -> Self::ValuesMut<'_>;
     /// Mutable iterator over bin indices, bin interval and bin values.
-    fn iter_mut(&mut self) -> IterMut<'_, A, V>;
+    fn iter_mut(&mut self) -> Self::IterMut<'_>;
 
     /// Fill the histogram bin value at coordinate with unit weight.
     /// If the [Axes](crate::Axes) do not cover that coordinate, do nothing.

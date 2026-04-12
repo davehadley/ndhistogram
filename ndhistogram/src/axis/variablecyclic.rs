@@ -63,6 +63,8 @@ impl<T> Axis for VariableCyclic<T>
 where
     T: PartialOrd + Copy + Num,
 {
+    axis_gat_defaults!();
+
     type Coordinate = T;
     type BinInterval = BinInterval<T>;
 
@@ -110,7 +112,7 @@ where
     VariableCyclic<T>: Axis,
 {
     type Item = (usize, <VariableCyclic<T> as Axis>::BinInterval);
-    type IntoIter = Box<dyn Iterator<Item = Self::Item> + 'a>;
+    type IntoIter = <VariableCyclic<T> as Axis>::Iter<'a>;
     fn into_iter(self) -> Self::IntoIter {
         self.iter()
     }

@@ -177,3 +177,77 @@ fn test_histogram_display() -> Result<(), Error> {
     let _ = format!("{hist}");
     Ok(())
 }
+
+#[test]
+fn test_histogram_item_iterator_rev() {
+    let mut hist = ndhistogram!(Uniform::new(5, 0.0, 5.0).unwrap());
+    hist.fill_with(&1.0, 1.0);
+    hist.fill_with(&2.0, 2.0);
+    hist.fill_with(&3.0, 3.0);
+
+    let actual: Vec<_> = hist.iter().rev().collect();
+
+    let expected: Vec<_> = (0..7)
+        .rev()
+        .map(|it| {
+            Item::new(
+                it,
+                hist.axes().bin(it).unwrap(),
+                hist.value_at_index(it).unwrap(),
+            )
+        })
+        .collect();
+
+    assert_eq!(actual, expected);
+}
+
+#[test]
+fn test_histogram_item_iterator_next_and_next_back() {
+    let hist = ndhistogram!(Uniform::new(5, 0.0, 5.0).unwrap());
+
+    let mut iter = hist.iter();
+
+    let first = iter.next().unwrap();
+    let last = iter.next_back().unwrap();
+
+    assert_eq!(first.index, 0);
+    assert_eq!(last.index, 6);
+
+    let remaining: Vec<_> = iter.map(|it| it.index).collect();
+    assert_eq!(remaining, vec![1, 2, 3, 4, 5]);
+}
+
+#[test]
+fn test_histogram_iter_mut_rev() {
+    let mut hist = ndhistogram!(Uniform::new(2, 0.0, 2.0).unwrap());
+
+    for item in (&mut hist).into_iter().rev() {
+        *item.value = item.index as f64;
+    }
+
+    assert_eq!(hist.value_at_index(0), Some(&0.0));
+    assert_eq!(hist.value_at_index(1), Some(&1.0));
+    assert_eq!(hist.value_at_index(2), Some(&2.0));
+    assert_eq!(hist.value_at_index(3), Some(&3.0));
+}
+
+#[test]
+fn test_histogram_iter_mut_next_and_next_back() {
+    let mut hist = ndhistogram!(Uniform::new(2, 0.0, 2.0).unwrap());
+    let mut iter = (&mut hist).into_iter();
+
+    // Front
+    {
+        let item = iter.next().unwrap();
+        *item.value = 10.0;
+    }
+
+    // Back
+    {
+        let item = iter.next_back().unwrap();
+        *item.value = 99.0;
+    }
+
+    assert_eq!(hist.value_at_index(0), Some(&10.0));
+    assert_eq!(hist.value_at_index(3), Some(&99.0));
+}

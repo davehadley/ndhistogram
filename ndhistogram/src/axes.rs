@@ -49,6 +49,9 @@ macro_rules! impl_axes {
         }
 
         impl<X: Axis> Axis for AxesTuple<(X,)> {
+
+            axis_gat_defaults!();
+
             type Coordinate = X::Coordinate;
             type BinInterval = X::BinInterval;
 
@@ -82,6 +85,9 @@ macro_rules! impl_axes {
         }
 
         impl<$($nth_type_parameter: Axis),*> Axis for AxesTuple<($($nth_type_parameter),*)> {
+
+            axis_gat_defaults!();
+
             type Coordinate = ($($nth_type_parameter::Coordinate),*);
             type BinInterval = ($($nth_type_parameter::BinInterval),*);
 

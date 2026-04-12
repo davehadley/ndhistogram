@@ -38,6 +38,8 @@ impl<T: Value> CategoryNoFlow<T> {
 }
 
 impl<T: Value> Axis for CategoryNoFlow<T> {
+    axis_gat_defaults!();
+
     type Coordinate = T;
     type BinInterval = SingleValueBinInterval<T>;
 
@@ -64,7 +66,7 @@ impl<T: Value> Axis for CategoryNoFlow<T> {
 
 impl<'a, T: Value> IntoIterator for &'a CategoryNoFlow<T> {
     type Item = (usize, <Category<T> as Axis>::BinInterval);
-    type IntoIter = Box<dyn Iterator<Item = Self::Item> + 'a>;
+    type IntoIter = <CategoryNoFlow<T> as Axis>::Iter<'a>;
 
     fn into_iter(self) -> Self::IntoIter {
         self.iter()

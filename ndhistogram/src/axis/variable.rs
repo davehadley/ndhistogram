@@ -81,6 +81,8 @@ impl<T> Axis for Variable<T>
 where
     T: PartialOrd + Copy,
 {
+    axis_gat_defaults!();
+
     type Coordinate = T;
     type BinInterval = BinInterval<T>;
 
@@ -135,7 +137,7 @@ where
     Variable<T>: Axis,
 {
     type Item = (usize, <Variable<T> as Axis>::BinInterval);
-    type IntoIter = Box<dyn Iterator<Item = Self::Item> + 'a>;
+    type IntoIter = <Variable<T> as Axis>::Iter<'a>;
 
     fn into_iter(self) -> Self::IntoIter {
         self.iter()

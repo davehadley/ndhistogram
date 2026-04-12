@@ -146,3 +146,17 @@ macro_rules! sparsehistogram {
     };
 
 }
+
+macro_rules! axis_gat_defaults {
+    () => {
+        type Iter<'a>
+            = crate::axis::AxisIter<'a, Self>
+        where
+            Self: 'a;
+
+        /// An iterator over bin numbers and bin intervals
+        fn iter(&self) -> Self::Iter<'_> {
+            crate::axis::AxisIter::new(self)
+        }
+    };
+}

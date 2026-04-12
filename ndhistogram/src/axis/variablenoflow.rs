@@ -56,6 +56,8 @@ impl<T: PartialOrd + Copy> VariableNoFlow<T> {
 }
 
 impl<T: PartialOrd + Copy> Axis for VariableNoFlow<T> {
+    axis_gat_defaults!();
+
     type Coordinate = T;
     type BinInterval = BinInterval<T>;
 
@@ -84,7 +86,7 @@ impl<T: PartialOrd + Copy> Axis for VariableNoFlow<T> {
 
 impl<'a, T: PartialOrd + Copy> IntoIterator for &'a VariableNoFlow<T> {
     type Item = (usize, <VariableNoFlow<T> as Axis>::BinInterval);
-    type IntoIter = Box<dyn Iterator<Item = Self::Item> + 'a>;
+    type IntoIter = <VariableNoFlow<T> as Axis>::Iter<'a>;
 
     fn into_iter(self) -> Self::IntoIter {
         self.iter()
