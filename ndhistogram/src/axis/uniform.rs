@@ -101,6 +101,8 @@ impl<T> Uniform<T> {
 
 // TODO: relax float restriction or add implementation for Integers
 impl<T: PartialOrd + NumCast + NumOps + Copy> Axis for Uniform<T> {
+    axis_gat_defaults!();
+
     type Coordinate = T;
     type BinInterval = BinInterval<T>;
 
@@ -133,10 +135,6 @@ impl<T: PartialOrd + NumCast + NumOps + Copy> Axis for Uniform<T> {
         let end = self.low + (T::from(index)?) * (self.high - self.low) / (T::from(self.num)?);
         Some(Self::BinInterval::new(start, end))
     }
-
-    fn indices(&self) -> Box<dyn Iterator<Item = usize>> {
-        Box::new(0..self.num_bins())
-    }
 }
 
 impl<T: Display> Display for Uniform<T> {
@@ -157,7 +155,7 @@ where
     Uniform<T>: Axis,
 {
     type Item = (usize, <Uniform<T> as Axis>::BinInterval);
-    type IntoIter = Box<dyn Iterator<Item = Self::Item> + 'a>;
+    type IntoIter = <Uniform<T> as Axis>::Iter<'a>;
 
     fn into_iter(self) -> Self::IntoIter {
         self.iter()

@@ -4,7 +4,6 @@ use super::{Axis, BinInterval, Uniform};
 use std::fmt::{Debug, Display};
 
 use num_traits::{Float, Num, NumCast, NumOps};
-
 /// An axis with equal sized bins and no under/overflow bins.
 ///
 /// An axis with N equally spaced, equal sized, bins between [low, high).
@@ -76,6 +75,8 @@ impl<T> Axis for UniformNoFlow<T>
 where
     T: PartialOrd + NumCast + NumOps + Copy,
 {
+    axis_gat_defaults!();
+
     type Coordinate = T;
     type BinInterval = BinInterval<T>;
 
@@ -107,7 +108,7 @@ where
     T: PartialOrd + NumCast + NumOps + Copy,
 {
     type Item = (usize, <Uniform<T> as Axis>::BinInterval);
-    type IntoIter = Box<dyn Iterator<Item = Self::Item> + 'a>;
+    type IntoIter = <UniformNoFlow<T> as Axis>::Iter<'a>;
 
     fn into_iter(self) -> Self::IntoIter {
         self.iter()

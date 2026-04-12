@@ -299,6 +299,9 @@
     )
 )]
 
+#[macro_use]
+mod macros;
+
 mod axes;
 pub mod axis;
 mod histogram;
@@ -344,6 +347,3 @@ pub type SparseHistND<A, V = f64> = HashHistogram<AxesTuple<A>, V>;
 pub mod error;
 
 pub use error::Error;
-
-#[macro_use]
-mod macros;

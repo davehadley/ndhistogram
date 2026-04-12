@@ -1,12 +1,12 @@
 use std::{
     collections::{HashMap, HashSet},
-    fmt::Debug,
-    fmt::Display,
+    fmt::{Debug, Display},
     hash::{BuildHasher, Hasher},
+    iter::FusedIterator,
     ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign},
 };
 
-use super::histogram::{Histogram, Iter, IterMut, ValuesMut};
+use super::histogram::Histogram;
 use crate::{axis::Axis, error::AxisError, Axes, Item};
 
 use rustc_hash::FxHasher;
@@ -101,6 +101,30 @@ impl<A: Axis, V, S: std::hash::BuildHasher> HashHistogram<A, V, S> {
 }
 
 impl<A: Axis, V: Default, S: BuildHasher> Histogram<A, V> for HashHistogram<A, V, S> {
+    type Values<'a>
+        = std::collections::hash_map::Values<'a, usize, V>
+    where
+        Self: 'a,
+        V: 'a;
+
+    type ValuesMut<'a>
+        = std::collections::hash_map::ValuesMut<'a, usize, V>
+    where
+        Self: 'a,
+        V: 'a;
+
+    type Iter<'a>
+        = HashHistogramIter<'a, A, V>
+    where
+        Self: 'a,
+        V: 'a;
+
+    type IterMut<'a>
+        = HashHistogramIterMut<'a, A, V>
+    where
+        Self: 'a,
+        V: 'a;
+
     #[inline]
     fn axes(&self) -> &A {
         &self.axes
@@ -110,42 +134,31 @@ impl<A: Axis, V: Default, S: BuildHasher> Histogram<A, V> for HashHistogram<A, V
         self.values.get(&index)
     }
 
-    fn values(&self) -> super::histogram::Values<'_, V> {
-        Box::new(self.values.values())
+    fn values(&self) -> Self::Values<'_> {
+        self.values.values()
     }
 
-    fn iter(&self) -> Iter<'_, A, V> {
-        Box::new(self.values.iter().map(move |(index, value)| {
-            Item {
-                index: *index,
-                bin: self
-                    .axes
-                    .bin(*index)
-                    .expect("iter() indices are always valid bins"),
-                value,
-            }
-        }))
+    fn iter(&self) -> Self::Iter<'_> {
+        HashHistogramIter {
+            axes: &self.axes,
+            inner: self.values.iter(),
+        }
     }
 
     fn value_at_index_mut(&mut self, index: usize) -> Option<&mut V> {
         self.values.get_mut(&index)
     }
 
-    fn values_mut(&mut self) -> ValuesMut<'_, V> {
-        Box::new(self.values.values_mut())
+    fn values_mut(&mut self) -> Self::ValuesMut<'_> {
+        self.values.values_mut()
     }
 
-    fn iter_mut(&mut self) -> IterMut<'_, A, V> {
+    fn iter_mut(&mut self) -> Self::IterMut<'_> {
         let axes = &self.axes;
-        Box::new(self.values.iter_mut().map(move |(index, value)| {
-            Item {
-                index: *index,
-                bin: axes
-                    .bin(*index)
-                    .expect("iter_mut() indices are always valid bins"),
-                value,
-            }
-        }))
+        HashHistogramIterMut {
+            axes,
+            inner: self.values.iter_mut(),
+        }
     }
 
     #[inline]
@@ -188,7 +201,7 @@ where
 {
     type Item = Item<A::BinInterval, &'a V>;
 
-    type IntoIter = Iter<'a, A, V>;
+    type IntoIter = <HashHistogram<A, V, S> as Histogram<A, V>>::Iter<'a>;
 
     fn into_iter(self) -> Self::IntoIter {
         self.iter()
@@ -201,7 +214,7 @@ where
 {
     type Item = Item<A::BinInterval, &'a mut V>;
 
-    type IntoIter = IterMut<'a, A, V>;
+    type IntoIter = <HashHistogram<A, V, S> as Histogram<A, V>>::IterMut<'a>;
 
     fn into_iter(self) -> Self::IntoIter {
         self.iter_mut()
@@ -495,3 +508,75 @@ impl<A, V, S> From<HashHistogram<A, V, S>> for HashMap<usize, V, S> {
         value.values
     }
 }
+
+/// Iterates over non-empty histogram bins, yielding `(bin_interval, &value)`.
+#[derive(Debug)]
+pub struct HashHistogramIter<'a, A: Axis, V> {
+    axes: &'a A,
+    inner: std::collections::hash_map::Iter<'a, usize, V>,
+}
+
+impl<'a, A: Axis, V> Iterator for HashHistogramIter<'a, A, V>
+where
+    V: 'a,
+{
+    type Item = Item<<A as Axis>::BinInterval, &'a V>;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        let (index, value) = self.inner.next()?;
+        let bin = self
+            .axes
+            .bin(*index)
+            .expect("iter() indices are always valid bins");
+
+        Some(Item::new(*index, bin, value))
+    }
+
+    fn size_hint(&self) -> (usize, Option<usize>) {
+        self.inner.size_hint()
+    }
+}
+
+/// Mutably iterates over non-empty histogram bins, yielding `(bin_interval, &mut value)`.
+#[derive(Debug)]
+pub struct HashHistogramIterMut<'a, A: Axis, V> {
+    axes: &'a A,
+    inner: std::collections::hash_map::IterMut<'a, usize, V>,
+}
+
+impl<'a, A: Axis, V> Iterator for HashHistogramIterMut<'a, A, V>
+where
+    V: 'a,
+{
+    type Item = Item<<A as Axis>::BinInterval, &'a mut V>;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        let (index, value) = self.inner.next()?;
+        let bin = self
+            .axes
+            .bin(*index)
+            .expect("iter_mut() indices are always valid bins");
+
+        Some(Item::new(*index, bin, value))
+    }
+
+    fn size_hint(&self) -> (usize, Option<usize>) {
+        self.inner.size_hint()
+    }
+}
+
+impl<'a, A: Axis, V> ExactSizeIterator for HashHistogramIter<'a, A, V> {
+    fn len(&self) -> usize {
+        self.inner.len()
+    }
+}
+
+impl<'a, A: Axis, V> ExactSizeIterator for HashHistogramIterMut<'a, A, V> {
+    fn len(&self) -> usize {
+        self.inner.len()
+    }
+}
+
+impl<'a, A: Axis, V> FusedIterator for HashHistogramIter<'a, A, V> {}
+
+impl<'a, A: Axis, V> FusedIterator for HashHistogramIterMut<'a, A, V> {}

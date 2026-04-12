@@ -95,6 +95,8 @@ impl<T> UniformCyclic<T> {
 }
 
 impl<T: PartialOrd + Num + NumCast + NumOps + Copy> Axis for UniformCyclic<T> {
+    axis_gat_defaults!();
+
     type Coordinate = T;
     type BinInterval = BinInterval<T>;
 
@@ -142,7 +144,7 @@ where
     UniformCyclic<T>: Axis,
 {
     type Item = (usize, <UniformCyclic<T> as Axis>::BinInterval);
-    type IntoIter = Box<dyn Iterator<Item = Self::Item> + 'a>;
+    type IntoIter = <UniformCyclic<T> as Axis>::Iter<'a>;
     fn into_iter(self) -> Self::IntoIter {
         self.iter()
     }

@@ -3,7 +3,9 @@
 //! This module contains implementations of [Axis] that are used to represent the axes of
 //! an N-dimensional [Histogram](crate::Histogram).
 //!
+
 mod bininterval;
+
 pub use bininterval::bininterval::BinInterval;
 pub use bininterval::singlevaluebininterval::SingleValueBinInterval;
 mod uniformcyclic;
@@ -22,10 +24,6 @@ mod variable;
 pub use variable::Variable;
 mod variablenoflow;
 pub use variablenoflow::VariableNoFlow;
-
-type Iter<'a, BinInterval> = Box<dyn Iterator<Item = (usize, BinInterval)> + 'a>;
-type Indices = Box<dyn Iterator<Item = usize>>;
-type Bins<'a, BinInterval> = Box<dyn Iterator<Item = BinInterval> + 'a>;
 
 /// An binned axis corresponding to one dimension of an N-dimensional [Histogram](crate::Histogram).
 ///
@@ -49,7 +47,7 @@ type Bins<'a, BinInterval> = Box<dyn Iterator<Item = BinInterval> + 'a>;
 /// Imagine we wanted an 2-bin axis where even values where mapped to one bin
 /// and odd values to another bin. We could implement this with the following:
 /// ```rust
-/// use ndhistogram::axis::Axis;
+/// use ndhistogram::axis::{Axis, AxisIter};
 /// use ndhistogram::{ndhistogram, Histogram};
 /// enum Parity {
 ///     Even,
@@ -59,9 +57,10 @@ type Bins<'a, BinInterval> = Box<dyn Iterator<Item = BinInterval> + 'a>;
 /// struct ParityAxis {}
 ///
 /// impl Axis for ParityAxis {
-///     type Coordinate = i32;
 ///
+///     type Coordinate = i32;
 ///     type BinInterval = Parity;
+///     type Iter<'a> = AxisIter<'a, Self> where Self: 'a;
 ///
 ///     fn index(&self, coordinate: &Self::Coordinate) -> Option<usize> {
 ///         if coordinate % 2 == 0 { Some(0) } else { Some(1) }
@@ -73,6 +72,10 @@ type Bins<'a, BinInterval> = Box<dyn Iterator<Item = BinInterval> + 'a>;
 ///
 ///    fn bin(&self, index: usize) -> Option<Self::BinInterval> {
 ///         if index == 0 { Some(Parity::Even) } else { Some(Parity::Odd) }
+///     }
+///
+///     fn iter(&self) -> Self::Iter<'_> {
+///         AxisIter::new(self)
 ///     }
 /// }
 ///
@@ -89,6 +92,11 @@ pub trait Axis {
     /// The type of an interval representing the set of Coordinates that correspond to a histogram bin
     type BinInterval;
 
+    /// Iterates over all bins on the axis, yielding `(index, bin_interval)`
+    type Iter<'a>: Iterator<Item = (usize, Self::BinInterval)>
+    where
+        Self: 'a;
+
     /// Map from coordinate to bin number.
     /// Returns an option as not all valid coordinates are necessarily contained within a bin.
     fn index(&self, coordinate: &Self::Coordinate) -> Option<usize>;
@@ -100,27 +108,16 @@ pub trait Axis {
     fn bin(&self, index: usize) -> Option<Self::BinInterval>;
 
     /// An iterator over bin numbers
-    fn indices(&self) -> Indices {
-        Box::new(0..self.num_bins())
+    fn indices(&self) -> impl Iterator<Item = usize> {
+        self.iter().map(|(it, _)| it)
     }
 
     /// An iterator over bin numbers and bin intervals
-    fn iter(&self) -> Iter<'_, Self::BinInterval> {
-        Box::new(self.indices().map(move |it| {
-            (
-                it,
-                self.bin(it)
-                    .expect("indices() should only produce valid indices"),
-            )
-        }))
-    }
+    fn iter(&self) -> Self::Iter<'_>;
 
     /// An iterator over bin intervals.
-    fn bins(&self) -> Bins<'_, Self::BinInterval> {
-        Box::new(self.indices().map(move |it| {
-            self.bin(it)
-                .expect("indices() should only produce valid indices")
-        }))
+    fn bins(&self) -> impl Iterator<Item = Self::BinInterval> {
+        self.iter().map(|(_, it)| it)
     }
 
     /// The number of dimensions that this object corresponds to.
@@ -129,5 +126,39 @@ pub trait Axis {
     /// and should return the number of [Axis] that it contains.
     fn num_dim(&self) -> usize {
         1
+    }
+}
+
+/// Iterator over axis bins by index, yielding `(index, bin_interval)` for all bins.
+#[derive(Debug)]
+pub struct AxisIter<'a, A: Axis> {
+    axis: &'a A,
+    range: std::ops::Range<usize>,
+}
+
+impl<'a, A: Axis> AxisIter<'a, A> {
+    /// Create a interator over Axis bins
+    pub fn new(axis: &'a A) -> Self {
+        Self {
+            axis,
+            range: 0..axis.num_bins(),
+        }
+    }
+}
+
+impl<'a, A: Axis> Iterator for AxisIter<'a, A> {
+    type Item = (usize, A::BinInterval);
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if let Some(index) = self.range.next() {
+            Some((
+                index,
+                self.axis
+                    .bin(index)
+                    .expect("indices() should only produce valid indices"),
+            ))
+        } else {
+            None
+        }
     }
 }
