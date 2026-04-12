@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.13.0](https://github.com/davehadley/ndhistogram/compare/v0.12.0...v0.13.0) - 2026-04-12
+
+### Added
+
+- implement ExactSizeIterator and FusedIterator for AxisIter
+- [**breaking**] boxed iterators replaced with GATs on Histogram and Axis trait ([#45](https://github.com/davehadley/ndhistogram/pull/45))
+
+### Other
+
+- remove specific version from usage instructions (suggest cargo add instead)
+- update latest version
+
 ## [0.12.0](https://github.com/davehadley/ndhistogram/compare/v0.11.0...v0.12.0) - 2026-04-03
 
 ### Added
